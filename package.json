@@ -17,6 +17,7 @@
     "generate:agents": "node scripts/generate-gpt-artifacts.mjs",
     "generate:agents:resume": "node scripts/generate-gpt-artifacts.mjs --resume",
     "generate:agents:dry-run": "node scripts/generate-gpt-artifacts.mjs --dry-run",
+    "promote:gpt-candidate": "node scripts/promote-gpt-candidate.mjs",
     "verify:gpt-artifact": "node scripts/verify-gpt-artifact.mjs",
     "judge:verify": "npm run reset && npm test && npm run verify:mcp && npm run validate:plugin && npm run generate:agents:dry-run && npm run build && npm run verify:dist"
   },

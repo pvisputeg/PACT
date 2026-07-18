@@ -13,14 +13,15 @@ const artifact = {
   usage: { requests: 2, inputTokens: 12000, outputTokens: 4000, estimatedCostUsd: 0.18, projectCommittedUsd: 0.18, projectBudgetUsd: 4.5 },
   plan: {
     executiveSummary: 'Use the balanced recovery.', recommendedStrategyId: 'STR-BALANCED',
-    strategyRationale: 'It meets the target inside every hard boundary.', evidenceCitations: ['EVD-SUP-017'],
+    strategyRationale: 'It meets the target inside every hard boundary.',
+    evidenceCitations: ['EVD-SUP-017 and EVD-LOG-023 support the observed associations.', 'proposedActionGraph: simulated outcomes and approval pending.'],
     assumptions: [],
     crossTeamPriorities: ['Finance', 'Procurement', 'Manufacturing', 'Logistics', 'Customer', 'Outcome Office'].map((team) => ({ team, priority: 'Coordinate recovery.', dependency: 'Approved predecessor.' })),
     residualRisks: [],
   },
   audit: {
     verdict: 'approve_with_conditions',
-    findings: [{ severity: 'material', title: 'Monitor carrier', detail: 'Retain the checkpoint.', evidenceIds: ['EVD-LOG-023'] }],
+    findings: [{ severity: 'material', title: 'Monitor carrier', detail: 'Retain the checkpoint.', evidenceIds: ['EVD-LOG-023', 'STR-BALANCED', 'ACT-001'] }],
     unsupportedClaims: [], requiredConditions: ['Human approval remains required.'],
     counterfactual: { scenario: 'Carrier recovery stalls.', expectedImpact: 'OTIF remains below target.' },
   },
@@ -44,4 +45,3 @@ describe('genuine artifact release review', () => {
     expect(result.checks).toMatchObject({ evidenceIntegrity: false, decisionReadyAudit: false, projectBudget: false });
   });
 });
-

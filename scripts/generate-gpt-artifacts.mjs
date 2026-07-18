@@ -269,12 +269,16 @@ const artifact = {
   audit,
 };
 
+const serializedArtifact = `${JSON.stringify(artifact, null, 2)}\n`;
+const candidateArtifactUrl = new URL('artifacts/gpt-5.6/candidate-artifact.json', root);
+await writeFile(candidateArtifactUrl, serializedArtifact, 'utf8');
+console.log(`Saved complete two-agent candidate ${auditResponseId} before release acceptance review.`);
+
 const artifactReview = reviewGenuineArtifact(artifact, collectEvidenceIds(evidencePacket));
 if (!artifactReview.ready) {
-  throw new Error(`Genuine artifact failed the release acceptance gate: ${JSON.stringify(artifactReview)}`);
+  throw new Error(`Genuine artifact failed the release acceptance gate. The paid candidate is preserved at artifacts/gpt-5.6/candidate-artifact.json: ${JSON.stringify(artifactReview)}`);
 }
 
-const serializedArtifact = `${JSON.stringify(artifact, null, 2)}\n`;
 await mkdir(new URL('public/artifacts/gpt-5.6/', root), { recursive: true });
 await Promise.all([
   writeFile(new URL('artifacts/gpt-5.6/strategy-and-audit.json', root), serializedArtifact, 'utf8'),

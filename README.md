@@ -196,6 +196,12 @@ If the audit stage needs to be deliberately resumed after the saved plan has bee
 npm run generate:agents:resume
 ```
 
+Every completed two-agent result is saved to `artifacts/gpt-5.6/candidate-artifact.json` before the release gate runs. If a reviewer rule—not the model call—needs correction, re-evaluate and promote that preserved candidate without spending again:
+
+```bash
+npm run promote:gpt-candidate
+```
+
 The agents do not call business tools. Deterministic policy guards and the explicit human approval gate remain the only path to simulated action.
 
 The prepared deterministic mode remains functional without external credentials. It never represents deterministic fallback calculations as live model output.

@@ -72,6 +72,12 @@ The generator checkpoints a valid Outcome Lead response before calling the Indep
 npm run generate:agents:resume
 ```
 
+The complete two-agent candidate is also checkpointed before release acceptance. If only a local reviewer rule fails, fix the rule and promote the preserved result without another API call:
+
+```bash
+npm run promote:gpt-candidate
+```
+
 ## Safety and truthfulness
 
 - Every scenario value is synthetic and fixed-seed.

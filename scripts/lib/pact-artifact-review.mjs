@@ -9,13 +9,23 @@ export function collectEvidenceIds(value, ids = new Set()) {
   return ids;
 }
 
+export function extractCitedEvidenceIds(values) {
+  const ids = new Set();
+  for (const value of values) {
+    if (typeof value !== 'string') continue;
+    for (const match of value.matchAll(/EVD-[A-Z]+-\d+/g)) ids.add(match[0]);
+  }
+  return ids;
+}
+
 export function reviewGenuineArtifact(artifact, knownEvidenceIds) {
   const plan = planSynthesisSchema.parse(artifact.plan);
   const audit = independentAuditSchema.parse(artifact.audit);
-  const citedEvidence = [
+  const citationFields = [
     ...plan.evidenceCitations,
     ...audit.findings.flatMap((finding) => finding.evidenceIds),
   ];
+  const citedEvidence = [...extractCitedEvidenceIds(citationFields)];
   const unknownEvidenceIds = [...new Set(citedEvidence.filter((id) => !knownEvidenceIds.has(id)))];
   const suppliedTeams = new Set(plan.crossTeamPriorities.map((priority) => priority.team));
   const missingTeams = REQUIRED_TEAMS.filter((team) => !suppliedTeams.has(team));
@@ -35,7 +45,9 @@ export function reviewGenuineArtifact(artifact, knownEvidenceIds) {
       && /^trace_/.test(artifact.provenance?.auditTraceId ?? ''),
     balancedStrategy: plan.recommendedStrategyId === 'STR-BALANCED',
     crossTeamCoverage: missingTeams.length === 0,
-    evidenceIntegrity: citedEvidence.length > 0 && unknownEvidenceIds.length === 0,
+    evidenceIntegrity: plan.evidenceCitations.length > 0
+      && citedEvidence.length > 0
+      && unknownEvidenceIds.length === 0,
     decisionReadyAudit: audit.verdict === 'approve_with_conditions'
       && blockingFindings.length === 0
       && audit.requiredConditions.length > 0,
@@ -57,4 +69,3 @@ export function reviewGenuineArtifact(artifact, knownEvidenceIds) {
     details: { missingTeams, unknownEvidenceIds, blockingFindingTitles: blockingFindings.map((finding) => finding.title) },
   };
 }
-
