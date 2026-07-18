@@ -13,6 +13,7 @@ const requiredFiles = [
   'docs/JUDGING_MATRIX.md',
   'docs/SUBMISSION.md',
   'docs/VERIFICATION.md',
+  '.github/workflows/deploy-pages.yml',
   'plugins/pact/.codex-plugin/plugin.json',
   'plugins/pact/.mcp.json',
   'plugins/pact/skills/investigate-and-recover-outcome/SKILL.md',
@@ -26,6 +27,7 @@ const requiredFiles = [
   'submission-assets/screenshots/03-strategy-sandbox.png',
   'submission-assets/screenshots/04-approval-gate.png',
   'submission-assets/screenshots/05-outcome-closeout.png',
+  'scripts/verify-dist.mjs',
 ];
 
 function walk(directory, output = []) {

@@ -76,8 +76,15 @@ Production verification:
 
 ```bash
 npm run build
+npm run verify:dist
 npm run validate:plugin
 ```
+
+### Publish the no-login judge demo
+
+The repository includes a GitHub Pages workflow at `.github/workflows/deploy-pages.yml`. After the repository is public, enable **Settings → Pages → Source: GitHub Actions**, then run **Deploy PACT judge demo** or push `main`.
+
+Use the deployed root URL with `?artifact=fixture&reset=1` for the free judge path. The workflow runs the complete judge verification before publishing and will refuse a bundle with broken subpath asset URLs or disguised fixture provenance.
 
 ## Three-minute walkthrough
 

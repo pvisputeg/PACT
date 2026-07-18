@@ -18,6 +18,10 @@ For a free test of the schema-validated plan and audit presentation, open http:/
 
 `judge:verify` reproduces the scenario, runs all domain tests, exercises the stateful MCP approval and dependency chain, validates the Codex plugin, checks the GPT-5.6 request boundary without credentials, and creates the production bundle.
 
+## No-login deployment
+
+The checked-in GitHub Pages workflow runs the full judge verification and deploys only `dist`. After Pages is enabled with GitHub Actions as its source, the public judge URL is the Pages root with `?artifact=fixture&reset=1` appended. `npm run verify:dist` proves that production assets are subpath-safe and that the bundled free artifact remains explicitly identified as a fixture.
+
 ## Ninety-second product path
 
 1. Confirm the Outcome Contract.
