@@ -6,7 +6,6 @@ dist/
 .env.*
 !.env.example
 artifacts/gpt-5.6/*.json
-public/artifacts/gpt-5.6/*.json
 coverage/
 .DS_Store
 Thumbs.db

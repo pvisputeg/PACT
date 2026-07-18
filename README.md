@@ -56,6 +56,14 @@ npm run dev
 
 Open `http://localhost:5173`.
 
+For the complete judge-facing verification in one command:
+
+```bash
+npm run judge:verify
+```
+
+See the [judge guide](docs/JUDGE_GUIDE.md) for the 90-second test path and the [official-criteria matrix](docs/JUDGING_MATRIX.md) for requirement-to-evidence traceability.
+
 Production verification:
 
 ```bash

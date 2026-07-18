@@ -14,7 +14,8 @@
     "validate:plugin": "node scripts/validate-plugin.mjs",
     "verify:mcp": "node scripts/verify-mcp.mjs",
     "generate:agents": "node scripts/generate-gpt-artifacts.mjs",
-    "generate:agents:dry-run": "node scripts/generate-gpt-artifacts.mjs --dry-run"
+    "generate:agents:dry-run": "node scripts/generate-gpt-artifacts.mjs --dry-run",
+    "judge:verify": "npm run reset && npm test && npm run verify:mcp && npm run validate:plugin && npm run generate:agents:dry-run && npm run build"
   },
   "dependencies": {
     "@fontsource/dm-mono": "^5.2.6",

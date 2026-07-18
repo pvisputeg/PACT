@@ -9,6 +9,8 @@ const requiredFiles = [
   'README.md',
   'PRODUCT_REQUIREMENTS.md',
   'docs/DEMO_SCRIPT.md',
+  'docs/JUDGE_GUIDE.md',
+  'docs/JUDGING_MATRIX.md',
   'docs/SUBMISSION.md',
   'docs/VERIFICATION.md',
   'plugins/pact/.codex-plugin/plugin.json',
@@ -37,14 +39,13 @@ function remoteUrl() {
 }
 
 const missingFiles = requiredFiles.filter((file) => !existsSync(join(root, file)));
-const generatedArtifactPath = join(root, 'artifacts/gpt-5.6/strategy-and-audit.json');
 const publicArtifactPath = join(root, 'public/artifacts/gpt-5.6/strategy-and-audit.json');
 let genuineArtifact = false;
 let artifactProblem = 'not generated';
 
-if (existsSync(generatedArtifactPath) && existsSync(publicArtifactPath)) {
+if (existsSync(publicArtifactPath)) {
   try {
-    const artifact = JSON.parse(readFileSync(generatedArtifactPath, 'utf8'));
+    const artifact = JSON.parse(readFileSync(publicArtifactPath, 'utf8'));
     genuineArtifact = artifact.provider === 'OpenAI Responses API'
       && artifact.model === 'gpt-5.6'
       && /^resp_/.test(artifact.provenance?.planResponseId ?? '')
@@ -75,7 +76,7 @@ for (const file of walk(root)) {
 
 const audit = {
   requiredFiles: missingFiles.length ? { status: 'BLOCKED', missing: missingFiles } : { status: 'READY' },
-  automatedVerification: { status: 'RUN_SEPARATELY', commands: ['npm test', 'npm run build', 'npm run verify:mcp', 'npm run validate:plugin', 'npm run generate:agents:dry-run'] },
+  automatedVerification: { status: 'RUN_SEPARATELY', commands: ['npm run judge:verify'] },
   genuineGptArtifact: genuineArtifact ? { status: 'READY' } : { status: 'BLOCKED', reason: artifactProblem, apiKeyConfigured: Boolean(process.env.OPENAI_API_KEY) },
   submissionPlaceholders: placeholderMatches.length ? { status: 'BLOCKED', values: placeholderMatches } : { status: 'READY' },
   gitOrigin: remoteUrl() ? { status: 'READY', url: remoteUrl() } : { status: 'BLOCKED', reason: 'origin remote not configured' },
