@@ -38,7 +38,7 @@ Click **Compare recovery options**.
 
 **Narration:**
 
-> PACT compares three bounded responses by outcome, cost, speed, and residual risk. GPT-5.6 synthesizes the evidence and recommends Balanced recovery; the deterministic simulator—not the model—produces 82.2 percent by Day 21 for 68,750 dollars.
+> PACT compares three bounded responses by outcome, cost, speed, and residual risk. The OpenAI Agents SDK Outcome Lead turns an immutable evidence packet into a typed, traced recommendation for Balanced recovery. The deterministic simulator—not the model—produces 82.2 percent by Day 21 for 68,750 dollars.
 
 Click **Build coordinated plan & audit it**.
 
@@ -48,7 +48,7 @@ Click **Build coordinated plan & audit it**.
 
 **Narration:**
 
-> The proposing role cannot certify itself. A second GPT-5.6 call acts as Independent Auditor, while deterministic checks reconcile the budget, constrain causality, and expose the optimistic carrier assumption. PACT stops before commitment. A human must decide.
+> The proposing role cannot certify itself. A separate GPT-5.6 Auditor agent receives the frozen plan, challenges its evidence and assumptions, and cannot edit or execute it. Deterministic checks reconcile the budget, and PACT stops before commitment. A human must decide.
 
 Click **Approve recovery plan**.
 
@@ -76,7 +76,7 @@ Click Day 7, Day 14, and Day 21 while narrating:
 
 **Narration:**
 
-> Codex accelerated the product decisions, implementation, debugging, and verification, and the result is itself Codex-native: AGENTS rules, a validated PACT plugin, an outcome-recovery skill, and stateful MCP tools. PACT turns AI answers into accountable outcomes.
+> Codex helped reshape the product from a narrow verifier into this complete outcome loop, then accelerated implementation, debugging, and verification. The result is Codex-native: AGENTS rules, a validated PACT plugin, an outcome-recovery skill, and nine stateful MCP tools. PACT turns AI answers into accountable outcomes.
 
 End on the Day-21 closeout, not source code.
 

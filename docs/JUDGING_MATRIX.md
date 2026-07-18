@@ -1,6 +1,6 @@
 # Build Week judging matrix
 
-**Verified against the official rules:** July 17, 2026  
+**Verified against the official rules:** July 18, 2026
 **Deadline:** July 21, 2026 at 5:00 PM Pacific Time  
 **Track:** Work & Productivity
 
@@ -28,7 +28,7 @@ The scores below are an internal readiness estimate on a five-point scale, not a
 
 | Criterion | Strongest evidence | Residual risk | Current posture |
 |---|---|---|---:|
-| Technological Implementation | Non-trivial React product; deterministic domain engine; versioned contracts; nine stateful MCP tools; approval and dependency enforcement; strict GPT-5.6 plan and audit schemas; 18 tests; browser replay; validated Codex plugin. | Genuine GPT-5.6 artifact and `/feedback` session ID are not yet captured. | 4.4 / 5 |
+| Technological Implementation | Non-trivial React product; deterministic domain engine; versioned contracts; nine stateful MCP tools; approval and dependency enforcement; two OpenAI Agents SDK roles with guardrails/traces; 25 tests; browser replay; validated Codex plugin. | Genuine GPT-5.6 artifact and `/feedback` session ID are not yet captured. | 4.4 / 5 |
 | Design | Seven-stage Outcome Room; consistent semantic labels; explicit authority boundary; strategy comparison; action dependency graph; projection-versus-observation closeout; optional narration and dual proof exports. | Final video must make the complete product legible in under three minutes. | 4.7 / 5 |
 | Potential Impact | Specific audience of operations and enterprise leaders; specific OTIF recovery problem; 318 orders, 42 strategic customers, $1.24M exposure, six accountable roles, measurable Day-21 result. | Submission must explain why the operating model generalizes without pretending arbitrary KPI support is already implemented. | 4.4 / 5 |
 | Quality of the Idea | Moves beyond dashboard explanation and agent task completion to a governed evidence-to-outcome loop with independent challenge and measured learning. | Novelty must be stated in one memorable sentence rather than buried in architecture. | 4.6 / 5 |
@@ -46,6 +46,15 @@ PACT connects all three while adding the missing control loop:
 > **PACT verifies whether the signal deserves action, coordinates bounded commitments across teams, preserves human authority, and measures whether the business outcome actually changed.**
 
 This is the primary novelty claim. It is demonstrated in the product rather than asserted as future architecture.
+
+## The four judge answers
+
+| Official criterion | One-sentence judge answer |
+|---|---|
+| Technological Implementation | Codex helped build a real governed system: two traced GPT-5.6 agents, typed guardrails, versioned contracts, a deterministic state machine, nine stateful MCP tools, approval and dependency enforcement, and release-grade verification. |
+| Design | The Outcome Room gives an executive one coherent experience from financial stakes through evidence, strategy, dissent, authorization, coordinated commitments, and measured closeout. |
+| Potential Impact | PACT addresses a credible operating gap for leaders who must coordinate multiple teams around consequential KPIs, demonstrated through a $1.24M exposure and a bounded $68,750 recovery decision. |
+| Quality of the Idea | Unlike dashboards, copilots, or task automation, PACT treats the accountable business outcome—not the answer or task—as the durable unit of work. |
 
 ## Submission requirement audit
 

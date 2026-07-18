@@ -6,7 +6,7 @@ PACT — Proof, Action, Coordination & Tracking
 
 ## Tagline
 
-From a disputed business signal to governed action and a measured outcome.
+From a disputed signal to coordinated action—and proof it worked.
 
 ## Proposed track
 
@@ -14,13 +14,19 @@ Work & Productivity
 
 ## Short description
 
-PACT is a governed multi-agent outcome system that verifies a consequential KPI, maps business impact, coordinates a cross-team recovery plan, requires human approval, executes safe business tools, and measures whether the intervention worked.
+PACT is an AI outcome command center that turns a disputed KPI into an evidence-backed, human-authorized cross-team recovery—then proves whether the business result changed.
 
 ## Inspiration
 
 Businesses are surrounded by dashboards and AI recommendations, yet leaders still struggle with the distance between “a metric changed” and “the organization produced a better outcome.” In enterprise operations, the hard part is not generating another explanation. It is establishing trust in the signal, aligning multiple teams, enforcing policy and authority, and learning whether the actions actually worked.
 
 PACT reflects years of experience across enterprise AI, analytics, ERP, manufacturing, governance, and agentic systems. Its premise is simple: AI should earn the right for its answers to influence real decisions.
+
+## Why it matters
+
+PACT is built for COO, supply-chain, transformation, and functional leaders who must act on consequential operating signals. In the flagship case, the decision is concrete: should six teams spend **$68,750** to recover delivery performance when **318 orders, 42 strategic customers, and $1.24M of delayed revenue** are exposed?
+
+Today, that decision is fragmented across a dashboard, data-quality investigation, analyst deck, approval meeting, task tracker, and later status review. Each system can be locally correct while nobody owns the complete outcome. PACT makes the chain inspectable and accountable in one place.
 
 ## What it does
 
@@ -42,6 +48,15 @@ PACT:
 
 The product ends with a measurable outcome, a machine-readable Outcome Ledger, and a human-readable proof report—not a recommendation.
 
+## What makes it different
+
+- A dashboard can detect the signal; PACT first proves whether it deserves action.
+- A copilot can recommend a response; PACT exposes competing strategies, dissent, constraints, owners, and human authority.
+- An automation can complete tasks; PACT enforces cross-team dependencies and measures whether the business outcome changed.
+- An agent swarm can look sophisticated; PACT uses only two reasoning agents with genuinely different duties, while deterministic controls retain authority.
+
+The novel unit of work is not a chat, answer, or task. It is an **Outcome Contract** that survives from disputed signal through observed result.
+
 ## How we built it
 
 - React 19, TypeScript, and Vite for the Outcome Room.
@@ -55,7 +70,11 @@ The product ends with a measurable outcome, a machine-readable Outcome Ledger, a
 
 ## How Codex was used
 
-Codex was the core development environment for product strategy, requirements, architecture, implementation, debugging, testing, browser verification, and submission preparation. The repository contains `AGENTS.md` with evidence, safety, build, and completion rules. PACT is also packaged as a Codex plugin with a focused skill and local MCP tool server, so the product operating model can be invoked from Codex rather than existing only as a standalone UI.
+Codex was the core collaboration environment for product strategy, architecture, implementation, debugging, design iteration, verification, and submission preparation. It helped reveal that the original Proofline-only idea was too narrow; compare broader executive concepts; redesign the app around business stakes; implement the deterministic workflow and Agents SDK orchestration; diagnose workflow and configuration defects; and turn those defects into regression tests and release gates.
+
+The key human decisions were equally important: choosing the outcome-accountability thesis, grounding it in enterprise operating experience, rejecting decorative autonomy, keeping approval human, and refusing to represent simulations or fixtures as genuine evidence. The repository captures this collaboration through `AGENTS.md`, dated commits, strict contracts, verification artifacts, and the required `/feedback` session.
+
+PACT is also packaged as a validated Codex plugin with the `investigate-and-recover-outcome` skill and nine stateful MCP business tools, so its operating model can be invoked from Codex rather than existing only as a standalone UI.
 
 Required `/feedback` session ID: **[ADD BEFORE SUBMISSION]**
 

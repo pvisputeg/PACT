@@ -7,7 +7,7 @@
 | Requirement | Command | Current evidence |
 |---|---|---|
 | Scenario determinism | `npm run reset` | 84.3% baseline, 72.4% current, 100% contributor allocation, 82.1% Day 21 verified. |
-| Domain and workflow | `npm test` | 18 tests passing across contracts, Proofline, workflow safety, genuine/fixture artifact validation, and proof-report generation. |
+| Domain and workflow | `npm test` | 25 tests passing across contracts, Proofline, workflow safety, genuine/fixture artifacts, cost controls, release acceptance, and proof-report generation. |
 | MCP safety | `npm run verify:mcp` | Initialization, 9 tools, missing-approval rejection, dependency chain, draft-only communication, and 82.1% outcome pass. |
 | GPT-5.6 agent boundary | `npm run generate:agents:dry-run` | Agents SDK dry run reports both agents, typed outputs, guardrails, traces, retry policy, and worst-case cost without making an API call. |
 | Genuine artifact acceptance | `npm run verify:gpt-artifact` | Requires decision-ready strategy, six-team coverage, known evidence, non-blocking audit, SDK traces/responses, and spend within the hard cap. |

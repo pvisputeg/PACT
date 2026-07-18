@@ -148,6 +148,16 @@ PACT is intentionally Codex-native rather than merely developed beside Codex.
 - Contracts, role boundaries, prompts, JSON Schemas, tests, and the complete product were iterated through the Build Week Codex development session.
 - The submission will include the required `/feedback` session ID.
 
+Codex was a product and engineering collaborator, not only a code generator:
+
+| Decision | How Codex contributed | Human judgment retained |
+|---|---|---|
+| Product scope | Compared hackathon ideas and exposed that Proofline alone was too narrow; helped expand it into the complete evidence-to-outcome loop. | Chose the executive outcome thesis and manufacturing flagship based on lived enterprise experience. |
+| Agent architecture | Implemented and challenged manager orchestration, typed outputs, independent audit, traces, checkpoints, and cost controls. | Rejected a decorative agent swarm and kept judgment separate from authority. |
+| Experience design | Iterated from a technical dashboard into an executive decision room organized around stakes, decision, commitments, and measured result. | Set the business language, maturity, and credibility bar. |
+| Safety architecture | Built deterministic contracts, approval gates, dependency checks, draft-only communication, and a cumulative API cost ledger. | Defined which decisions must remain human and which claims would be unacceptable. |
+| Verification | Found workflow and configuration defects through tests and walkthroughs, added regression coverage, and created judge and release audits. | Reviewed whether passing checks actually proved the intended business behavior. |
+
 ### GPT-5.6
 
 [`scripts/generate-gpt-artifacts.mjs`](scripts/generate-gpt-artifacts.mjs) uses the OpenAI Agents SDK with:
