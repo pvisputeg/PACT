@@ -1,0 +1,100 @@
+{
+  "generatedAt": "2026-07-17T20:00:00.000Z",
+  "model": "fixture:pact-v1",
+  "provider": "Local schema fixture",
+  "provenance": {
+    "kind": "fixture",
+    "planResponseId": "fixture_plan_001",
+    "auditResponseId": "fixture_audit_001"
+  },
+  "plan": {
+    "executiveSummary": "Balanced recovery meets the Day-21 target while preserving meaningful budget headroom and avoiding the speed plan's overtime concentration.",
+    "recommendedStrategyId": "STR-BALANCED",
+    "strategyRationale": "The balanced strategy reaches 82.2% simulated OTIF for $68,750, remains inside every hard constraint, and distributes recovery across approved supplier allocation, production resequencing, and bounded carrier capacity.",
+    "evidenceCitations": [
+      "EVD-SUP-017",
+      "EVD-MFG-009",
+      "EVD-LOG-023",
+      "EVD-FIN-018"
+    ],
+    "assumptions": [
+      {
+        "statement": "The approved alternate supplier covers 38% of the Atlas shortage.",
+        "evidenceStatus": "supported"
+      },
+      {
+        "statement": "Carrier Delta pickup acceptance reaches 92% by Day 7.",
+        "evidenceStatus": "partially_supported"
+      }
+    ],
+    "crossTeamPriorities": [
+      {
+        "team": "Finance",
+        "priority": "Authorize the bounded recovery envelope.",
+        "dependency": "Human approval of PLAN-BALANCED-v1."
+      },
+      {
+        "team": "Procurement",
+        "priority": "Confirm approved alternate component allocation.",
+        "dependency": "Finance authorization."
+      },
+      {
+        "team": "Manufacturing",
+        "priority": "Resequence feasible strategic orders at Wilmington.",
+        "dependency": "Alternate allocation confirmation."
+      },
+      {
+        "team": "Logistics",
+        "priority": "Reserve bounded Carrier Delta recovery capacity.",
+        "dependency": "Finance authorization."
+      },
+      {
+        "team": "Customer",
+        "priority": "Prepare evidence-backed recovery drafts.",
+        "dependency": "Updated production and pickup commitments."
+      },
+      {
+        "team": "Outcome Office",
+        "priority": "Track Day 3, 7, 14, and 21 checkpoints.",
+        "dependency": "Material commitments recorded."
+      }
+    ],
+    "residualRisks": [
+      "Carrier acceptance may remain one point below the simulated assumption.",
+      "Contributor shares remain observed associations rather than exclusive causal proof."
+    ]
+  },
+  "audit": {
+    "verdict": "approve_with_conditions",
+    "findings": [
+      {
+        "severity": "material",
+        "title": "Carrier assumption exceeds observed evidence",
+        "detail": "The plan assumes 92% pickup acceptance while the deterministic observation reaches 91%; retain the Day-7 checkpoint and variance disclosure.",
+        "evidenceIds": [
+          "EVD-LOG-023"
+        ]
+      },
+      {
+        "severity": "advisory",
+        "title": "Causality language is appropriately bounded",
+        "detail": "The plan treats contributor shares as observed associations and does not claim exclusive causal identification.",
+        "evidenceIds": [
+          "EVD-SUP-017",
+          "EVD-MFG-009",
+          "EVD-LOG-023"
+        ]
+      }
+    ],
+    "unsupportedClaims": [],
+    "requiredConditions": [
+      "Retain explicit human approval before any material synthetic operation.",
+      "Keep customer communication draft-only.",
+      "Measure and disclose the Day-21 projection variance."
+    ],
+    "counterfactual": {
+      "scenario": "Carrier pickup acceptance remains at 88% through Day 14.",
+      "expectedImpact": "Day-21 OTIF would likely close below the 82.0% target, requiring a bounded revision rather than silent escalation."
+    }
+  }
+}

@@ -7,7 +7,7 @@
 | Requirement | Command | Current evidence |
 |---|---|---|
 | Scenario determinism | `npm run reset` | 84.3% baseline, 72.4% current, 100% contributor allocation, 82.1% Day 21 verified. |
-| Domain and workflow | `npm test` | 16 tests passing across contracts, Proofline, workflow safety, GPT artifact validation, and proof-report generation. |
+| Domain and workflow | `npm test` | 18 tests passing across contracts, Proofline, workflow safety, genuine/fixture artifact validation, and proof-report generation. |
 | MCP safety | `npm run verify:mcp` | Initialization, 9 tools, missing-approval rejection, dependency chain, draft-only communication, and 82.1% outcome pass. |
 | GPT-5.6 request boundary | `npm run generate:agents:dry-run` | Responses API request uses `gpt-5.6`, high reasoning, and strict `pact_plan_synthesis` schema. |
 | Production bundle | `npm run build` | TypeScript passes; 1,598 modules transform; production bundle builds successfully. |
@@ -30,6 +30,14 @@ An in-app browser walkthrough completed the full prepared workflow on July 17, 2
 - Browser console errors: zero.
 
 The walkthrough discovered one defect: dependent actions did not become visually ready immediately after `ACT-001`. `readyActions` was corrected to recompute blocked nodes after every tool result, and a regression test was added.
+
+A second in-app browser walkthrough verified the no-cost artifact path on July 17, 2026:
+
+- `?artifact=fixture` loaded the bundled strict-schema fixture without a network API call.
+- Strategy displayed `LOCAL SCHEMA FIXTURE · NO API CALL` and `fixture_plan_001`.
+- Approval displayed `FIXTURE AUDITOR` and `fixture_audit_001` while preserving human authority.
+- Balanced recovery remained selectable and assembled the same six-action decision packet.
+- Browser console errors: zero.
 
 ## P0 coverage audit
 

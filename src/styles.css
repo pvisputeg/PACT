@@ -154,11 +154,15 @@ button:focus-visible, textarea:focus-visible { outline: 2px solid var(--cyan); o
 .model-provenance span { display: block; color: var(--violet); font: 7px var(--mono); letter-spacing: .1em; }
 .model-provenance strong { display: block; margin-top: 3px; font-size: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 680px; }
 .model-provenance code { color: #6e668f; font: 7px var(--mono); }
+.model-provenance.model-fixture { border-color: rgba(245,185,66,.28); background: linear-gradient(90deg, rgba(245,185,66,.08), rgba(12,15,21,.72)); }
+.model-provenance.model-fixture > svg, .model-provenance.model-fixture span, .model-provenance.model-fixture code { color: var(--amber); }
 .model-audit { margin: 0 17px 11px; padding: 11px; border: 1px solid rgba(155,135,245,.2); background: rgba(155,135,245,.05); border-radius: 5px; }
 .model-audit-block { border-color: rgba(255,109,122,.3); background: rgba(255,109,122,.05); }
 .model-audit > div { display: flex; justify-content: space-between; gap: 8px; }
 .model-audit span, .model-audit code { color: var(--violet); font: 7px var(--mono); }
 .model-audit-block span { color: var(--red); }
+.model-audit.model-fixture { border-color: rgba(245,185,66,.28); background: rgba(245,185,66,.045); }
+.model-audit.model-fixture span, .model-audit.model-fixture code { color: var(--amber); }
 .model-audit strong { display: block; margin: 7px 0 4px; font-size: 9px; }
 .model-audit p { margin: 0; color: var(--muted); font-size: 7.5px; line-height: 1.5; }
 

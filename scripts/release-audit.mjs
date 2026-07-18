@@ -18,6 +18,8 @@ const requiredFiles = [
   'plugins/pact/skills/investigate-and-recover-outcome/SKILL.md',
   'plugins/pact/scripts/pact-mcp-server.mjs',
   'public/artifacts/gpt-5.6/README.md',
+  'public/artifacts/fixture/README.md',
+  'public/artifacts/fixture/strategy-and-audit.json',
   'submission-assets/README.md',
   'submission-assets/screenshots/01-signal-contract.png',
   'submission-assets/screenshots/02-proofline-verification.png',
@@ -54,6 +56,7 @@ if (existsSync(publicArtifactPath)) {
     const artifact = JSON.parse(readFileSync(publicArtifactPath, 'utf8'));
     genuineArtifact = artifact.provider === 'OpenAI Responses API'
       && artifact.model === 'gpt-5.6'
+      && artifact.provenance?.kind === 'genuine'
       && /^resp_/.test(artifact.provenance?.planResponseId ?? '')
       && /^resp_/.test(artifact.provenance?.auditResponseId ?? '');
     artifactProblem = genuineArtifact ? '' : 'artifact provenance is incomplete';

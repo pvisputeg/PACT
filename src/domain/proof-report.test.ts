@@ -7,7 +7,7 @@ const artifact: AiArtifact = {
   generatedAt: '2026-07-17T13:00:00.000Z',
   model: 'gpt-5.6',
   provider: 'OpenAI Responses API',
-  provenance: { planResponseId: 'resp_plan_123', auditResponseId: 'resp_audit_456' },
+  provenance: { kind: 'genuine', planResponseId: 'resp_plan_123', auditResponseId: 'resp_audit_456' },
   plan: {
     executiveSummary: 'Use the balanced recovery strategy.',
     recommendedStrategyId: 'STR-BALANCED',
@@ -52,5 +52,18 @@ describe('human-readable outcome proof report', () => {
 
   it('is transparent when no GPT artifact is present', () => {
     expect(buildProofReport(initialState)).toContain('deterministic, schema-ready path');
+  });
+
+  it('never represents the free local fixture as GPT-5.6 evidence', () => {
+    const fixture: AiArtifact = {
+      ...artifact,
+      model: 'fixture:pact-v1',
+      provider: 'Local schema fixture',
+      provenance: { kind: 'fixture', planResponseId: 'fixture_plan_001', auditResponseId: 'fixture_audit_001' },
+    };
+    const report = buildProofReport(initialState, fixture);
+    expect(report).toContain('Local schema fixture');
+    expect(report).toContain('made no API call');
+    expect(report).toContain('not GPT-5.6 evidence');
   });
 });

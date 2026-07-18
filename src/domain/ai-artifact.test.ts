@@ -5,7 +5,7 @@ const validArtifact = {
   generatedAt: '2026-07-17T20:00:00.000Z',
   model: 'gpt-5.6',
   provider: 'OpenAI Responses API',
-  provenance: { planResponseId: 'resp_plan_001', auditResponseId: 'resp_audit_001' },
+  provenance: { kind: 'genuine', planResponseId: 'resp_plan_001', auditResponseId: 'resp_audit_001' },
   plan: {
     executiveSummary: 'Use the balanced recovery strategy.',
     recommendedStrategyId: 'STR-BALANCED',
@@ -27,6 +27,16 @@ const validArtifact = {
 describe('GPT-5.6 artifact boundary', () => {
   it('accepts the complete schema-constrained two-role artifact', () => {
     expect(aiArtifactSchema.parse(validArtifact).audit.verdict).toBe('approve_with_conditions');
+  });
+
+  it('accepts a clearly identified local fixture without treating it as API output', () => {
+    const fixture = {
+      ...validArtifact,
+      model: 'fixture:pact-v1',
+      provider: 'Local schema fixture',
+      provenance: { kind: 'fixture', planResponseId: 'fixture_plan_001', auditResponseId: 'fixture_audit_001' },
+    };
+    expect(aiArtifactSchema.parse(fixture).provenance.kind).toBe('fixture');
   });
 
   it('rejects an unknown strategy or missing provenance', () => {

@@ -10,8 +10,9 @@ const modelFindingSchema = z.object({
 export const aiArtifactSchema = z.object({
   generatedAt: z.string().datetime(),
   model: z.string().min(1),
-  provider: z.literal('OpenAI Responses API'),
+  provider: z.enum(['OpenAI Responses API', 'Local schema fixture']),
   provenance: z.object({
+    kind: z.enum(['genuine', 'fixture']),
     planResponseId: z.string().min(1),
     auditResponseId: z.string().min(1),
   }).strict(),

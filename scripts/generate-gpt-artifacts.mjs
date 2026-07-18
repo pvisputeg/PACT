@@ -67,7 +67,7 @@ const artifact = {
   generatedAt: new Date().toISOString(),
   model,
   provider: 'OpenAI Responses API',
-  provenance: { planResponseId: planResponse.id, auditResponseId: auditResponse.id },
+  provenance: { kind: 'genuine', planResponseId: planResponse.id, auditResponseId: auditResponse.id },
   plan,
   audit,
 };

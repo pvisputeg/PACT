@@ -14,6 +14,8 @@ npm run dev
 
 Open http://localhost:5173.
 
+For a free test of the schema-validated plan and audit presentation, open http://localhost:5173/?artifact=fixture. The bundled input is prominently labeled as a local fixture and is never accepted as GPT-5.6 evidence.
+
 `judge:verify` reproduces the scenario, runs all domain tests, exercises the stateful MCP approval and dependency chain, validates the Codex plugin, checks the GPT-5.6 request boundary without credentials, and creates the production bundle.
 
 ## Ninety-second product path

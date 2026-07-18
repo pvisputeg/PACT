@@ -85,7 +85,10 @@ export function App() {
   useEffect(() => localStorage.setItem('pact.workflow.v1', JSON.stringify(state)), [state]);
   useEffect(() => {
     let active = true;
-    fetch('/artifacts/gpt-5.6/strategy-and-audit.json', { cache: 'no-store' })
+    const artifactPath = new URLSearchParams(window.location.search).get('artifact') === 'fixture'
+      ? '/artifacts/fixture/strategy-and-audit.json'
+      : '/artifacts/gpt-5.6/strategy-and-audit.json';
+    fetch(artifactPath, { cache: 'no-store' })
       .then(async (response) => {
         if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) return;
         const parsed = aiArtifactSchema.safeParse(await response.json());
@@ -247,7 +250,7 @@ export function App() {
         <div className="target-mini"><div><span>OUTCOME TARGET</span><strong>≥82.0%</strong></div><Target size={18} /></div>
         <div className="target-mini"><div><span>CURRENT STATE</span><strong>{state.stage === 'outcome' ? `${observation.otif.toFixed(1)}%` : '72.4%'}</strong></div><Activity size={18} /></div>
         <div className="authority-card"><LockKeyhole size={16} /><div><span>Authority boundary</span><p>{state.approval?.decision === 'approved' ? 'Synthetic plan approved' : 'Material actions locked'}</p></div></div>
-        <p className="model-note">Deterministic engine <span>online</span><br/>GPT‑5.6 reasoning <span>{aiArtifact ? 'artifact verified' : 'schema-ready'}</span></p>
+        <p className="model-note">Deterministic engine <span>online</span><br/>Reasoning artifact <span>{aiArtifact ? (aiArtifact.provenance.kind === 'genuine' ? 'GPT‑5.6 verified' : 'local fixture') : 'schema-ready'}</span></p>
       </aside>
 
       {ledgerOpen && <LedgerDrawer state={state} onClose={() => setLedgerOpen(false)} />}
@@ -328,7 +331,7 @@ function StrategyView({ state, setState, artifact, onContinue }: { state: Workfl
   return <section className="view-enter">
     <PageHeading eyebrow="04 · STRATEGY SANDBOX" title="Choose the shape of recovery." description="Three bounded strategies trade margin, speed, and resilience. Every projected number remains explicitly simulated." label="DETERMINISTIC · SEED 56021" />
     <div className="simulation-banner"><Zap size={16} /><span>SIMULATION, NOT FORECAST</span><p>Same contract + scenario + parameters will always reproduce these results.</p></div>
-    {artifact && <div className="model-provenance panel"><Sparkles size={17}/><div><span>REVIEWED GPT‑5.6 ARTIFACT</span><strong>{artifact.plan.executiveSummary}</strong></div><code>{artifact.provenance.planResponseId.slice(0, 20)}</code></div>}
+    {artifact && <div className={`model-provenance panel ${artifact.provenance.kind === 'fixture' ? 'model-fixture' : ''}`}><Sparkles size={17}/><div><span>{artifact.provenance.kind === 'genuine' ? 'REVIEWED GPT‑5.6 ARTIFACT' : 'LOCAL SCHEMA FIXTURE · NO API CALL'}</span><strong>{artifact.plan.executiveSummary}</strong></div><code>{artifact.provenance.planResponseId.slice(0, 20)}</code></div>}
     <div className="strategy-grid">{scenario.strategies.map((strategy) => {
       const evaluation = evaluateStrategy(strategy); const selected = state.selectedStrategyId === strategy.id; const recommended = strategy.id === (artifact?.plan.recommendedStrategyId ?? 'STR-BALANCED');
       return <button key={strategy.id} className={`strategy-card panel ${selected ? 'selected' : ''}`} onClick={() => setState((current) => ({ ...current, selectedStrategyId: strategy.id }))}>
@@ -356,7 +359,7 @@ function ApprovalView({ state, strategy, artifact, onDecide }: { state: Workflow
       </article>
       <article className="audit-panel panel"><div className="auditor-heading"><div className="auditor-mark"><Scale size={20}/></div><div><small>SEPARATION OF DUTIES</small><h3>Independent Auditor</h3></div></div>
         <p className="audit-intro">The proposing roles cannot certify their own plan. These findings remain visible at decision time.</p>
-        {artifact && <div className={`model-audit model-audit-${artifact.audit.verdict}`}><div><span>GPT‑5.6 · {artifact.audit.verdict.replaceAll('_', ' ').toUpperCase()}</span><code>{artifact.provenance.auditResponseId.slice(0, 18)}</code></div><strong>{artifact.audit.findings[0]?.title ?? 'Independent model challenge complete'}</strong><p>{artifact.audit.findings[0]?.detail ?? artifact.audit.requiredConditions.join(' ')}</p></div>}
+        {artifact && <div className={`model-audit model-audit-${artifact.audit.verdict} ${artifact.provenance.kind === 'fixture' ? 'model-fixture' : ''}`}><div><span>{artifact.provenance.kind === 'genuine' ? 'GPT‑5.6' : 'FIXTURE AUDITOR'} · {artifact.audit.verdict.replaceAll('_', ' ').toUpperCase()}</span><code>{artifact.provenance.auditResponseId.slice(0, 18)}</code></div><strong>{artifact.audit.findings[0]?.title ?? 'Independent model challenge complete'}</strong><p>{artifact.audit.findings[0]?.detail ?? artifact.audit.requiredConditions.join(' ')}</p></div>}
         <div className="finding-list">{state.auditFindings.map((finding) => <div className={`finding finding-${finding.severity}`} key={finding.id}><div><span>{finding.severity.toUpperCase()}</span><code>{finding.id}</code></div><strong>{finding.title}</strong><p>{finding.detail}</p></div>)}</div>
       </article>
     </div>

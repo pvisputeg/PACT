@@ -58,6 +58,12 @@ npm run dev
 
 Open `http://localhost:5173`.
 
+### Test the complete presentation path for free
+
+Open `http://localhost:5173/?artifact=fixture` to load a bundled plan-and-audit fixture. It exercises the same strict artifact schema, recommendation banner, independent-audit card, ledger provenance, and proof-report path without an API call.
+
+The interface labels it **LOCAL SCHEMA FIXTURE · NO API CALL**. It is not represented as GPT-5.6 output and cannot satisfy the genuine-artifact release gate.
+
 For the complete judge-facing verification in one command:
 
 ```bash

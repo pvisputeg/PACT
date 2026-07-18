@@ -32,9 +32,10 @@ export function buildProofReport(state: WorkflowState, artifact: AiArtifact | nu
     ? state.auditFindings.map((finding) => `- **${finding.severity.toUpperCase()} — ${finding.title}:** ${finding.detail} Evidence: ${list(finding.evidenceIds)}.`).join('\n')
     : '- Deterministic independent audit not yet run.';
   const modelSection = artifact
-    ? `### GPT-5.6 reviewed artifacts
+    ? `### ${artifact.provenance.kind === 'genuine' ? 'GPT-5.6 reviewed artifacts' : 'Local schema fixture'}
 
 - Provider: ${artifact.provider}
+- Artifact kind: **${artifact.provenance.kind.toUpperCase()}**
 - Plan response: \`${artifact.provenance.planResponseId}\`
 - Audit response: \`${artifact.provenance.auditResponseId}\`
 - Recommended strategy: ${artifact.plan.recommendedStrategyId}
@@ -43,7 +44,9 @@ export function buildProofReport(state: WorkflowState, artifact: AiArtifact | nu
 - Required conditions: ${list(artifact.audit.requiredConditions)}
 - Counterfactual: ${artifact.audit.counterfactual.scenario} — ${artifact.audit.counterfactual.expectedImpact}
 
-The model output was accepted only after strict schema validation. It did not authorize or execute actions.`
+${artifact.provenance.kind === 'genuine'
+  ? 'The model output was accepted only after strict schema validation. It did not authorize or execute actions.'
+  : 'This fixture made no API call and is not GPT-5.6 evidence. It exists only to test the schema-validated presentation path for free.'}`
     : `### GPT-5.6 reviewed artifacts
 
 No generated model artifact was loaded. The workflow remained on its deterministic, schema-ready path.`;
