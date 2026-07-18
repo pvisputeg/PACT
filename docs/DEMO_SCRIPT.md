@@ -2,23 +2,23 @@
 
 The video must stay under three minutes. Record at 1440p or 1080p with browser zoom adjusted so the complete Approval Gate is visible. Use accelerated, deliberate clicks; do not show setup or installation.
 
-## 0:00–0:16 — The problem
+## 0:00–0:16 — The business stakes
 
-**Screen:** Signal.
-
-**Narration:**
-
-> A dashboard says OTIF collapsed from 84.3 to 72.4 percent. But a metric is not yet a business decision. Is the signal real? What should five different teams do? And did their actions actually work? This is PACT: Proof, Action, Coordination, and Tracking.
-
-Click **Confirm pact & investigate**.
-
-## 0:16–0:38 — Proofline
-
-**Screen:** Proofline.
+**Screen:** Define outcome.
 
 **Narration:**
 
-> First, PACT earns the right to act. Proofline checks completeness, grain, definition consistency, and historical reconciliation. It independently reproduces 1,810 compliant orders out of 2,500: 72.4 percent. The decline is verified operational—not a reporting defect.
+> Delivery performance collapsed from 84.3 to 72.4 percent. That puts 318 orders, 42 strategic customers, and 1.24 million dollars at risk. A dashboard can report the number. PACT turns it into a trusted decision, coordinated action, and a measured business result.
+
+Click **Lock success criteria & verify KPI**.
+
+## 0:16–0:38 — Verify before acting
+
+**Screen:** Verify the KPI.
+
+**Narration:**
+
+> Before mobilizing five teams or spending recovery budget, PACT earns the right to act. Four independent controls reproduce 1,810 compliant orders out of 2,500: 72.4 percent. The decline is real—not a reporting defect.
 
 Click **Map business impact**.
 
@@ -30,41 +30,41 @@ Click **Map business impact**.
 
 > The system connects evidence to consequence: 41 percent of the deterioration concentrates around an Atlas component shortage, 27 percent around Wilmington sequencing, and 19 percent around missed Delta pickups. That exposes 318 orders, 42 strategic customers, and 1.24 million dollars in delayed revenue.
 
-Click **Simulate responses**.
+Click **Compare recovery options**.
 
 ## 0:58–1:20 — Strategy Sandbox
 
-**Screen:** Strategies.
+**Screen:** Choose response.
 
 **Narration:**
 
-> PACT compares three bounded responses, and every projection remains explicitly simulated. GPT-5.6's Outcome Lead synthesizes the evidence packet and recommends Balanced recovery; the deterministic simulator—not the model—produces 82.2 percent by Day 21 for 68,750 dollars.
+> PACT compares three bounded responses by outcome, cost, speed, and residual risk. GPT-5.6 synthesizes the evidence and recommends Balanced recovery; the deterministic simulator—not the model—produces 82.2 percent by Day 21 for 68,750 dollars.
 
-Click **Assemble & challenge plan**.
+Click **Build coordinated plan & audit it**.
 
 ## 1:20–1:46 — Independent challenge and human authority
 
-**Screen:** Approval Gate.
+**Screen:** Authorize plan.
 
 **Narration:**
 
 > The proposing role cannot certify itself. A second GPT-5.6 call acts as Independent Auditor, while deterministic checks reconcile the budget, constrain causality, and expose the optimistic carrier assumption. PACT stops before commitment. A human must decide.
 
-Click **Approve pact**.
+Click **Approve recovery plan**.
 
 ## 1:46–2:17 — Governed execution
 
-**Screen:** Action Graph.
+**Screen:** Coordinate teams.
 
 **Narration while executing the six actions:**
 
-> Approval does not directly change the metric. PACT's Codex plugin exposes six local MCP operations that now execute in dependency order: finance, supplier allocation, production, carrier capacity, a customer draft, and coordinated work. Missing approval or predecessors are rejected, and customer communication stays draft-only.
+> Approval does not directly change the metric. PACT converts the decision into six owned commitments across finance, procurement, manufacturing, logistics, customer operations, and the outcome lead. Under the surface, governed Codex tools reject missing approval, missing predecessors, or unsafe requests.
 
-Click each **Execute** button, then **Observe the outcome**.
+Click each **Record [team] commitment** button, then **Measure business outcome**.
 
-## 2:17–2:39 — Outcome Replay
+## 2:17–2:39 — Measure the result
 
-**Screen:** Outcome Replay.
+**Screen:** Measure result.
 
 Click Day 7, Day 14, and Day 21 while narrating:
 

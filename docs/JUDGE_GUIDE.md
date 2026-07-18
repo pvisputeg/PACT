@@ -24,14 +24,14 @@ The checked-in GitHub Pages workflow runs the full judge verification and deploy
 
 ## Ninety-second product path
 
-1. Confirm the Outcome Contract.
-2. Inspect Proofline's four controls and reproduced 72.4% OTIF.
-3. Map the operational and financial impact.
-4. Compare all three simulations and keep Balanced recovery selected.
-5. Review independent audit findings and approve the synthetic plan.
-6. Execute `ACT-001` through `ACT-006` as each dependency becomes ready.
-7. Observe the outcome, then select Day 7, Day 14, and Day 21.
-8. Inspect the 82.1% observed synthetic result, 82.2% simulated projection, variance lesson, proof report, and Outcome Ledger.
+1. Read the business stakes: $1.24M revenue exposure, 42 strategic customers, and 318 orders.
+2. Click **Lock success criteria & verify KPI**, then inspect the independently reproduced 72.4% OTIF.
+3. Click **Map business impact** and see which value drivers and teams concentrate the loss.
+4. Click **Compare recovery options**, compare the three simulations, and keep Balanced recovery selected.
+5. Click **Build coordinated plan & audit it**, review independent dissent, then **Approve recovery plan**.
+6. Record the six team commitments as each dependency becomes ready. Technical tool proof is available on demand rather than dominating the business view.
+7. Click **Measure business outcome**, then select Day 7, Day 14, and Day 21.
+8. Inspect the 82.1% observed result, 82.2% simulated projection, variance lesson, proof report, and Outcome Ledger.
 
 No control in this path connects to a live ERP, supplier, carrier, customer, or financial system.
 

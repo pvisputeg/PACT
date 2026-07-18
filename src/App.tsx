@@ -13,14 +13,26 @@ import { buildProofReport } from './domain/proof-report';
 import type { EvidenceLabel, PactAction, Strategy, WorkflowStage, WorkflowState } from './domain/types';
 
 const STAGES: { id: WorkflowStage; label: string; eyebrow: string; icon: ComponentType<{ size?: number }> }[] = [
-  { id: 'signal', label: 'Signal', eyebrow: 'Define', icon: Activity },
-  { id: 'proof', label: 'Proofline', eyebrow: 'Verify', icon: Fingerprint },
-  { id: 'impact', label: 'Impact map', eyebrow: 'Understand', icon: Network },
-  { id: 'strategy', label: 'Strategies', eyebrow: 'Decide', icon: Route },
-  { id: 'approval', label: 'Approval gate', eyebrow: 'Authorize', icon: LockKeyhole },
-  { id: 'execution', label: 'Action graph', eyebrow: 'Coordinate', icon: GitBranch },
-  { id: 'outcome', label: 'Outcome replay', eyebrow: 'Measure', icon: Target },
+  { id: 'signal', label: 'Define outcome', eyebrow: '01 · BUSINESS CASE', icon: Activity },
+  { id: 'proof', label: 'Verify the KPI', eyebrow: '02 · TRUST', icon: Fingerprint },
+  { id: 'impact', label: 'Find value drivers', eyebrow: '03 · IMPACT', icon: Network },
+  { id: 'strategy', label: 'Choose response', eyebrow: '04 · DECISION', icon: Route },
+  { id: 'approval', label: 'Authorize plan', eyebrow: '05 · GOVERN', icon: LockKeyhole },
+  { id: 'execution', label: 'Coordinate teams', eyebrow: '06 · ACTION', icon: GitBranch },
+  { id: 'outcome', label: 'Measure result', eyebrow: '07 · LEARNING', icon: Target },
 ];
+
+const STAGE_QUESTIONS: Record<WorkflowStage, string> = {
+  signal: 'What business result are we committing to?',
+  proof: 'Is the KPI trustworthy enough to act on?',
+  impact: 'Where will intervention protect the most value?',
+  strategy: 'Which response best balances recovery, cost, and risk?',
+  approval: 'Should the organization commit money and people?',
+  execution: 'What can each team safely do next?',
+  outcome: 'Did the approved response improve the business result?',
+};
+
+const STORAGE_KEY = 'pact.workflow.v2';
 
 const teamIcons: Record<string, ComponentType<{ size?: number }>> = {
   Procurement: PackageCheck, Manufacturing: Boxes, Logistics: Truck, Finance: CircleDollarSign, Customer: Users, 'Outcome Office': Sparkles,
@@ -76,7 +88,7 @@ function speakBriefing(value: string) {
 export function App() {
   const [state, setState] = useState<WorkflowState>(() => {
     if (new URLSearchParams(window.location.search).get('reset') === '1') return initialState;
-    const stored = localStorage.getItem('pact.workflow.v1');
+    const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return initialState;
     try { return JSON.parse(stored) as WorkflowState; } catch { return initialState; }
   });
@@ -84,7 +96,7 @@ export function App() {
   const [aiArtifact, setAiArtifact] = useState<AiArtifact | null>(null);
   const ledgerButtonRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => localStorage.setItem('pact.workflow.v1', JSON.stringify(state)), [state]);
+  useEffect(() => localStorage.setItem(STORAGE_KEY, JSON.stringify(state)), [state]);
   useEffect(() => {
     const url = new URL(window.location.href);
     if (url.searchParams.get('reset') !== '1') return;
@@ -115,6 +127,7 @@ export function App() {
 
   const reset = () => {
     localStorage.removeItem('pact.workflow.v1');
+    localStorage.removeItem(STORAGE_KEY);
     setState(initialState);
     setLedgerOpen(false);
   };
@@ -199,12 +212,13 @@ export function App() {
   };
 
   const systemState = useMemo(() => {
-    if (state.stage === 'signal') return ['AWAITING OBJECTIVE', 'Define the outcome before investigating the metric.'];
-    if (state.stage === 'proof') return ['SIGNAL VERIFIED', 'Four independent controls reproduce the operational decline.'];
-    if (state.stage === 'approval') return ['HUMAN AUTHORITY', 'PACT has stopped before material commitments.'];
-    if (state.stage === 'execution') return ['COORDINATING', `${completedActions} of ${state.actions.length} approved actions executed.`];
-    if (state.stage === 'outcome') return [state.currentDay === 21 ? 'OUTCOME CLOSED' : 'MONITORING', `Synthetic operating state advanced to Day ${state.currentDay}.`];
-    return ['OUTCOME ASSEMBLY', 'Evidence, teams, and constraints are being connected.'];
+    if (state.stage === 'signal') return ['DEFINE SUCCESS', 'Set the target, deadline, budget, and guardrails before investigation begins.'];
+    if (state.stage === 'proof') return ['KPI VERIFIED', 'Four independent controls confirm the decline is operational—not a reporting error.'];
+    if (state.stage === 'impact') return ['VALUE EXPOSED', 'Connect the decline to customers, revenue, operational bottlenecks, and accountable teams.'];
+    if (state.stage === 'strategy') return ['RESPONSE OPTIONS', 'Compare recovery speed, cost, resilience, and residual risk under one contract.'];
+    if (state.stage === 'approval') return ['HUMAN DECISION', 'PACT has stopped before any material commitment.'];
+    if (state.stage === 'execution') return ['TEAMS MOBILIZING', `${completedActions} of ${state.actions.length} approved commitments completed.`];
+    return [state.currentDay === 21 ? 'OUTCOME PROVEN' : 'MEASURING IMPACT', `Observed business state advanced to Day ${state.currentDay}.`];
   }, [state, completedActions]);
 
   return (
@@ -215,11 +229,11 @@ export function App() {
           <div className="brand-mark"><span /><span /><span /></div>
           <div><strong>PACT</strong><small>Proof · Action · Coordination · Tracking</small></div>
         </div>
-        <div className="room-title"><span>Outcome Room</span><ChevronRight size={14} /><strong>OTIF recovery</strong></div>
+        <div className="room-title"><span>Flagship business case</span><ChevronRight size={14} /><strong>Strategic delivery recovery</strong></div>
         <div className="top-actions">
           <button ref={ledgerButtonRef} className="ghost-button" onClick={() => setLedgerOpen(true)} aria-haspopup="dialog"><History size={15} /> Ledger <span className="count">{state.ledger.length}</span></button>
           <button className="icon-button" onClick={reset} aria-label="Reset scenario" title="Reset scenario"><RefreshCw size={16} /></button>
-          <div className="live-pill"><i /> SYNTHETIC TWIN</div>
+          <div className="live-pill"><i /> SAFE BUSINESS TWIN</div>
         </div>
       </header>
 
@@ -236,7 +250,7 @@ export function App() {
             </button>
           );
         })}
-        <div className="rail-footer"><ShieldCheck size={15} /><span>Governed demo<br/><small>PACT · v0.1</small></span></div>
+        <div className="rail-footer"><ShieldCheck size={15} /><span>Governed outcome loop<br/><small>PACT · v0.2</small></span></div>
       </aside>
 
       <main className="workspace">
@@ -255,21 +269,46 @@ export function App() {
         {state.stage === 'outcome' && <OutcomeView state={state} observation={observation} artifact={aiArtifact} onAdvance={advanceDay} />}
       </main>
 
-      <aside className="intelligence-rail">
-        <div className={`intelligence-core core-${state.stage}`}>
-          <div className="core-orbit orbit-one" /><div className="core-orbit orbit-two" /><div className="core-center"><Sparkles size={22} /></div>
-        </div>
-        <div className="system-state-copy" role="status" aria-live="polite" aria-atomic="true"><p className="system-kicker">PACT STATE</p><h3>{systemState[0]}</h3><p>{systemState[1]}</p></div>
-        <div className="mini-rule" />
-        <div className="target-mini"><div><span>OUTCOME TARGET</span><strong>≥82.0%</strong></div><Target size={18} /></div>
-        <div className="target-mini"><div><span>CURRENT STATE</span><strong>{state.stage === 'outcome' ? `${observation.otif.toFixed(1)}%` : '72.4%'}</strong></div><Activity size={18} /></div>
-        <div className="authority-card"><LockKeyhole size={16} /><div><span>Authority boundary</span><p>{state.approval?.decision === 'approved' ? 'Synthetic plan approved' : 'Material actions locked'}</p></div></div>
-        <p className="model-note">Deterministic engine <span>online</span><br/>Reasoning artifact <span>{aiArtifact ? (aiArtifact.provenance.kind === 'genuine' ? 'GPT‑5.6 verified' : 'local fixture') : 'schema-ready'}</span></p>
-      </aside>
+      <BusinessRail state={state} observation={observation} systemState={systemState} artifact={aiArtifact} />
 
       {ledgerOpen && <LedgerDrawer state={state} onClose={closeLedger} />}
     </div>
   );
+}
+
+function BusinessRail({ state, observation, systemState, artifact }: { state: WorkflowState; observation: typeof scenario.observations[number]; systemState: string[]; artifact: AiArtifact | null }) {
+  const currentOtif = state.stage === 'outcome' ? observation.otif : 72.4;
+  return <aside className="business-rail" aria-label="Executive business context">
+    <section className="business-case-card">
+      <span className="rail-label">FLAGSHIP BUSINESS CASE</span>
+      <h2>Recover strategic customer deliveries</h2>
+      <p>OTIF collapsed by 11.9 points, delaying revenue and putting high-value customer relationships at risk.</p>
+      <div className="business-stakes">
+        <div><strong>$1.24M</strong><span>revenue exposed</span></div>
+        <div><strong>42</strong><span>strategic customers</span></div>
+        <div><strong>318</strong><span>orders at risk</span></div>
+        <div><strong>5</strong><span>teams involved</span></div>
+      </div>
+    </section>
+
+    <section className="step-brief" role="status" aria-live="polite" aria-atomic="true">
+      <span className="rail-label">WHAT PACT IS DOING NOW</span>
+      <h3>{systemState[0]}</h3>
+      <p>{systemState[1]}</p>
+      <div className="decision-question"><span>Business question</span><strong>{STAGE_QUESTIONS[state.stage]}</strong></div>
+    </section>
+
+    <section className="success-contract">
+      <div className="success-contract-heading"><Target size={17}/><span>SUCCESS CONTRACT</span></div>
+      <strong>≥82.0% OTIF by Day 21</strong>
+      <div className="contract-progress"><i style={{ width: `${Math.min(100, (currentOtif / 82) * 100)}%` }}/></div>
+      <div className="contract-values"><span>Now {currentOtif.toFixed(1)}%</span><span>Budget ≤$75K</span></div>
+      <small>No quality degradation · Approved suppliers only</small>
+    </section>
+
+    <div className="authority-card"><LockKeyhole size={16}/><div><span>Human authority</span><p>{state.approval?.decision === 'approved' ? 'Synthetic recovery plan approved' : 'Material commitments remain locked'}</p></div></div>
+    <p className="model-note">Deterministic controls <span>online</span><br/>Reasoning evidence <span>{artifact ? (artifact.provenance.kind === 'genuine' ? 'GPT‑5.6 verified' : 'local fixture') : 'schema-ready'}</span></p>
+  </aside>;
 }
 
 function PageHeading({ eyebrow, title, description, label }: { eyebrow: string; title: string; description: string; label?: string }) {
@@ -278,22 +317,23 @@ function PageHeading({ eyebrow, title, description, label }: { eyebrow: string; 
 
 function SignalView({ state, setState, onConfirm }: { state: WorkflowState; setState: Dispatch<SetStateAction<WorkflowState>>; onConfirm: () => void }) {
   return <section className="view-enter">
-    <PageHeading eyebrow="01 · SIGNAL INTAKE" title="A metric moved. Is the business moving with it?" description="Turn a disputed KPI into a bounded outcome before PACT earns the right to act." label="INC-OTIF-042" />
+    <PageHeading eyebrow="01 · DEFINE THE BUSINESS OUTCOME" title="A delivery collapse puts $1.24M—and 42 customer relationships—at risk." description="A dashboard found the decline. PACT turns it into a governed, cross-team recovery with a measurable finish line." label="INC-OTIF-042" />
+    <div className="outcome-thesis panel"><div><span>THE GAP PACT CLOSES</span><strong>Signal → trusted decision → coordinated action → measured result</strong></div><p>Most AI stops at an answer. PACT stays accountable until the business outcome changes.</p></div>
     <div className="signal-grid">
       <article className="hero-metric panel">
         <div className="panel-top"><span className={labelClass('OBSERVED')}>OBSERVED</span><span className="source-ref">ERP fulfillment snapshot · EVD-ORD-041</span></div>
-        <div className="metric-name">ON TIME IN FULL</div><div className="metric-value">72.4<span>%</span></div>
+        <div className="metric-name">CURRENT DELIVERY PERFORMANCE · ON TIME IN FULL</div><div className="metric-value">72.4<span>%</span></div>
         <div className="metric-delta"><Activity size={18} /> −11.9 <span>percentage points vs 13-week control</span></div>
         <div className="metric-baseline"><span>CONTROL</span><div><i style={{ width: '84.3%' }} /></div><strong>84.3%</strong></div>
         <div className="signal-stakes"><div><strong>318</strong><span>orders at risk</span></div><div><strong>42</strong><span>strategic customers</span></div><div><strong>$1.24M</strong><span>revenue exposure</span></div></div>
       </article>
       <article className="objective-card panel">
-        <div className="panel-title"><div><Target size={18} /><span>Outcome contract</span></div><span className="draft-pill">DRAFT · v1.0</span></div>
-        <label htmlFor="objective">What must be true when this pact closes?</label>
+        <div className="panel-title"><div><Target size={18} /><span>Define what success means</span></div><span className="draft-pill">OUTCOME CONTRACT · DRAFT</span></div>
+        <label htmlFor="objective">What result must the organization produce?</label>
         <textarea id="objective" value={state.objective} onChange={(event) => setState((current) => ({ ...current, objective: event.target.value }))} />
         <div className="contract-grid"><div><small>TARGET</small><strong>≥82.0% OTIF</strong></div><div><small>DEADLINE</small><strong>Day 21</strong></div><div><small>BUDGET CAP</small><strong>$75,000</strong></div><div><small>AUTHORITY</small><strong>Human approval</strong></div></div>
         <div className="constraint-line"><ShieldCheck size={15} /><span>No quality degradation · Strategic customers first · Approved suppliers only</span></div>
-        <button className="primary-button" onClick={onConfirm} disabled={state.objective.trim().length < 20}>Confirm pact & investigate <ArrowRight size={17} /></button>
+        <button className="primary-button" onClick={onConfirm} disabled={state.objective.trim().length < 20}>Lock success criteria & verify KPI <ArrowRight size={17} /></button>
       </article>
     </div>
     <div className="belief-line"><Sparkles size={16} /><span>AI should earn the right for its answers to influence real decisions.</span></div>
@@ -303,10 +343,10 @@ function SignalView({ state, setState, onConfirm }: { state: WorkflowState; setS
 function ProofView({ state, onContinue }: { state: WorkflowState; onContinue: () => void }) {
   const verification = state.verification!;
   return <section className="view-enter">
-    <PageHeading eyebrow="02 · PROOFLINE" title="The signal is real." description="PACT reproduced the metric from governed counts and challenged four ways the decline could be misleading." label={state.contractHash?.slice(0, 20)} />
+    <PageHeading eyebrow="02 · VERIFY BEFORE ACTING" title="The decline is real—not a reporting error." description="Before mobilizing five teams or spending recovery budget, PACT independently reproduces the KPI and challenges its integrity." label={state.contractHash?.slice(0, 20)} />
     <div className="verdict-panel panel verified-glow">
       <div className="verdict-icon"><BadgeCheck size={32} /></div><div><span className={labelClass('VERIFIED')}>VERIFIED OPERATIONAL</span><h2>72.4% reproduced independently</h2><p>{verification.explanation}</p></div>
-      <div className="reproduction"><small>CALCULATION</small><code>1,810 ÷ 2,500</code><strong>= 72.4%</strong></div>
+      <div className="reproduction"><small>INDEPENDENT REPRODUCTION</small><code>1,810 compliant ÷ 2,500 eligible</code><strong>= 72.4%</strong></div>
     </div>
     <div className="check-grid">{verification.checks.map((check, index) => <article className="check-card panel" key={check.id}><div className="check-order">0{index + 1}</div><div className="check-icon"><Check size={16} /></div><h3>{check.name}</h3><p>{check.detail}</p><code>{check.id}</code></article>)}</div>
     <div className="evidence-bar panel"><div><Fingerprint size={18} /><span>Metric Contract v1.0.0</span></div><div><FileCheck2 size={18} /><span>All invariants pass</span></div><div><Scale size={18} /><span>Definition consistent</span></div><button className="secondary-button compact narration-button" onClick={() => speakBriefing('Proofline verified the operational signal. OTIF declined from 84.3 percent to 72.4 percent. Four independent controls passed, so PACT can now map business impact.')}><Volume2 size={15}/> Executive brief</button><button className="primary-button compact" onClick={onContinue}>Map business impact <ArrowRight size={16} /></button></div>
@@ -315,7 +355,8 @@ function ProofView({ state, onContinue }: { state: WorkflowState; onContinue: ()
 
 function ImpactView({ onContinue }: { onContinue: () => void }) {
   return <section className="view-enter">
-    <PageHeading eyebrow="03 · IMPACT MAP" title="One signal. Five teams. A connected response." description="Observed associations explain where the deterioration concentrates; they are not presented as exclusive causation." label="318 ORDERS AT RISK" />
+    <PageHeading eyebrow="03 · CONNECT OPERATIONS TO BUSINESS VALUE" title="Three bottlenecks concentrate the recoverable loss." description="PACT connects operational evidence to exposed customers, revenue, cost, and the teams with power to change the result." label="318 ORDERS AT RISK" />
+    <div className="executive-insight panel"><span>EXECUTIVE INTERPRETATION</span><strong>68% of the decline concentrates in supplier availability and production sequencing.</strong><p>The response must coordinate Procurement and Manufacturing first, then secure Logistics capacity and protect strategic customers.</p></div>
     <div className="impact-layout">
       <article className="contribution-panel panel"><div className="panel-title"><div><Network size={18} /><span>Contribution model</span></div><span className={labelClass('CALCULATED')}>CALCULATED</span></div>
         <div className="contribution-bar">{scenario.contributors.map((item) => <span key={item.id} style={{ width: `${item.share}%` }} className={`cause-${item.id.toLowerCase()}`}><b>{item.share}%</b></span>)}</div>
@@ -327,7 +368,7 @@ function ImpactView({ onContinue }: { onContinue: () => void }) {
         <article className="risk-card panel"><span className={labelClass('ESTIMATED')}>ESTIMATED</span><strong>$186K</strong><p>premium freight exposure</p><code>2 assumptions · EVD-LOG-031</code></article>
       </div>
     </div>
-    <div className="team-strip panel"><span>CROSS-TEAM RESPONSE</span>{['Procurement','Manufacturing','Logistics','Finance','Customer'].map((team) => { const Icon = teamIcons[team]; return <div key={team}><Icon size={16} />{team}</div>; })}<button className="primary-button compact" onClick={onContinue}>Simulate responses <ArrowRight size={16} /></button></div>
+    <div className="team-strip panel"><span>TEAMS THAT MUST MOVE TOGETHER</span>{['Procurement','Manufacturing','Logistics','Finance','Customer'].map((team) => { const Icon = teamIcons[team]; return <div key={team}><Icon size={16} />{team}</div>; })}<button className="primary-button compact" onClick={onContinue}>Compare recovery options <ArrowRight size={16} /></button></div>
   </section>;
 }
 
@@ -343,7 +384,7 @@ function StrategyView({ state, setState, artifact, onContinue }: { state: Workfl
         ? `The reviewed model recommends ${artifact.plan.recommendedStrategyId}; human control keeps the executable MVP on the bounded Balanced contract.`
         : 'Independent challenge is required before approval.';
   return <section className="view-enter">
-    <PageHeading eyebrow="04 · STRATEGY SANDBOX" title="Choose the shape of recovery." description="Three bounded strategies trade margin, speed, and resilience. Every projected number remains explicitly simulated." label="DETERMINISTIC · SEED 56021" />
+    <PageHeading eyebrow="04 · CHOOSE THE RESPONSE" title="Three recovery paths. One responsible recommendation." description="Compare business tradeoffs—not just model scores. Every projection remains simulated, bounded by the same outcome contract." label="REPRODUCIBLE · SEED 56021" />
     <div className="simulation-banner"><Zap size={16} /><span>SIMULATION, NOT FORECAST</span><p>Same contract + scenario + parameters will always reproduce these results.</p></div>
     {artifact && <div className={`model-provenance panel ${artifact.provenance.kind === 'fixture' ? 'model-fixture' : ''}`}><Sparkles size={17}/><div><span>{artifact.provenance.kind === 'genuine' ? 'REVIEWED GPT‑5.6 ARTIFACT' : 'LOCAL SCHEMA FIXTURE · NO API CALL'}</span><strong>{artifact.plan.executiveSummary}</strong></div><code>{artifact.provenance.planResponseId.slice(0, 20)}</code></div>}
     <div className="strategy-grid">{scenario.strategies.map((strategy) => {
@@ -356,14 +397,14 @@ function StrategyView({ state, setState, artifact, onContinue }: { state: Workfl
         <div className="compliance"><ShieldCheck size={15} /><span>{evaluation.compliant ? 'Hard constraints pass' : evaluation.reasons[0]}</span></div>
       </button>;
     })}</div>
-    <div className="decision-bar panel"><div><span>SELECTED PACT</span><strong>{selected.name}</strong><p>{decisionRationale}</p></div><button className="primary-button" disabled={!executable} onClick={onContinue}>Assemble & challenge plan <ArrowRight size={17} /></button></div>
+    <div className="decision-bar panel"><div><span>RECOMMENDED BUSINESS RESPONSE</span><strong>{selected.name}</strong><p>{decisionRationale}</p></div><button className="primary-button" disabled={!executable} onClick={onContinue}>Build coordinated plan & audit it <ArrowRight size={17} /></button></div>
   </section>;
 }
 
 function ApprovalView({ state, strategy, artifact, onDecide }: { state: WorkflowState; strategy: Strategy; artifact: AiArtifact | null; onDecide: (decision: 'approved' | 'rejected' | 'revision_requested') => void }) {
   const blocking = state.auditFindings.some((finding) => finding.severity === 'blocking' && !finding.resolved) || artifact?.audit.verdict === 'block';
   return <section className="view-enter">
-    <PageHeading eyebrow="05 · APPROVAL GATE" title="PACT stops here. You decide." description="Review the complete decision packet. This approval controls synthetic actions only and does not represent a production authorization." label="HUMAN AUTHORITY REQUIRED" />
+    <PageHeading eyebrow="05 · HUMAN AUTHORITY" title="Authorize one coordinated business response." description="Review the outcome, cost, owners, dependencies, and independent dissent. PACT cannot commit money or mobilize teams without you." label="DECISION REQUIRED" />
     <div className="approval-grid">
       <article className="decision-packet panel"><div className="panel-title"><div><LockKeyhole size={18} /><span>Decision packet</span></div><span className="draft-pill">PLAN-BALANCED-v1</span></div>
         <div className="packet-outcome"><div><small>PROJECTED OUTCOME</small><strong>{strategy.projectedDay21}%</strong><span className={labelClass('SIMULATED')}>SIMULATED · DAY 21</span></div><div><small>AUTHORIZED CAP</small><strong>{formatMoney(strategy.cost)}</strong><span>$6,250 headroom</span></div></div>
@@ -377,20 +418,21 @@ function ApprovalView({ state, strategy, artifact, onDecide }: { state: Workflow
         <div className="finding-list">{state.auditFindings.map((finding) => <div className={`finding finding-${finding.severity}`} key={finding.id}><div><span>{finding.severity.toUpperCase()}</span><code>{finding.id}</code></div><strong>{finding.title}</strong><p>{finding.detail}</p></div>)}</div>
       </article>
     </div>
-    <div className="approval-gate panel"><div className="white-ring"><LockKeyhole size={19}/></div><div><span>YOUR DECISION</span><strong>Authorize six governed actions in the synthetic operating twin?</strong></div><div className="decision-buttons"><button className="secondary-button danger" onClick={() => onDecide('rejected')}><X size={16}/> Reject</button><button className="secondary-button" onClick={() => onDecide('revision_requested')}><RefreshCw size={16}/> Request revision</button><button className="approval-button" disabled={blocking} onClick={() => onDecide('approved')}><Check size={17}/> Approve pact</button></div></div>
+    <div className="approval-gate panel"><div className="white-ring"><LockKeyhole size={19}/></div><div><span>YOUR DECISION</span><strong>Authorize the $68,750 cross-team recovery plan?</strong></div><div className="decision-buttons"><button className="secondary-button danger" onClick={() => onDecide('rejected')}><X size={16}/> Reject</button><button className="secondary-button" onClick={() => onDecide('revision_requested')}><RefreshCw size={16}/> Request revision</button><button className="approval-button" disabled={blocking} onClick={() => onDecide('approved')}><Check size={17}/> Approve recovery plan</button></div></div>
   </section>;
 }
 
 function ExecutionView({ state, onExecute, onContinue }: { state: WorkflowState; onExecute: () => void; onContinue: () => void }) {
   const complete = state.actions.every((action) => action.status === 'complete');
   const ready = state.actions.find((action) => action.status === 'ready');
+  const ReadyTeamIcon = ready ? teamIcons[ready.team] : null;
   return <section className="view-enter">
-    <PageHeading eyebrow="06 · ACTION GRAPH" title={complete ? 'The organization is mobilized.' : 'Commitments move in dependency order.'} description="The UI changes only when an approved simulated business tool returns a correlated result." label={`${state.actions.filter((a) => a.status === 'complete').length} / ${state.actions.length} EXECUTED`} />
+    <PageHeading eyebrow="06 · COORDINATE THE ORGANIZATION" title={complete ? 'Five teams are aligned around one outcome.' : 'Each team receives the next safe commitment.'} description="PACT translates the approved plan into owned, dependency-aware business actions. No team can jump the sequence or exceed its authority." label={`${state.actions.filter((a) => a.status === 'complete').length} / ${state.actions.length} COMMITMENTS`} />
     <div className="execution-layout">
       <article className="action-graph panel"><div className="graph-spine" />{state.actions.map((action) => <ActionNode key={action.actionId} action={action} />)}</article>
-      <article className="tool-console panel"><div className="panel-title"><div><Zap size={18}/><span>Safe tool boundary</span></div><span className="live-pill"><i/> LOCAL MCP</span></div>
-        {ready ? <><span className="next-label">NEXT AUTHORIZED OPERATION</span><code className="tool-name">{ready.toolOperation}</code><div className="tool-request"><span>REQUEST</span><pre>{JSON.stringify({ approvedPlanId: 'PLAN-BALANCED-v1', actionId: ready.actionId, ...ready.parameters }, null, 2)}</pre></div><div className="tool-guards"><div><Check size={14}/> Approval valid</div><div><Check size={14}/> Dependencies satisfied</div><div><Check size={14}/> Schema valid</div></div><button className="primary-button execute-button" onClick={onExecute}><Play size={16}/> Execute {ready.actionId}</button></> : complete ? <div className="all-complete"><BadgeCheck size={38}/><h3>All commitments recorded</h3><p>Six tool results are now correlated in the Outcome Ledger. The operating timeline can advance.</p><button className="primary-button" onClick={onContinue}>Observe the outcome <ArrowRight size={16}/></button></div> : <div className="waiting-tools"><Clock3 size={30}/><h3>Resolving dependencies</h3></div>}
-        <div className="synthetic-warning"><ShieldCheck size={15}/><span>Every operation is local, deterministic, and synthetic.</span></div>
+      <article className="tool-console panel"><div className="panel-title"><div><Zap size={18}/><span>Next business commitment</span></div><span className="live-pill"><i/> SAFE SIMULATION</span></div>
+        {ready ? <><span className="next-label">READY NOW</span><div className="commitment-owner"><div className="commitment-team-icon">{ReadyTeamIcon && <ReadyTeamIcon size={20}/>}</div><div><small>{ready.team} · {ready.owner}</small><strong>{ready.description}</strong></div></div><div className="commitment-impact"><div><span>Business purpose</span><strong>{ready.team === 'Finance' ? 'Unlock the bounded recovery budget' : ready.team === 'Procurement' ? 'Restore constrained component supply' : ready.team === 'Manufacturing' ? 'Protect the production sequence' : ready.team === 'Logistics' ? 'Secure pickup capacity' : ready.team === 'Customer' ? 'Protect strategic relationships' : 'Coordinate the recovery work'}</strong></div><div><span>Authorized cost</span><strong>{formatMoney(ready.estimatedCost)}</strong></div></div><div className="tool-guards"><div><Check size={14}/> Human approval valid</div><div><Check size={14}/> Predecessors complete</div><div><Check size={14}/> Policy checks pass</div></div><details className="technical-proof"><summary>Inspect technical execution proof</summary><code className="tool-name">{ready.toolOperation}</code><div className="tool-request"><span>SCHEMA-VALIDATED REQUEST</span><pre>{JSON.stringify({ approvedPlanId: 'PLAN-BALANCED-v1', actionId: ready.actionId, ...ready.parameters }, null, 2)}</pre></div></details><button className="primary-button execute-button" onClick={onExecute}><Play size={16}/> Record {ready.team} commitment</button></> : complete ? <div className="all-complete"><BadgeCheck size={38}/><h3>All commitments recorded</h3><p>Six governed commitments are correlated in the Outcome Ledger. The operating timeline can advance.</p><button className="primary-button" onClick={onContinue}>Measure business outcome <ArrowRight size={16}/></button></div> : <div className="waiting-tools"><Clock3 size={30}/><h3>Resolving dependencies</h3></div>}
+        <div className="synthetic-warning"><ShieldCheck size={15}/><span>No live money, supplier, carrier, or customer system is changed.</span></div>
       </article>
     </div>
   </section>;
@@ -406,7 +448,7 @@ function OutcomeView({ state, observation, artifact, onAdvance }: { state: Workf
   const points = scenario.observations.map((item, index) => ({ x: 48 + index * 145, y: 210 - (item.otif - 70) * 9.4, ...item }));
   const projected = [{x:48,y:187.4},{x:193,y:160},{x:338,y:120},{x:483,y:104.7},{x:628,y:95.3}];
   return <section className="view-enter">
-    <PageHeading eyebrow="07 · OUTCOME REPLAY" title={closed ? 'The target was met. The variance still matters.' : 'Watch the business—not the activity.'} description="Projected and observed values remain separate as the synthetic operating twin advances through controlled checkpoints." label={closed ? 'PACT CLOSED · TARGET MET' : `OBSERVING · DAY ${state.currentDay}`} />
+    <PageHeading eyebrow="07 · MEASURE THE BUSINESS RESULT" title={closed ? 'The target was met—and PACT can prove what changed.' : 'Track the outcome, not task completion.'} description="Observed performance stays separate from the plan projection, so leaders see both the result and the assumptions that held or failed." label={closed ? 'OUTCOME CLOSED · TARGET MET' : `MEASURING · DAY ${state.currentDay}`} />
     <div className="outcome-grid">
       <article className="outcome-chart panel"><div className="chart-heading"><div><span className={labelClass('OBSERVED')}>OBSERVED</span><strong>{observation.otif.toFixed(1)}%</strong><small>OTIF · Day {state.currentDay}</small></div><div className="chart-legend"><span className="legend-observed">Observed synthetic</span><span className="legend-simulated">Simulated projection</span><span className="legend-target">Target 82.0%</span></div></div>
         <svg viewBox="0 0 680 250" className="line-chart" role="img" aria-label="Projected and observed OTIF recovery"><defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#43ead1" stopOpacity=".24"/><stop offset="1" stopColor="#43ead1" stopOpacity="0"/></linearGradient></defs>

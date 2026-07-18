@@ -10,7 +10,9 @@
 
 ![PACT Outcome Room closing a governed recovery at 82.1% observed synthetic OTIF](submission-assets/screenshots/05-outcome-closeout.png)
 
-PACT is a governed, multi-agent outcome system. It verifies whether a consequential KPI is real, explains why it matters, coordinates the teams that can change it, requires human authorization, executes safe business tools, and measures whether the intervention worked.
+PACT is the missing operating layer between a business signal and a business result. It verifies whether a consequential KPI is real, quantifies what is at stake, helps leaders choose a response, coordinates the teams that can change it, requires human authorization, and measures whether the intervention worked.
+
+The flagship case begins with a decision any executive can understand: **$1.24M in revenue, 42 strategic customers, and 318 orders are at risk. Can five teams recover delivery performance to at least 82% within 21 days and a $75K budget?**
 
 > AI should not merely produce business answers. It should earn the right for those answers to influence real decisions.
 
@@ -30,7 +32,7 @@ The deterministic demonstration closes at **82.1% observed synthetic OTIF on Day
 
 ## Why PACT is different
 
-PACT is not a chatbot, another KPI dashboard, or an autonomous agent acting without accountability. Its core artifact is an inspectable chain of consequence:
+PACT is not a chatbot, another KPI dashboard, or an autonomous agent acting without accountability. Its core experience follows one clear chain of consequence:
 
 ```text
 signal → proof → impact → strategy → challenge → approval → action → observation → learning
@@ -90,13 +92,13 @@ Use the deployed root URL with `?artifact=fixture&reset=1` for the free judge pa
 
 | Stage | What PACT proves |
 |---|---|
-| Signal | A natural-language objective becomes a versioned Outcome Contract with target, deadline, constraints, and approval authority. |
-| Proofline | Four controls independently reproduce 1,810 ÷ 2,500 = 72.4% and classify the signal as `verified_operational`. |
-| Impact Map | Ranked associations connect the decline to 318 orders, 42 strategic customers, financial exposure, and responsible teams. |
-| Strategy Sandbox | Margin, speed, and balanced strategies expose cost, time, assumptions, risks, and clearly labeled simulated results. |
-| Approval Gate | An independent Auditor surfaces material dissent before a human authorizes the plan. |
-| Action Graph | Six business tools execute only after approval and predecessor satisfaction; communication remains draft-only. |
-| Outcome Replay | Days 0, 3, 7, 14, and 21 separate projection from observed synthetic recovery and close with lessons. |
+| Define outcome | Leaders see the financial and customer stakes, then lock the target, deadline, budget, constraints, and authority. |
+| Verify the KPI | Four controls independently reproduce 1,810 ÷ 2,500 = 72.4% before anyone acts. |
+| Find value drivers | Ranked evidence connects the decline to 318 orders, 42 strategic customers, financial exposure, and responsible teams. |
+| Choose response | Margin, speed, and balanced strategies expose outcome, cost, time, assumptions, and residual risk. |
+| Authorize plan | An independent Auditor surfaces material dissent before a human authorizes the cross-team response. |
+| Coordinate teams | Six owned commitments unlock in dependency order; communication remains draft-only. Technical execution proof is progressively disclosed. |
+| Measure result | Days 0, 3, 7, 14, and 21 separate projection from observed synthetic recovery and close with lessons. |
 
 Proofline and Outcome Replay include optional, click-to-play executive briefings. At closeout, PACT exports both the machine-readable Outcome Ledger and a human-readable Markdown proof report that preserves evidence labels, model provenance, human approval, tool results, and outcome variance.
 
