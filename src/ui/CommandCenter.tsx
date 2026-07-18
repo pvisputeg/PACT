@@ -84,7 +84,7 @@ export function CommandCenter({ onOpenOutcome, onOpenLedger }: CommandCenterProp
       </div>
       <div className="command-context"><Building2 size={15}/><span>Enterprise Outcome Command Center</span></div>
       <div className="top-actions">
-        <div className="portfolio-period"><Clock3 size={14}/><span>FY26 · LIVE PORTFOLIO</span></div>
+        <div className="portfolio-period"><Clock3 size={14}/><span>FY26 · SYNTHETIC PORTFOLIO</span></div>
         <div className="live-pill"><i/> GOVERNANCE ONLINE</div>
       </div>
     </header>
@@ -117,7 +117,7 @@ export function CommandCenter({ onOpenOutcome, onOpenLedger }: CommandCenterProp
       </section>
 
       <section className="enterprise-snapshot panel" aria-labelledby="snapshot-title">
-        <div className="section-heading"><div><span>ENTERPRISE SNAPSHOT</span><h2 id="snapshot-title">Outcomes that matter now</h2></div><small>UPDATED 09:42 ET · 14 SYSTEMS OBSERVED</small></div>
+        <div className="section-heading"><div><span>ENTERPRISE SNAPSHOT</span><h2 id="snapshot-title">Outcomes that matter now</h2></div><small>SAFE ENTERPRISE TWIN · 14 FEEDS SIMULATED</small></div>
         <div className="snapshot-grid">
           <div><Target size={16}/><strong>8</strong><span>Active outcomes</span></div>
           <div><CircleDollarSign size={16}/><strong>$11.8M</strong><span>Business value at stake</span></div>
@@ -139,7 +139,7 @@ export function CommandCenter({ onOpenOutcome, onOpenLedger }: CommandCenterProp
               <h3>{outcome.title}</h3>
               <div className="outcome-value"><span>{outcome.valueLabel}</span><strong>{outcome.value}</strong></div>
               <div className="outcome-meta"><div><span>OWNER</span><strong>{outcome.owner}</strong></div><div><span>CURRENT STAGE</span><strong>{outcome.stage}</strong></div></div>
-              <div className="outcome-card-footer"><span>Outcome contract active</span>{outcome.featured ? <strong>Enter Outcome Room <ArrowRight size={14}/></strong> : <strong>Portfolio template</strong>}</div>
+              <div className="outcome-card-footer"><span>{outcome.featured ? 'Implemented synthetic contract' : 'Illustrative outcome template'}</span>{outcome.featured ? <strong>Enter Outcome Room <ArrowRight size={14}/></strong> : <strong>Not executed</strong>}</div>
             </>;
             return outcome.featured
               ? <button className="outcome-card outcome-card-featured panel" key={outcome.title} onClick={onOpenOutcome}>{content}</button>

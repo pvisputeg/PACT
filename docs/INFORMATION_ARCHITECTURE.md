@@ -88,4 +88,4 @@ App
 6. Preserve all existing workflow actions, safety controls, persistence, exports, and tests.
 7. Verify both route directions, browser console health, deterministic tests, and production build.
 
-The additional portfolio cards are explicitly presentation templates demonstrating information-architecture breadth. Only Strategic Delivery Recovery opens the implemented synthetic workflow; this avoids representing future integrations as complete.
+The Command Center is visibly labeled as a synthetic enterprise twin. Additional portfolio cards are explicitly illustrative templates demonstrating information-architecture breadth. Only Strategic Delivery Recovery is marked as an implemented synthetic contract and opens the working workflow; this avoids representing future integrations as complete.

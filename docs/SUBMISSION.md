@@ -30,7 +30,7 @@ Today, that decision is fragmented across a dashboard, data-quality investigatio
 
 ## What it does
 
-PACT opens on an enterprise portfolio showing active outcomes, business value at stake, coordinating teams, commitments, approvals, governance health, and organizational learning. The flagship Outcome Room begins when On Time In Full performance falls from 84.3% to 72.4%.
+PACT opens on a clearly labeled synthetic enterprise twin showing active outcomes, business value at stake, coordinating teams, commitments, approvals, governance health, and organizational learning. Illustrative outcome templates establish platform breadth without claiming execution. The implemented flagship Outcome Room begins when On Time In Full performance falls from 84.3% to 72.4%.
 
 PACT:
 
