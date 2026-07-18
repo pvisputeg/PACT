@@ -1,0 +1,20 @@
+{
+  "name": "pact-build-week",
+  "interface": {
+    "displayName": "PACT Build Week"
+  },
+  "plugins": [
+    {
+      "name": "pact",
+      "source": {
+        "source": "local",
+        "path": "./plugins/pact"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

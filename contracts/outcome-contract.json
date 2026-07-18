@@ -1,0 +1,26 @@
+{
+  "$schema": "./schemas/outcome-contract.schema.json",
+  "outcomeId": "otif-recovery-2026-07",
+  "version": "1.0.0",
+  "status": "draft",
+  "objective": "Recover OTIF to at least 82.0% within 21 simulated days without increasing quality escapes or exceeding the recovery budget.",
+  "businessSignal": "OTIF declined from a 84.3% historical baseline to 72.4% in the current period.",
+  "baseline": {"value": 84.3, "unit": "percent", "label": "OBSERVED"},
+  "current": {"value": 72.4, "unit": "percent", "label": "OBSERVED"},
+  "target": {"value": 82.0, "unit": "percent", "deadlineDay": 21},
+  "interimTarget": {"value": 81.0, "unit": "percent", "deadlineDay": 14},
+  "hardConstraints": [
+    {"id": "budget", "rule": "incremental_cost <= 75000", "value": 75000, "unit": "USD"},
+    {"id": "quality", "rule": "quality_escape_rate_delta <= 0", "value": 0, "unit": "percentage_points"},
+    {"id": "supplier", "rule": "approved_suppliers_only", "value": true},
+    {"id": "customer", "rule": "prioritize_strategic_customers", "value": true}
+  ],
+  "softConstraints": ["minimize premium freight", "avoid overtime beyond two consecutive weeks"],
+  "leadingIndicators": ["component coverage", "schedule adherence", "pickup acceptance"],
+  "laggingIndicators": ["OTIF", "quality escape rate", "premium freight cost"],
+  "businessConsequences": ["customer service", "delayed revenue", "premium freight", "strategic account risk"],
+  "requiredEvidence": ["metric integrity", "source reconciliation", "contributor evidence", "cost assumptions"],
+  "requiredApprovals": ["executive_outcome_owner"],
+  "permittedActionClasses": ["finance_authorization", "supplier_commitment", "production_resequence", "carrier_reservation", "customer_draft", "work_item"],
+  "contentHash": "sha256:generated-at-runtime"
+}

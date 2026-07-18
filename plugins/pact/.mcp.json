@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "pact-business-tools": {
+      "command": "node",
+      "args": ["./scripts/pact-mcp-server.mjs"],
+      "cwd": "."
+    }
+  }
+}

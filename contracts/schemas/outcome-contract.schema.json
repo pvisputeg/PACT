@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pact.local/schemas/outcome-contract.schema.json",
+  "type": "object",
+  "required": ["outcomeId", "version", "status", "objective", "businessSignal", "baseline", "current", "target", "hardConstraints", "requiredApprovals", "permittedActionClasses"],
+  "properties": {
+    "outcomeId": {"type": "string", "minLength": 1},
+    "version": {"type": "string"},
+    "status": {"enum": ["draft", "confirmed", "approved", "closed"]},
+    "objective": {"type": "string", "minLength": 20},
+    "businessSignal": {"type": "string", "minLength": 10},
+    "baseline": {"$ref": "#/$defs/measurement"},
+    "current": {"$ref": "#/$defs/measurement"},
+    "target": {"$ref": "#/$defs/target"},
+    "interimTarget": {"$ref": "#/$defs/target"},
+    "hardConstraints": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/constraint"}},
+    "softConstraints": {"type": "array", "items": {"type": "string"}},
+    "leadingIndicators": {"type": "array", "items": {"type": "string"}},
+    "laggingIndicators": {"type": "array", "items": {"type": "string"}},
+    "businessConsequences": {"type": "array", "items": {"type": "string"}},
+    "requiredEvidence": {"type": "array", "items": {"type": "string"}},
+    "requiredApprovals": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "permittedActionClasses": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "contentHash": {"type": "string"}
+  },
+  "$defs": {
+    "measurement": {
+      "type": "object",
+      "required": ["value", "unit", "label"],
+      "properties": {"value": {"type": "number"}, "unit": {"type": "string"}, "label": {"enum": ["OBSERVED", "CALCULATED"]}},
+      "additionalProperties": false
+    },
+    "target": {
+      "type": "object",
+      "required": ["value", "unit", "deadlineDay"],
+      "properties": {"value": {"type": "number"}, "unit": {"type": "string"}, "deadlineDay": {"type": "integer", "minimum": 1}},
+      "additionalProperties": false
+    },
+    "constraint": {
+      "type": "object",
+      "required": ["id", "rule", "value"],
+      "properties": {"id": {"type": "string"}, "rule": {"type": "string"}, "value": {}, "unit": {"type": "string"}},
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

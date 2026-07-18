@@ -1,0 +1,208 @@
+<div align="center">
+
+# PACT
+
+### Proof · Action · Coordination · Tracking
+
+**From a disputed business signal to governed action and a measured outcome.**
+
+</div>
+
+PACT is a governed, multi-agent outcome system. It verifies whether a consequential KPI is real, explains why it matters, coordinates the teams that can change it, requires human authorization, executes safe business tools, and measures whether the intervention worked.
+
+> AI should not merely produce business answers. It should earn the right for those answers to influence real decisions.
+
+## The flagship outcome
+
+An organization sees On Time In Full (OTIF) fall from **84.3% to 72.4%**. Existing dashboards can report the decline. PACT answers the harder sequence:
+
+1. Is the signal trustworthy?
+2. What operational evidence explains it?
+3. Which customers, money, and teams are exposed?
+4. Which recovery strategy respects the business constraints?
+5. What must happen across procurement, manufacturing, logistics, finance, and customer teams?
+6. Who has authority to approve the response?
+7. Did the approved actions produce the intended outcome?
+
+The deterministic demonstration closes at **82.1% observed synthetic OTIF on Day 21**, compared with a **82.2% simulated projection** and a target of **82.0%**.
+
+## Why PACT is different
+
+PACT is not a chatbot, another KPI dashboard, or an autonomous agent acting without accountability. Its core artifact is an inspectable chain of consequence:
+
+```text
+signal → proof → impact → strategy → challenge → approval → action → observation → learning
+```
+
+- **Proofline** reproduces the KPI and classifies the signal before recovery planning begins.
+- **Contracts** declare the metric definition, outcome target, constraints, authority, and permitted action classes.
+- **Separation of duties** keeps the Outcome Lead, specialist roles, independent Auditor, and human approver distinct.
+- **The Action Graph** encodes owners and predecessor dependencies across six organizational roles.
+- **Safe MCP tools** reject missing approvals, unsatisfied dependencies, unapproved suppliers, excessive spend, and external message sending.
+- **The Outcome Ledger** correlates evidence, simulations, decisions, approvals, tool results, observations, and closeout.
+- **The Outcome Room** makes organizational state—not chat activity—the primary interface.
+
+## Run locally
+
+Requirements: Node.js 20 or later.
+
+```bash
+npm install
+npm run reset
+npm test
+npm run verify:mcp
+npm run dev
+```
+
+Open `http://localhost:5173`.
+
+Production verification:
+
+```bash
+npm run build
+npm run validate:plugin
+```
+
+## Three-minute walkthrough
+
+| Stage | What PACT proves |
+|---|---|
+| Signal | A natural-language objective becomes a versioned Outcome Contract with target, deadline, constraints, and approval authority. |
+| Proofline | Four controls independently reproduce 1,810 ÷ 2,500 = 72.4% and classify the signal as `verified_operational`. |
+| Impact Map | Ranked associations connect the decline to 318 orders, 42 strategic customers, financial exposure, and responsible teams. |
+| Strategy Sandbox | Margin, speed, and balanced strategies expose cost, time, assumptions, risks, and clearly labeled simulated results. |
+| Approval Gate | An independent Auditor surfaces material dissent before a human authorizes the plan. |
+| Action Graph | Six business tools execute only after approval and predecessor satisfaction; communication remains draft-only. |
+| Outcome Replay | Days 0, 3, 7, 14, and 21 separate projection from observed synthetic recovery and close with lessons. |
+
+Proofline and Outcome Replay include optional, click-to-play executive briefings. At closeout, PACT exports both the machine-readable Outcome Ledger and a human-readable Markdown proof report that preserves evidence labels, model provenance, human approval, tool results, and outcome variance.
+
+The timed narration is in [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
+
+## Architecture
+
+PACT separates model judgment from deterministic authority:
+
+```mermaid
+flowchart LR
+    UI[Outcome Room] --> WF[Governed workflow]
+    WF --> PF[Proofline]
+    WF --> DS[Deterministic simulation]
+    WF --> AG[Action Graph]
+    AG --> MCP[Safe business MCP tools]
+    MCP --> TWIN[Synthetic operating twin]
+    TWIN --> OUT[Outcome monitor]
+    PF --> LEDGER[Outcome Ledger]
+    DS --> LEDGER
+    MCP --> LEDGER
+    OUT --> LEDGER
+    GPT[GPT-5.6 structured reasoning] -. proposals and independent challenge .-> WF
+```
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for boundaries, data flow, and replaceable enterprise adapters.
+
+## Codex and GPT-5.6
+
+PACT is intentionally Codex-native rather than merely developed beside Codex.
+
+### Codex
+
+- [`AGENTS.md`](AGENTS.md) defines repository-wide build, evidence, safety, and completion rules.
+- [`plugins/pact`](plugins/pact) is a validated local Codex plugin.
+- [`.agents/plugins/marketplace.json`](.agents/plugins/marketplace.json) makes it discoverable as the repo-scoped **PACT Build Week** marketplace after an app restart.
+- The plugin includes the `investigate-and-recover-outcome` skill.
+- Its local `pact-business-tools` MCP server exposes nine inspectable tools with stateful authorization guards.
+- Contracts, role boundaries, prompts, JSON Schemas, tests, and the complete product were iterated through the Build Week Codex development session.
+- The submission will include the required `/feedback` session ID.
+
+### GPT-5.6
+
+[`scripts/generate-gpt-artifacts.mjs`](scripts/generate-gpt-artifacts.mjs) uses the OpenAI Responses API with:
+
+- model alias `gpt-5.6` (GPT-5.6 Sol),
+- `reasoning.effort: high`,
+- strict Structured Outputs,
+- one Outcome Lead plan-synthesis call,
+- a separate Independent Auditor call, and
+- preserved response IDs and schema-validated artifacts.
+
+Inspect the request boundary without credentials:
+
+```bash
+npm run generate:agents:dry-run
+```
+
+Generate genuine artifacts when `OPENAI_API_KEY` is configured:
+
+```bash
+# Export OPENAI_API_KEY in your shell; the application never reads it in the browser.
+npm run generate:agents
+```
+
+The prepared deterministic mode remains functional without external credentials. It never represents deterministic fallback calculations as live model output.
+
+## Safe MCP tool surface
+
+The plugin exposes:
+
+- `pact_verify_signal`
+- `pact_authorize_finance`
+- `pact_commit_supplier`
+- `pact_resequence_production`
+- `pact_reserve_carrier`
+- `pact_create_customer_draft`
+- `pact_create_work_items`
+- `pact_observe_outcome`
+- `pact_reset_demo`
+
+Run `npm run verify:mcp` to exercise initialization, tool discovery, a rejected unauthorized call, the approved dependency chain, the communication safeguard, and the final observation.
+
+## Evidence and determinism
+
+The demonstration values live in [`data/otif-recovery.scenario.json`](data/otif-recovery.scenario.json) and are derived by testable domain functions. The fixed seed is `56021`.
+
+Automated coverage currently verifies:
+
+- Metric and Outcome Contract validation.
+- Baseline and current OTIF reproduction.
+- Detection of an intentionally corrupted integrity control.
+- Strategy hard-constraint compliance.
+- Action Contract validation.
+- Independent Auditor dissent.
+- Dependency readiness and execution order.
+- Approval required before material tools.
+- Customer communication remains `not_sent`.
+- Day-14 and Day-21 observed checkpoints.
+- MCP protocol and tool safeguards.
+
+See [docs/VERIFICATION.md](docs/VERIFICATION.md) for the latest evidence.
+
+## Implemented boundary
+
+This Build Week version implements one complete synthetic manufacturing recovery loop. It does **not** claim production ERP integration, causal proof, formal certification, enterprise authentication, or autonomous production authority. Real Oracle, SAP, Snowflake, CRM, carrier, work-management, and collaboration adapters are future implementations behind the same contracts.
+
+Speech and a non-human Intelligence Core are optional presentation enhancements; neither is required for the primary workflow. PACT deliberately excludes a human avatar.
+
+## Repository map
+
+```text
+contracts/       Metric, outcome, action, plan, and audit schemas
+data/            Fixed-seed synthetic operating scenario
+src/domain/      Contracts, deterministic engine, authorization, tests
+src/             Outcome Room application
+plugins/pact/    Codex skill and stateful MCP business tools
+scripts/         Scenario, MCP, plugin, and GPT-5.6 verification utilities
+docs/            Architecture, verification, demo, and submission material
+```
+
+## Project documents
+
+- [Product requirements](PRODUCT_REQUIREMENTS.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Verification evidence](docs/VERIFICATION.md)
+- [Demo script](docs/DEMO_SCRIPT.md)
+- [Submission draft](docs/SUBMISSION.md)
+
+## License
+
+MIT — see [LICENSE](LICENSE).

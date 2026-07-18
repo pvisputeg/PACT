@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pact.local/schemas/plan-synthesis.schema.json",
+  "type": "object",
+  "properties": {
+    "executiveSummary": {"type": "string"},
+    "recommendedStrategyId": {"type": "string", "enum": ["STR-MARGIN", "STR-SPEED", "STR-BALANCED"]},
+    "strategyRationale": {"type": "string"},
+    "evidenceCitations": {"type": "array", "items": {"type": "string"}},
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "statement": {"type": "string"},
+          "evidenceStatus": {"type": "string", "enum": ["supported", "partially_supported", "unsupported"]}
+        },
+        "required": ["statement", "evidenceStatus"],
+        "additionalProperties": false
+      }
+    },
+    "crossTeamPriorities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "team": {"type": "string", "enum": ["Finance", "Procurement", "Manufacturing", "Logistics", "Customer", "Outcome Office"]},
+          "priority": {"type": "string"},
+          "dependency": {"type": "string"}
+        },
+        "required": ["team", "priority", "dependency"],
+        "additionalProperties": false
+      }
+    },
+    "residualRisks": {"type": "array", "items": {"type": "string"}}
+  },
+  "required": ["executiveSummary", "recommendedStrategyId", "strategyRationale", "evidenceCitations", "assumptions", "crossTeamPriorities", "residualRisks"],
+  "additionalProperties": false
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pact.local/schemas/independent-audit.schema.json",
+  "type": "object",
+  "properties": {
+    "verdict": {"type": "string", "enum": ["approve_with_conditions", "block"]},
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "severity": {"type": "string", "enum": ["blocking", "material", "advisory"]},
+          "title": {"type": "string"},
+          "detail": {"type": "string"},
+          "evidenceIds": {"type": "array", "items": {"type": "string"}}
+        },
+        "required": ["severity", "title", "detail", "evidenceIds"],
+        "additionalProperties": false
+      }
+    },
+    "unsupportedClaims": {"type": "array", "items": {"type": "string"}},
+    "requiredConditions": {"type": "array", "items": {"type": "string"}},
+    "counterfactual": {
+      "type": "object",
+      "properties": {
+        "scenario": {"type": "string"},
+        "expectedImpact": {"type": "string"}
+      },
+      "required": ["scenario", "expectedImpact"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["verdict", "findings", "unsupportedClaims", "requiredConditions", "counterfactual"],
+  "additionalProperties": false
+}

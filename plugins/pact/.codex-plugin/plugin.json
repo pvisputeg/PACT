@@ -1,0 +1,22 @@
+{
+  "name": "pact",
+  "version": "0.1.0",
+  "description": "Governed outcome recovery from verified signal to coordinated action and measured result.",
+  "author": {
+    "name": "PACT"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "PACT",
+    "shortDescription": "Turn verified business signals into governed outcomes.",
+    "longDescription": "PACT helps Codex investigate a consequential KPI, challenge the evidence, coordinate a dependency-aware response, invoke safe simulated business tools, and track the measured outcome.",
+    "developerName": "PACT",
+    "category": "Productivity",
+    "capabilities": ["Outcome investigation", "Evidence-first planning", "Governed action", "Outcome tracking"],
+    "defaultPrompt": "Use PACT to investigate this business signal, build a governed recovery plan, and track it to a measurable outcome.",
+    "brandColor": "#43EAD1",
+    "logo": "./assets/logo.svg",
+    "composerIcon": "./assets/icon.svg"
+  },
+  "mcpServers": "./.mcp.json"
+}
