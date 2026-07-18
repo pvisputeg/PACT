@@ -8,7 +8,7 @@
 
 </div>
 
-![PACT Outcome Room closing a governed recovery at 82.1% observed synthetic OTIF](submission-assets/screenshots/05-outcome-closeout.png)
+![PACT Enterprise Outcome Command Center showing the governed outcome portfolio](submission-assets/screenshots/00-enterprise-command-center.png)
 
 PACT is an Enterprise Outcome Command Center for COO, transformation, and functional leaders. Its opening control plane shows the outcomes that matter across the organization; each Outcome Room then governs the complete path from business signal to proof, decision, human approval, coordinated execution, measured result, and organizational learning.
 

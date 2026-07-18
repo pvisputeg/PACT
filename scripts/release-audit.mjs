@@ -26,6 +26,7 @@ const requiredFiles = [
   'public/og.png',
   'submission-assets/README.md',
   'submission-assets/gallery-manifest.json',
+  'submission-assets/screenshots/00-enterprise-command-center.png',
   'submission-assets/screenshots/01-signal-contract.png',
   'submission-assets/screenshots/02-proofline-verification.png',
   'submission-assets/screenshots/03-strategy-sandbox.png',
