@@ -150,14 +150,16 @@ PACT is intentionally Codex-native rather than merely developed beside Codex.
 
 ### GPT-5.6
 
-[`scripts/generate-gpt-artifacts.mjs`](scripts/generate-gpt-artifacts.mjs) uses the OpenAI Responses API with:
+[`scripts/generate-gpt-artifacts.mjs`](scripts/generate-gpt-artifacts.mjs) uses the OpenAI Agents SDK with:
 
 - model alias `gpt-5.6` (GPT-5.6 Sol),
 - `reasoning.effort: high`,
-- strict Structured Outputs,
-- one Outcome Lead plan-synthesis call,
-- a separate Independent Auditor call, and
-- preserved response IDs and schema-validated artifacts.
+- strict Zod Structured Outputs and SDK output guardrails,
+- one Outcome Lead agent that synthesizes the governed plan,
+- a separate Independent Auditor agent that receives an immutable audit packet,
+- linked stage traces, response IDs, and schema-validated artifacts,
+- resumable plan checkpoints with automatic retries disabled, and
+- a durable project cost ledger capped at $4.50 by default and never configurable above $5.
 
 Inspect the request boundary without credentials:
 
@@ -171,6 +173,14 @@ Generate genuine artifacts when `OPENAI_API_KEY` is configured:
 # Export OPENAI_API_KEY in your shell; the application never reads it in the browser.
 npm run generate:agents
 ```
+
+If the audit stage needs to be deliberately resumed after the saved plan has been inspected:
+
+```bash
+npm run generate:agents:resume
+```
+
+The agents do not call business tools. Deterministic policy guards and the explicit human approval gate remain the only path to simulated action.
 
 The prepared deterministic mode remains functional without external credentials. It never represents deterministic fallback calculations as live model output.
 

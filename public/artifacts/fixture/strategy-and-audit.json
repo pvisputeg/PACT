@@ -4,8 +4,22 @@
   "provider": "Local schema fixture",
   "provenance": {
     "kind": "fixture",
+    "framework": "offline-fixture",
+    "orchestration": "manager",
+    "planAgent": "PACT Outcome Lead",
+    "auditAgent": "Independent PACT Outcome Auditor",
     "planResponseId": "fixture_plan_001",
-    "auditResponseId": "fixture_audit_001"
+    "auditResponseId": "fixture_audit_001",
+    "planTraceId": "fixture_trace_plan_001",
+    "auditTraceId": "fixture_trace_audit_001"
+  },
+  "usage": {
+    "requests": 0,
+    "inputTokens": 0,
+    "outputTokens": 0,
+    "estimatedCostUsd": 0,
+    "projectCommittedUsd": 0,
+    "projectBudgetUsd": 4.5
   },
   "plan": {
     "executiveSummary": "Balanced recovery meets the Day-21 target while preserving meaningful budget headroom and avoiding the speed plan's overtime concentration.",

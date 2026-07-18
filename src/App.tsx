@@ -388,6 +388,36 @@ function ImpactView({ onContinue }: { onContinue: () => void }) {
   </section>;
 }
 
+function AgentDecisionLineage({ artifact }: { artifact: AiArtifact | null }) {
+  const isFixture = artifact?.provenance.kind === 'fixture';
+  const verdict = artifact?.audit.verdict.replaceAll('_', ' ') ?? 'awaiting plan';
+  const planTrace = artifact?.provenance.planTraceId.slice(0, 18) ?? 'trace pending';
+  const auditTrace = artifact?.provenance.auditTraceId.slice(0, 18) ?? 'trace pending';
+
+  return <section className={`agent-lineage panel ${isFixture ? 'agent-lineage-fixture' : ''}`} aria-label="Agent decision lineage">
+    <div className="agent-lineage-heading">
+      <div><span>GOVERNED DECISION LINEAGE</span><strong>Two agents challenge one plan. A human owns the decision.</strong></div>
+      <div className="agent-runtime"><i />{artifact ? (isFixture ? 'OFFLINE REHEARSAL' : 'OPENAI AGENTS SDK') : 'SDK READY'}</div>
+    </div>
+    <div className="agent-lineage-flow">
+      <article className="agent-role-card">
+        <div className="agent-role-icon"><Sparkles size={17}/></div>
+        <div><small>01 · SYNTHESIZE</small><strong>{artifact?.provenance.planAgent ?? 'PACT Outcome Lead'}</strong><p>Turns verified evidence, constraints, and business impact into one cross-team recommendation.</p><code>{planTrace}</code></div>
+      </article>
+      <div className="agent-handoff"><ArrowRight size={15}/><span>TYPED PLAN</span><small>immutable</small></div>
+      <article className="agent-role-card agent-role-audit">
+        <div className="agent-role-icon"><Scale size={17}/></div>
+        <div><small>02 · CHALLENGE</small><strong>{artifact?.provenance.auditAgent ?? 'Independent Outcome Auditor'}</strong><p>Tests evidence, dependencies, unsupported claims, and counterfactual risk without editing the plan.</p><code>{auditTrace}</code></div>
+      </article>
+      <div className="agent-handoff"><ArrowRight size={15}/><span>VERDICT</span><small>{verdict}</small></div>
+      <article className="agent-role-card agent-role-human">
+        <div className="agent-role-icon"><LockKeyhole size={17}/></div>
+        <div><small>03 · AUTHORIZE</small><strong>Executive decision owner</strong><p>Sees recommendation and dissent together. Only the human can release budget or mobilize teams.</p><code>{artifact ? `$${artifact.usage.estimatedCostUsd.toFixed(4)} model cost` : 'authority locked'}</code></div>
+      </article>
+    </div>
+  </section>;
+}
+
 function StrategyView({ state, setState, artifact, onContinue }: { state: WorkflowState; setState: Dispatch<SetStateAction<WorkflowState>>; artifact: AiArtifact | null; onContinue: () => void }) {
   const selected = scenario.strategies.find((item) => item.id === state.selectedStrategyId) ?? scenario.strategies[2];
   const executable = selected.id === 'STR-BALANCED';
@@ -403,6 +433,7 @@ function StrategyView({ state, setState, artifact, onContinue }: { state: Workfl
     <PageHeading eyebrow="04 · CHOOSE THE RESPONSE" title="Three recovery paths. One responsible recommendation." description="Compare business tradeoffs—not just model scores. Every projection remains simulated, bounded by the same outcome contract." label="REPRODUCIBLE · SEED 56021" />
     <div className="simulation-banner"><Zap size={16} /><span>SIMULATION, NOT FORECAST</span><p>Same contract + scenario + parameters will always reproduce these results.</p></div>
     {artifact && <div className={`model-provenance panel ${artifact.provenance.kind === 'fixture' ? 'model-fixture' : ''}`}><Sparkles size={17}/><div><span>{artifact.provenance.kind === 'genuine' ? 'REVIEWED GPT‑5.6 ARTIFACT' : 'LOCAL SCHEMA FIXTURE · NO API CALL'}</span><strong>{artifact.plan.executiveSummary}</strong></div><code>{artifact.provenance.planResponseId.slice(0, 20)}</code></div>}
+    <AgentDecisionLineage artifact={artifact} />
     <div className="strategy-grid">{scenario.strategies.map((strategy) => {
       const evaluation = evaluateStrategy(strategy); const selected = state.selectedStrategyId === strategy.id; const recommended = strategy.id === (artifact?.plan.recommendedStrategyId ?? 'STR-BALANCED');
       return <button key={strategy.id} aria-pressed={selected} className={`strategy-card panel ${selected ? 'selected' : ''}`} onClick={() => setState((current) => ({ ...current, selectedStrategyId: strategy.id }))}>

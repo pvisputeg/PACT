@@ -50,7 +50,7 @@ The product ends with a measurable outcome, a machine-readable Outcome Ledger, a
 - A governed workflow state machine with local persistence.
 - A stateful local MCP server with nine business tools and authorization guards.
 - A local Codex plugin containing the `investigate-and-recover-outcome` skill.
-- GPT-5.6 through the Responses API with high reasoning and strict Structured Outputs for separate Outcome Lead and Auditor calls.
+- GPT-5.6 through the OpenAI Agents SDK with high reasoning, typed outputs, output guardrails, linked traces, and separate Outcome Lead and Auditor agents.
 - Vitest domain and workflow coverage, a standalone MCP protocol verifier, production build verification, and browser-based end-to-end interaction testing.
 
 ## How Codex was used
@@ -61,7 +61,7 @@ Required `/feedback` session ID: **[ADD BEFORE SUBMISSION]**
 
 ## How GPT-5.6 was used
 
-PACT sends the deterministic evidence packet and Outcome Contract to GPT-5.6 using the Responses API. An Outcome Lead call synthesizes a schema-constrained, evidence-cited cross-team recommendation. A second call uses a distinct Independent Auditor role and schema to challenge unsupported claims, constraints, dependencies, and optimistic projections. Model output cannot approve or execute tools; deterministic guards and human authority remain in control.
+PACT sends the deterministic evidence packet and Outcome Contract through an explicit manager-style OpenAI Agents SDK workflow. The Outcome Lead agent synthesizes a typed, evidence-cited cross-team recommendation. The Independent Auditor agent receives a frozen packet and challenges unsupported claims, constraints, dependencies, and optimistic projections without mutating the plan. SDK traces and response IDs preserve provenance. Output guardrails enforce cross-team coverage, authority boundaries, and verdict consistency. Model output cannot approve or execute tools; deterministic guards and human authority remain in control.
 
 Genuine artifact generation status: **[RUN `npm run generate:agents` AND CONFIRM BEFORE SUBMISSION]**
 

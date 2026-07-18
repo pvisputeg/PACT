@@ -72,13 +72,13 @@ export const actionContractSchema = z.object({
   evidenceIds: z.array(z.string()).min(1),
   preconditions: z.array(z.string()),
   dependencies: z.array(z.string().regex(/^ACT-\d{3}$/)),
-  parameters: z.record(z.union([z.string(), z.number(), z.boolean()])),
+  parameters: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])),
   estimatedCost: z.number().nonnegative(),
   estimatedEffect: z.number(),
   approvalRequired: z.boolean(),
   toolOperation: z.string().min(1),
   status: z.enum(['proposed', 'blocked', 'ready', 'executing', 'complete', 'failed']),
-  result: z.record(z.unknown()).nullable(),
+  result: z.record(z.string(), z.unknown()).nullable(),
   recovery: z.string().min(1),
 });
 

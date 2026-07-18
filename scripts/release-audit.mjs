@@ -60,11 +60,16 @@ let genuineArtifactData = null;
 if (existsSync(publicArtifactPath)) {
   try {
     const artifact = JSON.parse(readFileSync(publicArtifactPath, 'utf8'));
-    genuineArtifact = artifact.provider === 'OpenAI Responses API'
+    genuineArtifact = artifact.provider === 'OpenAI Agents SDK'
       && artifact.model === 'gpt-5.6'
       && artifact.provenance?.kind === 'genuine'
+      && artifact.provenance?.framework === '@openai/agents'
+      && artifact.provenance?.orchestration === 'manager'
       && /^resp_/.test(artifact.provenance?.planResponseId ?? '')
-      && /^resp_/.test(artifact.provenance?.auditResponseId ?? '');
+      && /^resp_/.test(artifact.provenance?.auditResponseId ?? '')
+      && /^trace_/.test(artifact.provenance?.planTraceId ?? '')
+      && /^trace_/.test(artifact.provenance?.auditTraceId ?? '')
+      && artifact.usage?.projectBudgetUsd <= 5;
     if (genuineArtifact) genuineArtifactData = artifact;
     artifactProblem = genuineArtifact ? '' : 'artifact provenance is incomplete';
   } catch {

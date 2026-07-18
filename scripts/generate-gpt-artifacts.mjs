@@ -1,18 +1,32 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { Agent, Runner, generateTraceId, withTrace } from '@openai/agents';
+import { independentAuditSchema, planSynthesisSchema } from './lib/pact-agent-schemas.mjs';
+import {
+  estimateCostUsd,
+  estimateTokens,
+  readLedger,
+  reconcileCall,
+  reserveCall,
+  resolveBudget,
+  totalCommittedUsd,
+  writeLedger,
+} from './lib/pact-cost-guard.mjs';
 
 const dryRun = process.argv.includes('--dry-run');
 const resume = process.argv.includes('--resume');
 const model = process.env.PACT_OPENAI_MODEL || 'gpt-5.6';
 const apiKey = process.env.OPENAI_API_KEY;
 const root = new URL('../', import.meta.url);
+const artifactDirectoryUrl = new URL('artifacts/gpt-5.6/', root);
 const checkpointUrl = new URL('artifacts/gpt-5.6/plan-checkpoint.json', root);
+const ledgerUrl = new URL('artifacts/gpt-5.6/cost-ledger.json', root);
+const projectBudgetUsd = resolveBudget();
+const workflowGroupId = 'pact-otif-recovery-demo';
 
-const [scenario, metricContract, outcomeContract, planSchema, auditSchema] = await Promise.all([
+const [scenario, metricContract, outcomeContract] = await Promise.all([
   readJson('data/otif-recovery.scenario.json'),
   readJson('contracts/metric-contract.json'),
   readJson('contracts/outcome-contract.json'),
-  readJson('contracts/schemas/plan-synthesis.schema.json'),
-  readJson('contracts/schemas/independent-audit.schema.json'),
 ]);
 
 const evidencePacket = {
@@ -43,117 +57,227 @@ const evidencePacket = {
   note: 'Contributor shares are observed associations, not exclusive causal proof. Projections are SIMULATED.',
 };
 
-const planRequest = {
+const outcomeLead = new Agent({
+  name: 'PACT Outcome Lead',
+  handoffDescription: 'Synthesizes evidence into a coordinated, cross-team outcome recommendation.',
   model,
-  reasoning: { effort: 'high' },
-  max_output_tokens: 3500,
-  input: [
-    {
-      role: 'system',
-      content: 'You are the PACT Outcome Lead. Synthesize an evidence-cited, cross-team recovery recommendation. Preserve facts, estimates, simulations, and assumptions as distinct categories. Enforce the Outcome Contract. Do not approve or execute the plan.',
+  modelSettings: {
+    reasoning: { effort: 'high' },
+    maxTokens: 3500,
+    text: { verbosity: 'low' },
+    store: true,
+    retry: { maxRetries: 0, policy: async () => false },
+  },
+  instructions: [
+    'You are the PACT Outcome Lead.',
+    'Synthesize an evidence-cited, cross-team recovery recommendation from the immutable packet.',
+    'Preserve facts, estimates, simulations, and assumptions as distinct categories.',
+    'Cover Finance, Procurement, Manufacturing, Logistics, Customer, and Outcome Office.',
+    'Enforce the Outcome Contract. Do not approve, claim execution, or invoke actions.',
+    'Be concise enough for an executive decision packet.',
+  ].join(' '),
+  outputType: planSynthesisSchema,
+  outputGuardrails: [{
+    name: 'Cross-team authority boundary',
+    execute: async ({ agentOutput }) => {
+      const expectedTeams = ['Finance', 'Procurement', 'Manufacturing', 'Logistics', 'Customer', 'Outcome Office'];
+      const suppliedTeams = new Set(agentOutput.crossTeamPriorities.map((priority) => priority.team));
+      const missingTeams = expectedTeams.filter((team) => !suppliedTeams.has(team));
+      const authorityClaim = /\b(plan|action|recovery)\s+(has been|is)\s+(approved|executed)\b/i.test(`${agentOutput.executiveSummary} ${agentOutput.strategyRationale}`);
+      return {
+        tripwireTriggered: missingTeams.length > 0 || authorityClaim,
+        outputInfo: { missingTeams, authorityClaim },
+      };
     },
-    { role: 'user', content: JSON.stringify(evidencePacket) },
-  ],
-  text: { format: { type: 'json_schema', name: 'pact_plan_synthesis', strict: true, schema: planSchema } },
-};
+  }],
+});
+
+const independentAuditor = new Agent({
+  name: 'Independent PACT Outcome Auditor',
+  handoffDescription: 'Challenges a proposed plan without editing, approving, or executing it.',
+  model,
+  modelSettings: {
+    reasoning: { effort: 'high' },
+    maxTokens: 6500,
+    text: { verbosity: 'low' },
+    store: true,
+    retry: { maxRetries: 0, policy: async () => false },
+  },
+  instructions: [
+    'You are the Independent PACT Outcome Auditor. You did not propose this plan.',
+    'Review readiness for a human decision inside the supplied fixed-seed synthetic demonstration.',
+    'Treat supplied evidence records and deterministic guards as authoritative within that boundary.',
+    'Human approval being pending is expected: preserve it as a required condition, not a blocking defect.',
+    'A simulated projection may be challenged as a material assumption without demanding production-grade confidence intervals.',
+    'Block only an internal contradiction, hard-constraint violation, or unsafe dependency not handled by the stated guards.',
+    'Return at most 3 prioritized findings, unsupported claims, and required conditions.',
+    'You may not modify, approve, or execute the plan.',
+  ].join(' '),
+  outputType: independentAuditSchema,
+  outputGuardrails: [{
+    name: 'Verdict consistency',
+    execute: async ({ agentOutput }) => {
+      const hasBlockingFinding = agentOutput.findings.some((finding) => finding.severity === 'blocking');
+      const inconsistent = agentOutput.verdict === 'block' ? !hasBlockingFinding : hasBlockingFinding;
+      return { tripwireTriggered: inconsistent, outputInfo: { hasBlockingFinding, verdict: agentOutput.verdict } };
+    },
+  }],
+});
+
+const planInput = JSON.stringify({ packetType: 'PACT_EVIDENCE_PACKET_V1', evidencePacket });
+const planWorstCase = estimateCostUsd({ inputTokens: estimateTokens(planInput) + 1200, outputTokens: 3500 });
+const auditWorstCase = estimateCostUsd({ inputTokens: estimateTokens(JSON.stringify({ evidencePacket, proposedPlan: 'bounded structured plan' })) + 3000, outputTokens: 6500 });
 
 if (dryRun) {
-  console.log(JSON.stringify({ mode: 'dry-run', endpoint: 'POST /v1/responses', model, reasoningEffort: 'high', resumable: true, schema: planRequest.text.format.name, evidenceBytes: JSON.stringify(evidencePacket).length }, null, 2));
+  console.log(JSON.stringify({
+    mode: 'dry-run',
+    framework: '@openai/agents',
+    model,
+    orchestration: 'explicit manager-style sequence',
+    agents: [
+      { name: outcomeLead.name, outputSchema: 'planSynthesisSchema', guardrail: 'Cross-team authority boundary', maxOutputTokens: 3500 },
+      { name: independentAuditor.name, outputSchema: 'independentAuditSchema', guardrail: 'Verdict consistency', maxOutputTokens: 6500 },
+    ],
+    boundaries: ['immutable evidence packet', 'independent audit', 'no model tools', 'human approval remains external'],
+    tracing: 'linked SDK stage traces grouped as one governed workflow; response IDs retained',
+    resumable: true,
+    automaticRetries: false,
+    costGuard: { projectBudgetUsd, hardCapUsd: 5, estimatedWorstCaseUsd: Number((planWorstCase + auditWorstCase).toFixed(6)) },
+    evidenceBytes: planInput.length,
+  }, null, 2));
   process.exit(0);
 }
 
 if (!apiKey) {
-  console.error('OPENAI_API_KEY is not configured. Run with --dry-run or copy .env.example to .env and export the key in your shell.');
+  console.error('OPENAI_API_KEY is not configured. Run with --dry-run to verify the full Agents SDK configuration without an API call.');
   process.exit(1);
 }
 
-let planResponseId;
+await mkdir(artifactDirectoryUrl, { recursive: true });
+let ledger = await readLedger(ledgerUrl, projectBudgetUsd);
+const runner = new Runner({
+  tracingDisabled: false,
+  traceIncludeSensitiveData: false,
+  workflowName: 'PACT Governed Outcome Review',
+  groupId: workflowGroupId,
+  traceMetadata: { application: 'PACT', scenario: 'otif-recovery', orchestration: 'manager' },
+});
+
 let plan;
+let planResponseId;
+let planTraceId;
+let planUsage;
+
 if (resume) {
   const checkpoint = await readJson('artifacts/gpt-5.6/plan-checkpoint.json');
-  if (checkpoint.model !== model || !checkpoint.responseId || !checkpoint.plan) throw new Error(`Plan checkpoint does not match model ${model}`);
-  planResponseId = checkpoint.responseId;
+  if (checkpoint.framework !== '@openai/agents' || checkpoint.model !== model || !checkpoint.responseId || !checkpoint.traceId || !checkpoint.plan || !checkpoint.usage) {
+    throw new Error(`Agents SDK plan checkpoint does not match model ${model}.`);
+  }
   plan = checkpoint.plan;
-  console.log(`Resuming from saved Outcome Lead response ${planResponseId}.`);
+  planResponseId = checkpoint.responseId;
+  planTraceId = checkpoint.traceId;
+  planUsage = checkpoint.usage;
+  console.log(`Resuming from saved Outcome Lead SDK response ${planResponseId}.`);
 } else {
-  const planResponse = await createResponse(planRequest);
-  plan = extractStructuredOutput(planResponse, 'Outcome Lead');
-  planResponseId = planResponse.id;
-  await mkdir(new URL('artifacts/gpt-5.6/', root), { recursive: true });
-  await writeFile(checkpointUrl, `${JSON.stringify({ generatedAt: new Date().toISOString(), model, responseId: planResponseId, plan }, null, 2)}\n`, 'utf8');
-  console.log(`Saved Outcome Lead checkpoint ${planResponseId} before independent audit.`);
+  planTraceId = generateTraceId();
+  const planReservationId = `${planTraceId}:outcome-lead`;
+  ledger = reserveCall(ledger, { id: planReservationId, agent: outcomeLead.name, costUsd: planWorstCase });
+  await writeLedger(ledgerUrl, ledger);
+
+  const planResult = await withTrace('PACT Governed Outcome Review',
+    async () => runner.run(outcomeLead, planInput, { maxTurns: 1 }),
+    { traceId: planTraceId, groupId: workflowGroupId, metadata: { stage: 'plan', model } },
+  );
+  if (!planResult.finalOutput || !planResult.lastResponseId) throw new Error('Outcome Lead SDK run returned no typed output or response ID. The cost reservation remains for manual review.');
+
+  plan = planSynthesisSchema.parse(planResult.finalOutput);
+  planResponseId = planResult.lastResponseId;
+  planUsage = summarizeUsage(planResult.runContext.usage);
+  ledger = reconcileCall(ledger, planReservationId, planUsage);
+  await writeLedger(ledgerUrl, ledger);
+  await writeFile(checkpointUrl, `${JSON.stringify({
+    generatedAt: new Date().toISOString(),
+    framework: '@openai/agents',
+    model,
+    traceId: planTraceId,
+    responseId: planResponseId,
+    usage: planUsage,
+    plan,
+  }, null, 2)}\n`, 'utf8');
+  console.log(`Saved Outcome Lead SDK checkpoint ${planResponseId} before independent audit.`);
 }
 
-const auditRequest = {
-  model,
-  reasoning: { effort: 'high' },
-  max_output_tokens: 4500,
-  input: [
-    {
-      role: 'system',
-      content: 'You are the Independent PACT Outcome Auditor. You did not propose this plan. Review readiness for a human decision inside the supplied fixed-seed synthetic demonstration. Treat supplied evidence records and deterministic guards as authoritative within that boundary. Human approval being pending is expected: preserve it as a required condition, not a blocking defect. A simulated projection may be challenged as a material assumption without demanding production-grade confidence intervals. Block only an internal contradiction, hard-constraint violation, or unsafe dependency that cannot be handled by the stated guards. Return at most 3 prioritized findings, 3 unsupported claims, and 3 required conditions. Keep every title under 10 words and every detail, claim, condition, and counterfactual field under 35 words. You may not modify, approve on behalf of a human, or execute the plan.',
-    },
-    { role: 'user', content: JSON.stringify({ evidencePacket, proposedPlan: plan }) },
-  ],
-  text: { format: { type: 'json_schema', name: 'pact_independent_audit', strict: true, schema: auditSchema } },
-};
+const auditInput = JSON.stringify({
+  packetType: 'PACT_INDEPENDENT_AUDIT_PACKET_V1',
+  separationOfDuties: 'The auditor receives a frozen copy and cannot mutate the Outcome Lead plan.',
+  evidencePacket,
+  proposedPlan: plan,
+});
+const auditTraceId = generateTraceId();
+const auditReservationId = `${auditTraceId}:independent-auditor`;
+const boundedAuditWorstCase = estimateCostUsd({ inputTokens: estimateTokens(auditInput) + 1200, outputTokens: 6500 });
+ledger = reserveCall(ledger, { id: auditReservationId, agent: independentAuditor.name, costUsd: boundedAuditWorstCase });
+await writeLedger(ledgerUrl, ledger);
 
-const auditResponse = await createResponse(auditRequest);
-const audit = extractStructuredOutput(auditResponse, 'Independent Auditor');
+const auditResult = await withTrace('PACT Independent Outcome Audit',
+  async () => runner.run(independentAuditor, auditInput, { maxTurns: 1 }),
+  { traceId: auditTraceId, groupId: workflowGroupId, metadata: { stage: 'audit', model, planResponseId } },
+);
+if (!auditResult.finalOutput || !auditResult.lastResponseId) throw new Error('Independent Auditor SDK run returned no typed output or response ID. Resume the plan only after inspecting the cost ledger.');
+
+const audit = independentAuditSchema.parse(auditResult.finalOutput);
+const auditResponseId = auditResult.lastResponseId;
+const auditUsage = summarizeUsage(auditResult.runContext.usage);
+ledger = reconcileCall(ledger, auditReservationId, auditUsage);
+await writeLedger(ledgerUrl, ledger);
+
+const artifactCostUsd = estimateCostUsd({
+  inputTokens: planUsage.inputTokens + auditUsage.inputTokens,
+  outputTokens: planUsage.outputTokens + auditUsage.outputTokens,
+});
 const artifact = {
   generatedAt: new Date().toISOString(),
   model,
-  provider: 'OpenAI Responses API',
-  provenance: { kind: 'genuine', planResponseId, auditResponseId: auditResponse.id },
+  provider: 'OpenAI Agents SDK',
+  provenance: {
+    kind: 'genuine',
+    framework: '@openai/agents',
+    orchestration: 'manager',
+    planAgent: outcomeLead.name,
+    auditAgent: independentAuditor.name,
+    planResponseId,
+    auditResponseId,
+    planTraceId,
+    auditTraceId,
+  },
+  usage: {
+    requests: planUsage.requests + auditUsage.requests,
+    inputTokens: planUsage.inputTokens + auditUsage.inputTokens,
+    outputTokens: planUsage.outputTokens + auditUsage.outputTokens,
+    estimatedCostUsd: artifactCostUsd,
+    projectCommittedUsd: totalCommittedUsd(ledger),
+    projectBudgetUsd,
+  },
   plan,
   audit,
 };
 
 const serializedArtifact = `${JSON.stringify(artifact, null, 2)}\n`;
-await Promise.all([
-  mkdir(new URL('artifacts/gpt-5.6/', root), { recursive: true }),
-  mkdir(new URL('public/artifacts/gpt-5.6/', root), { recursive: true }),
-]);
+await mkdir(new URL('public/artifacts/gpt-5.6/', root), { recursive: true });
 await Promise.all([
   writeFile(new URL('artifacts/gpt-5.6/strategy-and-audit.json', root), serializedArtifact, 'utf8'),
   writeFile(new URL('public/artifacts/gpt-5.6/strategy-and-audit.json', root), serializedArtifact, 'utf8'),
 ]);
-console.log(`Generated genuine ${model} PACT artifact and staged its reviewed UI copy.`);
+console.log(`Generated genuine ${model} PACT artifact with OpenAI Agents SDK. Estimated artifact cost: $${artifactCostUsd.toFixed(4)}; project ledger: $${totalCommittedUsd(ledger).toFixed(4)} / $${projectBudgetUsd.toFixed(2)}.`);
 
 async function readJson(path) {
   return JSON.parse(await readFile(new URL(path, root), 'utf8'));
 }
 
-async function createResponse(body) {
-  const response = await fetch('https://api.openai.com/v1/responses', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  if (!response.ok) throw new Error(`OpenAI Responses API returned ${response.status}: ${await response.text()}`);
-  return response.json();
-}
-
-function extractStructuredOutput(response, roleName) {
-  if (response.status === 'incomplete') {
-    const reason = response.incomplete_details?.reason ?? 'unknown reason';
-    const recovery = roleName === 'Independent Auditor'
-      ? 'The valid Outcome Lead checkpoint can be reused with npm run generate:agents:resume.'
-      : 'No checkpoint was created; adjust the Outcome Lead response boundary before retrying.';
-    throw new Error(`${roleName} response ${response.id ?? '(no id)'} was incomplete: ${reason}. ${recovery}`);
-  }
-  for (const item of response.output ?? []) {
-    if (item.type !== 'message') continue;
-    for (const content of item.content ?? []) {
-      if (content.type === 'output_text') {
-        try { return JSON.parse(content.text); }
-        catch (error) {
-          const recovery = roleName === 'Independent Auditor' ? ' Reuse the saved plan with npm run generate:agents:resume.' : '';
-          throw new Error(`${roleName} response ${response.id ?? '(no id)'} returned invalid structured JSON: ${error instanceof Error ? error.message : String(error)}.${recovery}`);
-        }
-      }
-      if (content.type === 'refusal') throw new Error(`Model refusal: ${content.refusal}`);
-    }
-  }
-  throw new Error('Responses API returned no structured output_text');
+function summarizeUsage(usage) {
+  return {
+    requests: usage.requests,
+    inputTokens: usage.inputTokens,
+    outputTokens: usage.outputTokens,
+  };
 }

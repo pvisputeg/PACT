@@ -50,7 +50,7 @@ npm run verify:mcp
 
 ## GPT-5.6 boundary
 
-The GPT integration uses two separate GPT-5.6 Responses API calls: Outcome Lead synthesis and Independent Auditor challenge. Before submission, the generated artifact must pass the strict local schema and release audit; the reviewed public artifact then ships with response IDs for provenance. Model output cannot approve a plan or execute a tool.
+The GPT integration is a manager-style OpenAI Agents SDK workflow with two separately instructed GPT-5.6 agents: Outcome Lead synthesis and Independent Auditor challenge. Each agent has a strict typed output and an SDK output guardrail. Linked trace IDs, response IDs, token usage, and estimated cost ship with the reviewed artifact. Model output cannot approve a plan or execute a tool.
 
 The request contract can be inspected without an API key:
 
@@ -58,7 +58,7 @@ The request contract can be inspected without an API key:
 npm run generate:agents:dry-run
 ```
 
-The generator checkpoints a valid Outcome Lead response before calling the Independent Auditor. If only the audit call fails or is incomplete, reuse the paid first response instead of generating it again:
+The generator checkpoints a valid Outcome Lead response before calling the Independent Auditor. It disables automatic retries and writes a pre-call cost reservation, so an interrupted call cannot be silently repeated. After inspecting the checkpoint and cost ledger, reuse the paid first response with:
 
 ```bash
 npm run generate:agents:resume

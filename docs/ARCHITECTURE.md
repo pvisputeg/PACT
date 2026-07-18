@@ -16,17 +16,20 @@ flowchart LR
     WF --> CT[Versioned contracts]
     WF --> PE[Proofline evidence engine]
     WF --> SE[Deterministic strategy simulator]
-    WF --> AU[Independent Auditor]
+    WF --> AO[Agents SDK orchestrator]
+    AO --> GL[GPT-5.6 Outcome Lead]
+    GL --> GA[GPT-5.6 Independent Auditor]
+    GA --> WF
     WF --> TG[Dependency-aware Action Graph]
     TG --> BT[Safe simulated business tools]
     BT --> DT[Synthetic operating twin]
     DT --> OM[Outcome monitor]
     PE --> OL[Outcome Ledger]
     SE --> OL
-    AU --> OL
+    AO --> OL
     BT --> OL
     OM --> OL
-    CX[Codex + GPT-5.6 structured reasoning] -. schema-validated proposals and challenges .-> WF
+    CX[Codex development environment] -. plugin, skill, and MCP surface .-> WF
 ```
 
 ## Layers
@@ -45,7 +48,17 @@ The client follows an explicit stage machine. Later stages cannot appear complet
 
 ### Intelligence boundary
 
-GPT-5.6 is used through schema-constrained roles for explanation, plan synthesis, and independent challenge. Its output is advisory until validated against deterministic calculations and hard constraints. The prepared demo remains executable without external credentials, using versioned artifacts from the deterministic engine rather than fabricated chat.
+GPT-5.6 is used through the OpenAI Agents SDK. An explicit manager-style orchestrator runs the Outcome Lead and then gives the Independent Auditor an immutable packet containing the same evidence plus the typed plan. Each agent has a distinct instruction boundary, Zod output type, SDK output guardrail, response ID, and trace ID. The agents have no business tools and cannot hand off authority. Their output is advisory until validated against deterministic calculations and hard constraints. The prepared demo remains executable without external credentials through a clearly labeled offline fixture.
+
+### Agent topology
+
+The implementation deliberately uses two reasoning agents, not a swarm:
+
+1. **PACT Outcome Lead** synthesizes one evidence-cited, six-team recovery recommendation. Its output guardrail requires cross-team coverage and rejects claims that the plan was already approved or executed.
+2. **Independent PACT Outcome Auditor** receives a frozen audit packet. Its output guardrail requires the verdict to agree with the severity of its findings.
+3. **Executive decision owner** is not an agent. The human reviews both outputs together and remains the only authority that can release the deterministic action graph.
+
+Linked SDK traces group both reasoning stages into the governed workflow. A checkpoint preserves a valid Outcome Lead result before the audit begins. Automatic API retries are disabled, and a durable pre-call cost ledger enforces a configurable project budget that cannot exceed $5.
 
 ### Tool boundary
 

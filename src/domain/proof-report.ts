@@ -36,8 +36,12 @@ export function buildProofReport(state: WorkflowState, artifact: AiArtifact | nu
 
 - Provider: ${artifact.provider}
 - Artifact kind: **${artifact.provenance.kind.toUpperCase()}**
+- Orchestration: ${artifact.provenance.orchestration} via ${artifact.provenance.framework}
+- Outcome Lead trace: \`${artifact.provenance.planTraceId}\`
+- Independent Auditor trace: \`${artifact.provenance.auditTraceId}\`
 - Plan response: \`${artifact.provenance.planResponseId}\`
 - Audit response: \`${artifact.provenance.auditResponseId}\`
+- Estimated model cost: $${artifact.usage.estimatedCostUsd.toFixed(4)} within a $${artifact.usage.projectBudgetUsd.toFixed(2)} project cap
 - Recommended strategy: ${artifact.plan.recommendedStrategyId}
 - Model rationale: ${artifact.plan.strategyRationale}
 - Independent verdict: **${artifact.audit.verdict.toUpperCase()}**

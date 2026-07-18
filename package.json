@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "dev": "vite --configLoader runner",
+    "build": "tsc --noEmit && vite build --configLoader runner",
     "verify:dist": "node scripts/verify-dist.mjs",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "vitest run --config vitest.config.ts --configLoader runner",
+    "test:watch": "vitest --config vitest.config.ts --configLoader runner",
     "reset": "node scripts/verify-scenario.mjs",
     "release:audit": "node scripts/release-audit.mjs",
     "release:check": "node scripts/release-audit.mjs --strict",
@@ -22,10 +22,11 @@
   "dependencies": {
     "@fontsource/dm-mono": "^5.2.6",
     "@fontsource/manrope": "^5.2.6",
+    "@openai/agents": "^0.13.5",
     "lucide-react": "^0.468.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "zod": "^3.24.1"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
@@ -33,7 +34,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "^5.7.2",
     "vite": "^6.0.5",
-    "vitest": "^2.1.8"
+    "vitest": "^4.1.10"
   },
   "packageManager": "npm@10.9.2"
 }

@@ -18,7 +18,7 @@ The official rules use a Stage One viability check followed by four equally weig
 |---|---|---|
 | Fits a challenge track | A cross-team operational recovery product fits Work & Productivity workflow automation, analytics, and back-office operations. | Ready |
 | Built with Codex | Repository-wide `AGENTS.md`, dated Codex task, validated Codex plugin, skill, repo marketplace, and MCP server. | Ready |
-| Uses GPT-5.6 | Two-role Responses API integration with high reasoning, strict schemas, provenance validation, and reviewed UI loading. | **Release blocker: genuine artifact must be generated** |
+| Uses GPT-5.6 | Two-agent OpenAI Agents SDK workflow with high reasoning, strict typed outputs, output guardrails, linked traces, cost controls, provenance validation, and reviewed UI loading. | **Release blocker: genuine artifact must be generated** |
 | Working project | Full deterministic outcome loop passes domain, MCP, build, and browser checks. | Ready |
 | Works as depicted | Demo script uses only verified interactions and labels all synthetic state. | Ready; final video pending |
 
