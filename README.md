@@ -4,13 +4,15 @@
 
 ### Proof · Action · Coordination · Tracking
 
-**From a disputed business signal to governed action and a measured outcome.**
+**The enterprise operating system for measurable outcomes.**
 
 </div>
 
 ![PACT Outcome Room closing a governed recovery at 82.1% observed synthetic OTIF](submission-assets/screenshots/05-outcome-closeout.png)
 
-PACT is an AI outcome command center for COO, supply-chain, and transformation leaders. It is the missing operating layer between a business signal and a business result: verifying whether a consequential KPI is real, quantifying what is at stake, helping leaders choose a response, coordinating the teams that can change it, requiring human authorization, and measuring whether the intervention worked.
+PACT is an Enterprise Outcome Command Center for COO, transformation, and functional leaders. Its opening control plane shows the outcomes that matter across the organization; each Outcome Room then governs the complete path from business signal to proof, decision, human approval, coordinated execution, measured result, and organizational learning.
+
+Strategic Delivery Recovery is the fully implemented flagship outcome—not the product boundary. The same portfolio architecture is designed for cost optimization, throughput, customer retention, working capital, compliance, safety, and other measurable enterprise results.
 
 The flagship case begins with a decision any executive can understand: **$1.24M in revenue, 42 strategic customers, and 318 orders are at risk. Can five teams recover delivery performance to at least 82% within 21 days and a $75K budget?**
 
@@ -80,7 +82,7 @@ For the complete judge-facing verification in one command:
 npm run judge:verify
 ```
 
-See the [judge guide](docs/JUDGE_GUIDE.md) for the 90-second test path and the [official-criteria matrix](docs/JUDGING_MATRIX.md) for requirement-to-evidence traceability.
+See the [product information architecture](docs/INFORMATION_ARCHITECTURE.md), [judge guide](docs/JUDGE_GUIDE.md), and [official-criteria matrix](docs/JUDGING_MATRIX.md).
 
 Production verification:
 

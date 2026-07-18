@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type ComponentType, type Dispatch
 import {
   Activity, ArrowRight, BadgeCheck, Boxes, Check, ChevronRight, CircleDollarSign, Clock3,
   Download, FileCheck2, FileText, Fingerprint, GitBranch, History, LockKeyhole, Network, PackageCheck,
-  Play, RefreshCw, Route, Scale, ShieldCheck, Sparkles, Target, Truck, Users, Volume2, X, Zap,
+  LayoutGrid, Play, RefreshCw, Route, Scale, ShieldCheck, Sparkles, Target, Truck, Users, Volume2, X, Zap,
 } from 'lucide-react';
 import {
   appendLedger, auditBalancedPlan, buildBalancedPlan, createApproval, evaluateStrategy, executeNextAction,
@@ -11,6 +11,7 @@ import {
 import { aiArtifactSchema, type AiArtifact } from './domain/ai-artifact';
 import { buildProofReport } from './domain/proof-report';
 import type { EvidenceLabel, PactAction, Strategy, WorkflowStage, WorkflowState } from './domain/types';
+import { CommandCenter } from './ui/CommandCenter';
 
 const STAGES: { id: WorkflowStage; label: string; eyebrow: string; icon: ComponentType<{ size?: number }> }[] = [
   { id: 'signal', label: 'Define outcome', eyebrow: '01 · BUSINESS CASE', icon: Activity },
@@ -39,6 +40,12 @@ const STAGE_QUESTIONS: Record<WorkflowStage, string> = {
 };
 
 const STORAGE_KEY = 'pact.workflow.v2';
+
+type AppRoute = 'command-center' | 'outcome-room';
+
+function routeFromLocation(): AppRoute {
+  return window.location.hash.startsWith('#/outcomes/strategic-delivery-recovery') ? 'outcome-room' : 'command-center';
+}
 
 const teamIcons: Record<string, ComponentType<{ size?: number }>> = {
   Procurement: PackageCheck, Manufacturing: Boxes, Logistics: Truck, Finance: CircleDollarSign, Customer: Users, 'Outcome Office': Sparkles,
@@ -92,6 +99,7 @@ function speakBriefing(value: string) {
 }
 
 export function App() {
+  const [appRoute, setAppRoute] = useState<AppRoute>(routeFromLocation);
   const [state, setState] = useState<WorkflowState>(() => {
     if (new URLSearchParams(window.location.search).get('reset') === '1') return initialState;
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -103,6 +111,11 @@ export function App() {
   const ledgerButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => localStorage.setItem(STORAGE_KEY, JSON.stringify(state)), [state]);
+  useEffect(() => {
+    const onRouteChange = () => setAppRoute(routeFromLocation());
+    window.addEventListener('hashchange', onRouteChange);
+    return () => window.removeEventListener('hashchange', onRouteChange);
+  }, []);
   useEffect(() => {
     const url = new URL(window.location.href);
     if (url.searchParams.get('reset') !== '1') return;
@@ -141,6 +154,13 @@ export function App() {
   const closeLedger = () => {
     setLedgerOpen(false);
     requestAnimationFrame(() => ledgerButtonRef.current?.focus());
+  };
+
+  const navigateTo = (route: AppRoute) => {
+    const hash = route === 'outcome-room' ? '#/outcomes/strategic-delivery-recovery' : '#/';
+    if (window.location.hash !== hash) window.location.hash = hash;
+    setAppRoute(route);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const confirmContract = async () => {
@@ -227,6 +247,13 @@ export function App() {
     return [state.currentDay === 21 ? 'OUTCOME PROVEN' : 'MEASURING IMPACT', `Observed business state advanced to Day ${state.currentDay}.`];
   }, [state, completedActions]);
 
+  if (appRoute === 'command-center') {
+    return <>
+      <CommandCenter onOpenOutcome={() => navigateTo('outcome-room')} onOpenLedger={() => setLedgerOpen(true)}/>
+      {ledgerOpen && <LedgerDrawer state={state} onClose={closeLedger}/>}
+    </>;
+  }
+
   return (
     <div className="app-shell">
       <div className="ambient ambient-one" /><div className="ambient ambient-two" />
@@ -235,7 +262,7 @@ export function App() {
           <div className="brand-mark"><span /><span /><span /></div>
           <div><strong>PACT</strong><small>Proof · Action · Coordination · Tracking</small></div>
         </div>
-        <div className="room-title"><span>Executive Outcome Room</span><ChevronRight size={14} /><strong>Strategic delivery recovery</strong></div>
+        <div className="room-title"><button className="room-home-button" onClick={() => navigateTo('command-center')}><LayoutGrid size={13}/> Enterprise outcomes</button><ChevronRight size={14} /><strong>Strategic Delivery Recovery</strong></div>
         <div className="top-actions">
           <button ref={ledgerButtonRef} className="ghost-button" onClick={() => setLedgerOpen(true)} aria-haspopup="dialog"><History size={15} /> Ledger <span className="count">{state.ledger.length}</span></button>
           <button className="icon-button" onClick={reset} aria-label="Reset scenario" title="Reset scenario"><RefreshCw size={16} /></button>
@@ -261,6 +288,7 @@ export function App() {
       </aside>
 
       <main className="workspace">
+        <OutcomeTimeline state={state}/>
         {state.stage === 'signal' && <SignalView state={state} setState={setState} onConfirm={confirmContract} />}
         {state.stage === 'proof' && <ProofView state={state} onContinue={acceptProof} />}
         {state.stage === 'impact' && <ImpactView onContinue={() => setState((current) => ({
@@ -325,15 +353,39 @@ function PageHeading({ eyebrow, title, description, label }: { eyebrow: string; 
   return <div className="page-heading"><div><span className="page-eyebrow">{eyebrow}</span><h1>{title}</h1><p>{description}</p></div>{label && <div className="page-id">{label}</div>}</div>;
 }
 
+const OUTCOME_LIFECYCLE = ['Signal', 'Proof', 'Decision', 'Approval', 'Execution', 'Observation', 'Outcome', 'Learning'];
+
+function OutcomeTimeline({ state }: { state: WorkflowState }) {
+  const activeIndex = state.stage === 'signal' ? 0
+    : state.stage === 'proof' || state.stage === 'impact' ? 1
+      : state.stage === 'strategy' ? 2
+        : state.stage === 'approval' ? 3
+          : state.stage === 'execution' ? 4
+            : state.currentDay === 21 ? 7 : state.currentDay > 0 ? 6 : 5;
+
+  return <nav className="outcome-timeline" aria-label="Outcome lifecycle">
+    <span>OUTCOME LIFECYCLE</span>
+    <div>{OUTCOME_LIFECYCLE.map((label, index) => <div key={label} className={`${index === activeIndex ? 'active' : ''} ${index < activeIndex ? 'complete' : ''}`}><i>{index < activeIndex ? <Check size={10}/> : index + 1}</i><span>{label}</span></div>)}</div>
+  </nav>;
+}
+
 function SignalView({ state, setState, onConfirm }: { state: WorkflowState; setState: Dispatch<SetStateAction<WorkflowState>>; onConfirm: () => void }) {
   return <section className="view-enter">
-    <PageHeading eyebrow="EXECUTIVE DECISION BRIEF · COO / SUPPLY CHAIN / TRANSFORMATION" title="$1.24M is exposed. Five teams need one recovery decision." description="PACT is an AI outcome command center that turns a critical business signal into a trusted decision, coordinated action, and a provable result." label="INC-OTIF-042 · MATERIAL" />
+    <PageHeading eyebrow="BUSINESS OUTCOME · SUPPLY CHAIN" title="Strategic Delivery Recovery" description="Recover customer delivery performance through one governed, cross-team outcome contract." label="INVESTIGATION · 21 DAYS" />
+    <div className="outcome-room-summary panel">
+      <div><span>OUTCOME OWNER</span><strong>Supply Chain COO</strong></div>
+      <div><span>STATUS</span><strong><i/> Investigation</strong></div>
+      <div><span>VALUE AT RISK</span><strong>$1.24M</strong></div>
+      <div><span>TEAMS</span><strong>5 coordinating</strong></div>
+      <div><span>TARGET</span><strong>Recover delivery performance</strong></div>
+      <div><span>TIMELINE</span><strong>21 days</strong></div>
+    </div>
     <div className="executive-brief-grid">
-      <article className="incident-brief panel">
-        <div className="brief-topline"><span className={labelClass('OBSERVED')}>OBSERVED BUSINESS SIGNAL</span><code>ERP · EVD-ORD-041</code></div>
-        <div className="incident-score"><div><small>ON TIME IN FULL</small><strong>72.4%</strong></div><div className="incident-drop"><Activity size={18}/><strong>−11.9 pts</strong><span>vs 13-week control</span></div></div>
-        <div className="executive-stakes"><div><span>REVENUE EXPOSED</span><strong>$1.24M</strong></div><div><span>STRATEGIC CUSTOMERS</span><strong>42</strong></div><div><span>ORDERS AT RISK</span><strong>318</strong></div></div>
-        <div className="inaction-line"><Clock3 size={16}/><div><span>COST OF DELAY</span><strong>Every planning cycle leaves customer, revenue, and operational risk unresolved.</strong></div></div>
+      <article className="incident-brief business-signal-card panel">
+        <div className="brief-topline"><span className={labelClass('OBSERVED')}>BUSINESS SIGNAL</span><code>ERP · EVD-ORD-041</code></div>
+        <div className="business-signal-heading"><div className="signal-icon"><Activity size={21}/></div><div><small>ANOMALY DETECTED</small><h2>Delivery performance decline threatens strategic commitments.</h2></div><div className="signal-confidence"><span>CONFIDENCE</span><strong>97%</strong></div></div>
+        <div className="signal-evidence-grid"><div><span>OBSERVED KPI</span><strong>OTIF 72.4%</strong><small>−11.9 pts vs control</small></div><div><span>BUSINESS IMPACT</span><strong>$1.24M</strong><small>Delayed revenue exposure</small></div><div><span>NEXT GOVERNED STEP</span><strong>Verify evidence</strong><small>Before teams or budget move</small></div></div>
+        <div className="inaction-line"><Clock3 size={16}/><div><span>WHY IT MATTERS</span><strong>Five teams need one verified truth before the enterprise commits to recovery.</strong></div></div>
       </article>
 
       <article className="executive-decision-card panel">

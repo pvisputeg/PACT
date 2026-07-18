@@ -6,7 +6,7 @@ PACT — Proof, Action, Coordination & Tracking
 
 ## Tagline
 
-From a disputed signal to coordinated action—and proof it worked.
+The enterprise operating system for measurable outcomes.
 
 ## Proposed track
 
@@ -14,7 +14,7 @@ Work & Productivity
 
 ## Short description
 
-PACT is an AI outcome command center that turns a disputed KPI into an evidence-backed, human-authorized cross-team recovery—then proves whether the business result changed.
+PACT is an Enterprise Outcome Command Center that governs a portfolio of measurable outcomes, then gives each outcome an evidence-backed, human-authorized room from signal through proven result.
 
 ## Inspiration
 
@@ -30,7 +30,7 @@ Today, that decision is fragmented across a dashboard, data-quality investigatio
 
 ## What it does
 
-The flagship scenario begins when On Time In Full performance falls from 84.3% to 72.4%.
+PACT opens on an enterprise portfolio showing active outcomes, business value at stake, coordinating teams, commitments, approvals, governance health, and organizational learning. The flagship Outcome Room begins when On Time In Full performance falls from 84.3% to 72.4%.
 
 PACT:
 
@@ -59,7 +59,7 @@ The novel unit of work is not a chat, answer, or task. It is an **Outcome Contra
 
 ## How we built it
 
-- React 19, TypeScript, and Vite for the Outcome Room.
+- React 19, TypeScript, and Vite for Enterprise Mission Control and the routed Outcome Room.
 - Versioned Metric, Outcome, Action, plan-synthesis, and independent-audit contracts.
 - A fixed-seed deterministic domain engine and synthetic operating twin.
 - A governed workflow state machine with local persistence.
@@ -117,6 +117,6 @@ The same contract and ledger model can extend to margin, forecast, procurement r
 
 ## Accurate implementation statement
 
-Implemented: complete synthetic OTIF recovery loop, deterministic contracts and simulation, Outcome Room, Auditor, approval, Action Graph, safe MCP tools, Outcome Ledger, Markdown proof report, optional executive briefings, Codex plugin and skill, GPT-5.6 structured-call generator, tests, and local build.
+Implemented: Enterprise Outcome Command Center, six-outcome portfolio architecture, routed flagship Outcome Room, complete synthetic OTIF recovery loop, deterministic contracts and simulation, Auditor, approval, Action Graph, safe MCP tools, Outcome Ledger, Markdown proof report, optional executive briefings, Codex plugin and skill, GPT-5.6 structured-call generator, tests, and local build.
 
 Optional or future: push-to-talk objective input, live enterprise integrations, production identity and RBAC, arbitrary KPIs, formal causal inference, and autonomous production execution.

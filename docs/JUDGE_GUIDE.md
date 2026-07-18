@@ -14,7 +14,7 @@ npm run dev
 
 Open http://localhost:5173.
 
-For a free test of the schema-validated plan and audit presentation, open http://localhost:5173/?artifact=fixture&reset=1. The `reset=1` parameter is consumed on load so every walkthrough starts at the Executive Decision Brief; the bundled input is prominently labeled as a local fixture and is never accepted as GPT-5.6 evidence.
+For a free test of the schema-validated plan and audit presentation, open http://localhost:5173/?artifact=fixture&reset=1. The `reset=1` parameter is consumed on load so every walkthrough starts at the Enterprise Outcome Command Center; the bundled input is prominently labeled as a local fixture and is never accepted as GPT-5.6 evidence.
 
 `judge:verify` reproduces the scenario, runs all domain tests, exercises the stateful MCP approval and dependency chain, validates the Codex plugin, checks the GPT-5.6 request boundary without credentials, and creates the production bundle.
 
@@ -24,14 +24,14 @@ The checked-in GitHub Pages workflow runs the full judge verification and deploy
 
 ## Ninety-second product path
 
-1. Read the Executive Decision Brief: $1.24M revenue exposure, 42 strategic customers, 318 orders, and one decision required now. Contrast the fragmented current response with PACT's accountable outcome loop.
-2. Click **Verify the signal & prepare options**, then inspect the independently reproduced 72.4% OTIF.
-3. Click **Map business impact** and see which value drivers and teams concentrate the loss.
-4. Click **Compare recovery options**, compare the three simulations, and keep Balanced recovery selected.
-5. Click **Build coordinated plan & audit it**, review independent dissent, then **Approve recovery plan**.
-6. Record the six team commitments as each dependency becomes ready. Technical tool proof is available on demand rather than dominating the business view.
-7. Click **Measure business outcome**, then select Day 7, Day 14, and Day 21.
-8. Inspect the 82.1% observed result, 82.2% simulated projection, variance lesson, proof report, and Outcome Ledger.
+1. Read the Enterprise Snapshot, portfolio breadth, executive attention, lifecycle health, and governed outcome loop. PACT should register as a platform before any use case opens.
+2. Select **Strategic Delivery Recovery** to enter its Outcome Room. Confirm owner, status, value at risk, teams, target, and timeline appear before OTIF evidence.
+3. Click **Verify the signal & prepare options**, then inspect the independently reproduced 72.4% OTIF.
+4. Click **Map business impact** and see which value drivers and teams concentrate the loss.
+5. Click **Compare recovery options**, compare the three simulations, and keep Balanced recovery selected.
+6. Click **Build coordinated plan & audit it**, review independent dissent, then **Approve recovery plan**.
+7. Record the six team commitments as each dependency becomes ready. Technical tool proof is available on demand rather than dominating the business view.
+8. Click **Measure business outcome**, select Day 7, Day 14, and Day 21, then inspect the observed result, variance lesson, proof report, and Outcome Ledger.
 
 No control in this path connects to a live ERP, supplier, carrier, customer, or financial system.
 

@@ -1,18 +1,28 @@
-# PACT demo script — 2 minutes 50 seconds
+# PACT demo script — 2 minutes 55 seconds
 
 The video must stay under three minutes. Record at 1440p or 1080p with browser zoom adjusted so the complete Approval Gate is visible. Use accelerated, deliberate clicks; do not show setup or installation.
 
-## 0:00–0:16 — The business stakes
+## 0:00–0:14 — Enterprise Mission Control
 
-**Screen:** Executive Decision Brief.
+**Screen:** Enterprise Outcome Command Center.
 
 **Narration:**
 
-> This is the decision a COO sees: delivery performance collapsed from 84.3 to 72.4 percent, exposing 318 orders, 42 strategic customers, and 1.24 million dollars. Today that response fragments across dashboards, meetings, and spreadsheets. PACT creates one accountable outcome loop.
+> PACT is an enterprise operating system for measurable outcomes. This is Mission Control: eight active outcomes, 11.8 million dollars at stake, 27 teams coordinating, five approvals waiting, and one governed lifecycle from signal to organizational learning.
 
-Point to **Today / With PACT**, then click **Verify the signal & prepare options**.
+Click **Strategic Delivery Recovery**.
 
-## 0:16–0:38 — Verify before acting
+## 0:14–0:30 — One governed Outcome Room
+
+**Screen:** Strategic Delivery Recovery.
+
+**Narration:**
+
+> Each outcome opens a governed room. The owner, value at risk, teams, target, and 21-day contract lead. OTIF is supporting evidence: a 97-percent-confidence signal exposing 1.24 million dollars—not the product itself.
+
+Click **Verify the signal & prepare options**.
+
+## 0:30–0:48 — Verify before acting
 
 **Screen:** Verify the KPI.
 
@@ -22,7 +32,7 @@ Point to **Today / With PACT**, then click **Verify the signal & prepare options
 
 Click **Map business impact**.
 
-## 0:38–0:58 — Impact Map
+## 0:48–1:04 — Impact Map
 
 **Screen:** Impact Map.
 
@@ -32,7 +42,7 @@ Click **Map business impact**.
 
 Click **Compare recovery options**.
 
-## 0:58–1:20 — Strategy Sandbox
+## 1:04–1:25 — Strategy Sandbox
 
 **Screen:** Choose response.
 
@@ -42,7 +52,7 @@ Click **Compare recovery options**.
 
 Click **Build coordinated plan & audit it**.
 
-## 1:20–1:46 — Independent challenge and human authority
+## 1:25–1:48 — Independent challenge and human authority
 
 **Screen:** Authorize plan.
 
@@ -52,7 +62,7 @@ Click **Build coordinated plan & audit it**.
 
 Click **Approve recovery plan**.
 
-## 1:46–2:17 — Governed execution
+## 1:48–2:20 — Governed execution
 
 **Screen:** Coordinate teams.
 
@@ -62,7 +72,7 @@ Click **Approve recovery plan**.
 
 Click each **Record [team] commitment** button, then **Measure business outcome**.
 
-## 2:17–2:39 — Measure the result
+## 2:20–2:42 — Measure the result
 
 **Screen:** Measure result.
 
@@ -70,7 +80,7 @@ Click Day 7, Day 14, and Day 21 while narrating:
 
 > Activity is not success. PACT advances the synthetic operating twin and observes leading indicators. OTIF reaches 81.5 percent on Day 14 and 82.1 percent on Day 21. The target is met—but the 0.1-point variance from projection remains visible and explained.
 
-## 2:39–2:50 — Codex-native close
+## 2:42–2:55 — Codex-native close
 
 **Screen:** Day 21, point to the proof-report and Outcome Ledger exports.
 
