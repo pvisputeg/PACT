@@ -39,6 +39,15 @@ A second in-app browser walkthrough verified the no-cost artifact path on July 1
 - Balanced recovery remained selectable and assembled the same six-action decision packet.
 - Browser console errors: zero.
 
+An accessibility interaction pass verified:
+
+- The active lifecycle step uses `aria-current`, while strategy and outcome selections use `aria-pressed`.
+- PACT state changes are exposed through a polite live status region.
+- Outcome Ledger opens as a named modal dialog with an immediately focused close control.
+- Escape closes the Ledger and restores focus to its trigger.
+- Ledger payloads can be revealed with keyboard focus as well as pointer hover.
+- Browser console errors: zero.
+
 ## P0 coverage audit
 
 | P0 area | Evidence | Status |

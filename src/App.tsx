@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ComponentType, type Dispatch, type SetStateAction } from 'react';
+import { useEffect, useMemo, useRef, useState, type ComponentType, type Dispatch, type SetStateAction } from 'react';
 import {
   Activity, ArrowRight, BadgeCheck, Boxes, Check, ChevronRight, CircleDollarSign, Clock3,
   Download, FileCheck2, FileText, Fingerprint, GitBranch, History, LockKeyhole, Network, PackageCheck,
@@ -82,6 +82,7 @@ export function App() {
   });
   const [ledgerOpen, setLedgerOpen] = useState(false);
   const [aiArtifact, setAiArtifact] = useState<AiArtifact | null>(null);
+  const ledgerButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => localStorage.setItem('pact.workflow.v1', JSON.stringify(state)), [state]);
   useEffect(() => {
@@ -116,6 +117,11 @@ export function App() {
     localStorage.removeItem('pact.workflow.v1');
     setState(initialState);
     setLedgerOpen(false);
+  };
+
+  const closeLedger = () => {
+    setLedgerOpen(false);
+    requestAnimationFrame(() => ledgerButtonRef.current?.focus());
   };
 
   const confirmContract = async () => {
@@ -211,7 +217,7 @@ export function App() {
         </div>
         <div className="room-title"><span>Outcome Room</span><ChevronRight size={14} /><strong>OTIF recovery</strong></div>
         <div className="top-actions">
-          <button className="ghost-button" onClick={() => setLedgerOpen(true)}><History size={15} /> Ledger <span className="count">{state.ledger.length}</span></button>
+          <button ref={ledgerButtonRef} className="ghost-button" onClick={() => setLedgerOpen(true)} aria-haspopup="dialog"><History size={15} /> Ledger <span className="count">{state.ledger.length}</span></button>
           <button className="icon-button" onClick={reset} aria-label="Reset scenario" title="Reset scenario"><RefreshCw size={16} /></button>
           <div className="live-pill"><i /> SYNTHETIC TWIN</div>
         </div>
@@ -224,7 +230,7 @@ export function App() {
           const unlocked = isUnlocked(stage.id, state);
           const complete = index < stageIndex || (stage.id === 'outcome' && state.currentDay === 21);
           return (
-            <button key={stage.id} disabled={!unlocked} className={`stage-button ${state.stage === stage.id ? 'active' : ''} ${complete ? 'complete' : ''}`} onClick={() => setState((current) => ({ ...current, stage: stage.id }))}>
+            <button key={stage.id} disabled={!unlocked} aria-current={state.stage === stage.id ? 'step' : undefined} className={`stage-button ${state.stage === stage.id ? 'active' : ''} ${complete ? 'complete' : ''}`} onClick={() => setState((current) => ({ ...current, stage: stage.id }))}>
               <span className="stage-node">{complete ? <Check size={14} /> : <Icon size={15} />}</span>
               <span className="stage-copy"><small>{stage.eyebrow}</small><strong>{stage.label}</strong></span>
             </button>
@@ -253,7 +259,7 @@ export function App() {
         <div className={`intelligence-core core-${state.stage}`}>
           <div className="core-orbit orbit-one" /><div className="core-orbit orbit-two" /><div className="core-center"><Sparkles size={22} /></div>
         </div>
-        <p className="system-kicker">PACT STATE</p><h3>{systemState[0]}</h3><p>{systemState[1]}</p>
+        <div className="system-state-copy" role="status" aria-live="polite" aria-atomic="true"><p className="system-kicker">PACT STATE</p><h3>{systemState[0]}</h3><p>{systemState[1]}</p></div>
         <div className="mini-rule" />
         <div className="target-mini"><div><span>OUTCOME TARGET</span><strong>≥82.0%</strong></div><Target size={18} /></div>
         <div className="target-mini"><div><span>CURRENT STATE</span><strong>{state.stage === 'outcome' ? `${observation.otif.toFixed(1)}%` : '72.4%'}</strong></div><Activity size={18} /></div>
@@ -261,7 +267,7 @@ export function App() {
         <p className="model-note">Deterministic engine <span>online</span><br/>Reasoning artifact <span>{aiArtifact ? (aiArtifact.provenance.kind === 'genuine' ? 'GPT‑5.6 verified' : 'local fixture') : 'schema-ready'}</span></p>
       </aside>
 
-      {ledgerOpen && <LedgerDrawer state={state} onClose={() => setLedgerOpen(false)} />}
+      {ledgerOpen && <LedgerDrawer state={state} onClose={closeLedger} />}
     </div>
   );
 }
@@ -342,7 +348,7 @@ function StrategyView({ state, setState, artifact, onContinue }: { state: Workfl
     {artifact && <div className={`model-provenance panel ${artifact.provenance.kind === 'fixture' ? 'model-fixture' : ''}`}><Sparkles size={17}/><div><span>{artifact.provenance.kind === 'genuine' ? 'REVIEWED GPT‑5.6 ARTIFACT' : 'LOCAL SCHEMA FIXTURE · NO API CALL'}</span><strong>{artifact.plan.executiveSummary}</strong></div><code>{artifact.provenance.planResponseId.slice(0, 20)}</code></div>}
     <div className="strategy-grid">{scenario.strategies.map((strategy) => {
       const evaluation = evaluateStrategy(strategy); const selected = state.selectedStrategyId === strategy.id; const recommended = strategy.id === (artifact?.plan.recommendedStrategyId ?? 'STR-BALANCED');
-      return <button key={strategy.id} className={`strategy-card panel ${selected ? 'selected' : ''}`} onClick={() => setState((current) => ({ ...current, selectedStrategyId: strategy.id }))}>
+      return <button key={strategy.id} aria-pressed={selected} className={`strategy-card panel ${selected ? 'selected' : ''}`} onClick={() => setState((current) => ({ ...current, selectedStrategyId: strategy.id }))}>
         <div className="strategy-top"><span className={labelClass('SIMULATED')}>SIMULATED</span>{recommended && <span className="recommended">PACT RECOMMENDS</span>}</div><h3>{strategy.name}</h3>
         <div className="strategy-outcome"><small>PROJECTED DAY 21</small><strong>{strategy.projectedDay21.toFixed(1)}%</strong><span className={strategy.projectedDay21 >= 82 ? 'meets' : 'misses'}>{strategy.projectedDay21 >= 82 ? 'Target met' : 'Target gap'}</span></div>
         <div className="strategy-stats"><div><small>COST</small><strong>{formatMoney(strategy.cost)}</strong></div><div><small>IMPACT</small><strong>Day {strategy.timeToImpactDays}</strong></div><div><small>DAY 14</small><strong>{strategy.projectedDay14}%</strong></div></div>
@@ -412,7 +418,7 @@ function OutcomeView({ state, observation, artifact, onAdvance }: { state: Workf
           {points.map((point) => <circle key={point.day} cx={point.x} cy={point.y} r={point.day <= state.currentDay ? 5 : 3} className={point.day <= state.currentDay ? 'point-active' : 'point-future'}/>) }
           {points.map((point) => <text key={`d${point.day}`} x={point.x} y="242" textAnchor="middle">D{point.day}</text>)}
         </svg>
-        <div className="timeline-controls">{scenario.observations.map((item) => <button key={item.day} className={state.currentDay === item.day ? 'active' : ''} onClick={() => onAdvance(item.day)}><span>{item.day <= state.currentDay ? <Check size={12}/> : null}</span>Day {item.day}</button>)}</div>
+        <div className="timeline-controls" aria-label="Outcome checkpoints">{scenario.observations.map((item) => <button key={item.day} aria-pressed={state.currentDay === item.day} className={state.currentDay === item.day ? 'active' : ''} onClick={() => onAdvance(item.day)}><span>{item.day <= state.currentDay ? <Check size={12}/> : null}</span>Day {item.day}</button>)}</div>
       </article>
       <div className="outcome-side">
         <article className="indicator-panel panel"><span>LEADING INDICATORS</span>{[['Component coverage',observation.componentCoverage],['Schedule adherence',observation.scheduleAdherence],['Pickup acceptance',observation.pickupAcceptance]].map(([name,value]) => <div className="indicator" key={String(name)}><div><span>{name}</span><strong>{value}%</strong></div><i><b style={{width:`${value}%`}}/></i></div>)}</article>
@@ -424,5 +430,13 @@ function OutcomeView({ state, observation, artifact, onAdvance }: { state: Workf
 }
 
 function LedgerDrawer({ state, onClose }: { state: WorkflowState; onClose: () => void }) {
-  return <div className="drawer-backdrop" onMouseDown={onClose}><aside className="ledger-drawer" onMouseDown={(event) => event.stopPropagation()}><div className="drawer-heading"><div><span>OUTCOME LEDGER</span><h2>Trace every consequential state.</h2></div><button className="icon-button" onClick={onClose}><X size={18}/></button></div><div className="ledger-meta"><div><span>CORRELATION</span><code>PACT-OTIF-2026-07</code></div><div><span>EVENTS</span><strong>{state.ledger.length}</strong></div></div><div className="ledger-events">{[...state.ledger].reverse().map((event) => <article key={event.eventId}><div className="event-line"><span className="event-dot"/><i/></div><div><div className="event-top"><code>{event.eventId}</code><span>{new Date(event.timestamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})}</span></div><strong>{event.eventType}</strong><p>{event.source} · {event.status}</p><pre>{JSON.stringify(event.payload, null, 2)}</pre></div></article>)}</div><button className="primary-button drawer-export" onClick={() => downloadJson('pact-outcome-ledger.json', state.ledger)}><Download size={16}/> Export machine-readable JSON</button></aside></div>;
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  return <div className="drawer-backdrop" onMouseDown={onClose}><aside className="ledger-drawer" role="dialog" aria-modal="true" aria-labelledby="ledger-title" onMouseDown={(event) => event.stopPropagation()}><div className="drawer-heading"><div><span>OUTCOME LEDGER</span><h2 id="ledger-title">Trace every consequential state.</h2></div><button className="icon-button" onClick={onClose} aria-label="Close Outcome Ledger" autoFocus><X size={18}/></button></div><div className="ledger-meta"><div><span>CORRELATION</span><code>PACT-OTIF-2026-07</code></div><div><span>EVENTS</span><strong>{state.ledger.length}</strong></div></div><div className="ledger-events">{[...state.ledger].reverse().map((event) => <article key={event.eventId} tabIndex={0}><div className="event-line"><span className="event-dot"/><i/></div><div><div className="event-top"><code>{event.eventId}</code><span>{new Date(event.timestamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})}</span></div><strong>{event.eventType}</strong><p>{event.source} · {event.status}</p><pre>{JSON.stringify(event.payload, null, 2)}</pre></div></article>)}</div><button className="primary-button drawer-export" onClick={() => downloadJson('pact-outcome-ledger.json', state.ledger)}><Download size={16}/> Export machine-readable JSON</button></aside></div>;
 }
