@@ -58,6 +58,12 @@ The request contract can be inspected without an API key:
 npm run generate:agents:dry-run
 ```
 
+The generator checkpoints a valid Outcome Lead response before calling the Independent Auditor. If only the audit call fails or is incomplete, reuse the paid first response instead of generating it again:
+
+```bash
+npm run generate:agents:resume
+```
+
 ## Safety and truthfulness
 
 - Every scenario value is synthetic and fixed-seed.
