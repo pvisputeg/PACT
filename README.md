@@ -174,6 +174,12 @@ Generate genuine artifacts when `OPENAI_API_KEY` is configured:
 npm run generate:agents
 ```
 
+The generator publishes only after the artifact passes the release acceptance gate. It requires the balanced strategy, six-team coverage, known evidence IDs, a decision-ready independent audit, genuine response/trace provenance, and spend inside the project cap. Recheck it independently with:
+
+```bash
+npm run verify:gpt-artifact
+```
+
 If the audit stage needs to be deliberately resumed after the saved plan has been inspected:
 
 ```bash

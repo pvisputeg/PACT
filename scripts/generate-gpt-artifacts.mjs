@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { Agent, Runner, generateTraceId, withTrace } from '@openai/agents';
 import { independentAuditSchema, planSynthesisSchema } from './lib/pact-agent-schemas.mjs';
+import { collectEvidenceIds, reviewGenuineArtifact } from './lib/pact-artifact-review.mjs';
 import {
   acknowledgeUnsettledCall,
   estimateCostUsd,
@@ -268,13 +269,18 @@ const artifact = {
   audit,
 };
 
+const artifactReview = reviewGenuineArtifact(artifact, collectEvidenceIds(evidencePacket));
+if (!artifactReview.ready) {
+  throw new Error(`Genuine artifact failed the release acceptance gate: ${JSON.stringify(artifactReview)}`);
+}
+
 const serializedArtifact = `${JSON.stringify(artifact, null, 2)}\n`;
 await mkdir(new URL('public/artifacts/gpt-5.6/', root), { recursive: true });
 await Promise.all([
   writeFile(new URL('artifacts/gpt-5.6/strategy-and-audit.json', root), serializedArtifact, 'utf8'),
   writeFile(new URL('public/artifacts/gpt-5.6/strategy-and-audit.json', root), serializedArtifact, 'utf8'),
 ]);
-console.log(`Generated genuine ${model} PACT artifact with OpenAI Agents SDK. Estimated artifact cost: $${artifactCostUsd.toFixed(4)}; project ledger: $${totalCommittedUsd(ledger).toFixed(4)} / $${projectBudgetUsd.toFixed(2)}.`);
+console.log(`Generated release-ready ${model} PACT artifact with OpenAI Agents SDK. Estimated artifact cost: $${artifactCostUsd.toFixed(4)}; project ledger: $${totalCommittedUsd(ledger).toFixed(4)} / $${projectBudgetUsd.toFixed(2)}.`);
 
 async function readJson(path) {
   return JSON.parse(await readFile(new URL(path, root), 'utf8'));

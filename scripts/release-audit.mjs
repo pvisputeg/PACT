@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import { collectEvidenceIds, reviewGenuineArtifact } from './lib/pact-artifact-review.mjs';
 
 const root = process.cwd();
 const strict = process.argv.includes('--strict');
@@ -31,6 +32,7 @@ const requiredFiles = [
   'submission-assets/screenshots/04-approval-gate.png',
   'submission-assets/screenshots/05-outcome-closeout.png',
   'scripts/verify-dist.mjs',
+  'scripts/verify-gpt-artifact.mjs',
 ];
 
 function walk(directory, output = []) {
@@ -60,18 +62,14 @@ let genuineArtifactData = null;
 if (existsSync(publicArtifactPath)) {
   try {
     const artifact = JSON.parse(readFileSync(publicArtifactPath, 'utf8'));
-    genuineArtifact = artifact.provider === 'OpenAI Agents SDK'
-      && artifact.model === 'gpt-5.6'
-      && artifact.provenance?.kind === 'genuine'
-      && artifact.provenance?.framework === '@openai/agents'
-      && artifact.provenance?.orchestration === 'manager'
-      && /^resp_/.test(artifact.provenance?.planResponseId ?? '')
-      && /^resp_/.test(artifact.provenance?.auditResponseId ?? '')
-      && /^trace_/.test(artifact.provenance?.planTraceId ?? '')
-      && /^trace_/.test(artifact.provenance?.auditTraceId ?? '')
-      && artifact.usage?.projectBudgetUsd <= 5;
+    const evidenceSources = ['data/otif-recovery.scenario.json', 'contracts/metric-contract.json', 'contracts/outcome-contract.json']
+      .map((path) => JSON.parse(readFileSync(join(root, path), 'utf8')));
+    const artifactReview = reviewGenuineArtifact(artifact, collectEvidenceIds(evidenceSources));
+    genuineArtifact = artifactReview.ready;
     if (genuineArtifact) genuineArtifactData = artifact;
-    artifactProblem = genuineArtifact ? '' : 'artifact provenance is incomplete';
+    artifactProblem = genuineArtifact
+      ? ''
+      : `artifact acceptance checks failed: ${Object.entries(artifactReview.checks).filter(([, ready]) => !ready).map(([name]) => name).join(', ')}`;
   } catch {
     artifactProblem = 'artifact JSON is invalid';
   }

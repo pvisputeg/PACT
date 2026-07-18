@@ -58,6 +58,14 @@ The request contract can be inspected without an API key:
 npm run generate:agents:dry-run
 ```
 
+After genuine generation, the release acceptance gate can be rerun independently:
+
+```bash
+npm run verify:gpt-artifact
+```
+
+It rejects a schema-valid artifact if it recommends the non-executable strategy, omits a team, cites unknown evidence, returns a blocking verdict, lacks SDK provenance, or exceeds the project budget.
+
 The generator checkpoints a valid Outcome Lead response before calling the Independent Auditor. It disables automatic retries and writes a pre-call cost reservation, so an interrupted call cannot be silently repeated. After inspecting the checkpoint and cost ledger, reuse the paid first response with:
 
 ```bash
