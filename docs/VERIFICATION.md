@@ -70,6 +70,7 @@ An accessibility interaction pass verified:
 ## Remaining release gates
 
 - Generate and inspect one genuine GPT-5.6 plan-and-audit artifact.
+- Recapture the final submission gallery with the reviewed response IDs and update its provenance manifest.
 - Record and edit a public video under three minutes with audio.
 - Capture the required `/feedback` session ID.
 - Publish the repository and complete its public URL.

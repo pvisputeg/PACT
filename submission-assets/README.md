@@ -2,6 +2,8 @@
 
 These screenshots were captured from the verified local PACT build on July 17, 2026. They contain only the synthetic scenario and may be used in the Devpost gallery, repository, or demo-video edit.
 
+The current set is verified deterministic product evidence, not GPT-5.6 provenance evidence. After the genuine GPT-5.6 artifact is generated and reviewed, recapture the final gallery with the visible response IDs and update `gallery-manifest.json` to `status: reviewed` with matching plan and audit response IDs. The release audit enforces this handoff.
+
 | File | Suggested caption | Judging story |
 |---|---|---|
 | `01-signal-contract.png` | Turn a disputed KPI into an explicit outcome contract before AI acts. | Real problem and coherent product entry point |

@@ -22,6 +22,7 @@ const requiredFiles = [
   'public/artifacts/fixture/README.md',
   'public/artifacts/fixture/strategy-and-audit.json',
   'submission-assets/README.md',
+  'submission-assets/gallery-manifest.json',
   'submission-assets/screenshots/01-signal-contract.png',
   'submission-assets/screenshots/02-proofline-verification.png',
   'submission-assets/screenshots/03-strategy-sandbox.png',
@@ -52,6 +53,7 @@ const missingFiles = requiredFiles.filter((file) => !existsSync(join(root, file)
 const publicArtifactPath = join(root, 'public/artifacts/gpt-5.6/strategy-and-audit.json');
 let genuineArtifact = false;
 let artifactProblem = 'not generated';
+let genuineArtifactData = null;
 
 if (existsSync(publicArtifactPath)) {
   try {
@@ -61,9 +63,25 @@ if (existsSync(publicArtifactPath)) {
       && artifact.provenance?.kind === 'genuine'
       && /^resp_/.test(artifact.provenance?.planResponseId ?? '')
       && /^resp_/.test(artifact.provenance?.auditResponseId ?? '');
+    if (genuineArtifact) genuineArtifactData = artifact;
     artifactProblem = genuineArtifact ? '' : 'artifact provenance is incomplete';
   } catch {
     artifactProblem = 'artifact JSON is invalid';
+  }
+}
+
+let galleryProvenance = { status: 'BLOCKED', reason: 'genuine GPT-5.6 artifact pending' };
+if (genuineArtifactData) {
+  try {
+    const gallery = JSON.parse(readFileSync(join(root, 'submission-assets/gallery-manifest.json'), 'utf8'));
+    const matchesArtifact = gallery.gptArtifact?.status === 'reviewed'
+      && gallery.gptArtifact?.planResponseId === genuineArtifactData.provenance.planResponseId
+      && gallery.gptArtifact?.auditResponseId === genuineArtifactData.provenance.auditResponseId;
+    galleryProvenance = matchesArtifact
+      ? { status: 'READY' }
+      : { status: 'BLOCKED', reason: 'gallery was not recaptured with the reviewed GPT-5.6 artifact' };
+  } catch {
+    galleryProvenance = { status: 'BLOCKED', reason: 'gallery manifest JSON is invalid' };
   }
 }
 
@@ -89,6 +107,7 @@ const audit = {
   requiredFiles: missingFiles.length ? { status: 'BLOCKED', missing: missingFiles } : { status: 'READY' },
   automatedVerification: { status: 'RUN_SEPARATELY', commands: ['npm run judge:verify'] },
   genuineGptArtifact: genuineArtifact ? { status: 'READY' } : { status: 'BLOCKED', reason: artifactProblem, apiKeyConfigured: Boolean(process.env.OPENAI_API_KEY) },
+  galleryProvenance,
   submissionPlaceholders: placeholderMatches.length ? { status: 'BLOCKED', values: placeholderMatches } : { status: 'READY' },
   gitOrigin: remoteUrl() ? { status: 'READY', url: remoteUrl() } : { status: 'BLOCKED', reason: 'origin remote not configured' },
   credentialScan: secretFindings.length ? { status: 'BLOCKED', files: [...new Set(secretFindings)] } : { status: 'READY' },

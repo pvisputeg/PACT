@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "scenario": "PACT synthetic OTIF recovery",
+  "capturedOn": "2026-07-17",
+  "gptArtifact": {
+    "status": "pending",
+    "planResponseId": null,
+    "auditResponseId": null
+  },
+  "images": [
+    { "file": "01-signal-contract.png", "width": 1265, "height": 712 },
+    { "file": "02-proofline-verification.png", "width": 1280, "height": 720 },
+    { "file": "03-strategy-sandbox.png", "width": 1265, "height": 712 },
+    { "file": "04-approval-gate.png", "width": 1265, "height": 934 },
+    { "file": "05-outcome-closeout.png", "width": 1265, "height": 712 }
+  ]
+}
