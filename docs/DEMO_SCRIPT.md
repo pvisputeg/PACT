@@ -38,7 +38,7 @@ Click **Simulate responses**.
 
 **Narration:**
 
-> PACT compares three deterministic responses. Every projection is labeled simulated. Margin protection misses the target. Fastest recovery leaves only 100 dollars of headroom. PACT recommends the balanced plan: 82.2 percent by Day 21 for 68,750 dollars.
+> PACT compares three bounded responses, and every projection remains explicitly simulated. GPT-5.6's Outcome Lead synthesizes the evidence packet and recommends Balanced recovery; the deterministic simulator—not the model—produces 82.2 percent by Day 21 for 68,750 dollars.
 
 Click **Assemble & challenge plan**.
 
@@ -48,7 +48,7 @@ Click **Assemble & challenge plan**.
 
 **Narration:**
 
-> The proposing agents cannot certify themselves. A separate Auditor reconciles the budget, constrains the causality claim, and flags the carrier assumption as materially optimistic. Cross-team dependencies and resource tensions remain visible. PACT stops before commitment. A human must decide.
+> The proposing role cannot certify itself. A second GPT-5.6 call acts as Independent Auditor, while deterministic checks reconcile the budget, constrain causality, and expose the optimistic carrier assumption. PACT stops before commitment. A human must decide.
 
 Click **Approve pact**.
 
@@ -58,7 +58,7 @@ Click **Approve pact**.
 
 **Narration while executing the six actions:**
 
-> Approval does not directly change the dashboard. Six explicit MCP tools now execute in dependency order: finance, approved supplier allocation, production resequencing, carrier capacity, a customer draft, and coordinated work items. Missing approval or predecessors are rejected. Customer communication can only remain a draft.
+> Approval does not directly change the metric. PACT's Codex plugin exposes six local MCP operations that now execute in dependency order: finance, supplier allocation, production, carrier capacity, a customer draft, and coordinated work. Missing approval or predecessors are rejected, and customer communication stays draft-only.
 
 Click each **Execute** button, then **Observe the outcome**.
 
@@ -76,7 +76,7 @@ Click Day 7, Day 14, and Day 21 while narrating:
 
 **Narration:**
 
-> Codex built and governs this repository through AGENTS rules, a validated PACT plugin, its outcome-recovery skill, and a local stateful MCP server. GPT-5.6 performs schema-constrained synthesis and independent challenge. PACT closes with both human-readable proof and a machine ledger: AI answers become accountable outcomes.
+> Codex accelerated the product decisions, implementation, debugging, and verification, and the result is itself Codex-native: AGENTS rules, a validated PACT plugin, an outcome-recovery skill, and stateful MCP tools. PACT turns AI answers into accountable outcomes.
 
 End on the Day-21 closeout, not source code.
 
@@ -88,4 +88,5 @@ End on the Day-21 closeout, not source code.
 - Do not describe simulated values as forecasts.
 - Do not say the customer message was sent.
 - If showing GPT-5.6, generate and inspect the genuine artifact before recording.
+- Keep the GPT-5.6 response IDs visible on Strategy and Approval long enough to establish provenance.
 - Keep installation, test output, and future vision outside the primary product story.
