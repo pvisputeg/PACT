@@ -22,6 +22,12 @@ const STAGES: { id: WorkflowStage; label: string; eyebrow: string; icon: Compone
   { id: 'outcome', label: 'Measure result', eyebrow: '07 · LEARNING', icon: Target },
 ];
 
+const PHASES = [
+  { id: 'understand', label: 'UNDERSTAND', caption: 'Trust the signal', stages: STAGES.slice(0, 3) },
+  { id: 'mobilize', label: 'DECIDE & MOBILIZE', caption: 'Move the organization', stages: STAGES.slice(3, 6) },
+  { id: 'prove', label: 'PROVE', caption: 'Measure the result', stages: STAGES.slice(6) },
+];
+
 const STAGE_QUESTIONS: Record<WorkflowStage, string> = {
   signal: 'What business result are we committing to?',
   proof: 'Is the KPI trustworthy enough to act on?',
@@ -229,7 +235,7 @@ export function App() {
           <div className="brand-mark"><span /><span /><span /></div>
           <div><strong>PACT</strong><small>Proof · Action · Coordination · Tracking</small></div>
         </div>
-        <div className="room-title"><span>Flagship business case</span><ChevronRight size={14} /><strong>Strategic delivery recovery</strong></div>
+        <div className="room-title"><span>Executive Outcome Room</span><ChevronRight size={14} /><strong>Strategic delivery recovery</strong></div>
         <div className="top-actions">
           <button ref={ledgerButtonRef} className="ghost-button" onClick={() => setLedgerOpen(true)} aria-haspopup="dialog"><History size={15} /> Ledger <span className="count">{state.ledger.length}</span></button>
           <button className="icon-button" onClick={reset} aria-label="Reset scenario" title="Reset scenario"><RefreshCw size={16} /></button>
@@ -238,18 +244,19 @@ export function App() {
       </header>
 
       <aside className="stage-rail" aria-label="PACT lifecycle">
-        <div className="stage-line" />
-        {STAGES.map((stage, index) => {
-          const Icon = stage.icon;
-          const unlocked = isUnlocked(stage.id, state);
-          const complete = index < stageIndex || (stage.id === 'outcome' && state.currentDay === 21);
-          return (
-            <button key={stage.id} disabled={!unlocked} aria-current={state.stage === stage.id ? 'step' : undefined} className={`stage-button ${state.stage === stage.id ? 'active' : ''} ${complete ? 'complete' : ''}`} onClick={() => setState((current) => ({ ...current, stage: stage.id }))}>
+        {PHASES.map((phase, phaseIndex) => <section className="phase-group" key={phase.id}>
+          <div className="phase-heading"><span>0{phaseIndex + 1}</span><div><strong>{phase.label}</strong><small>{phase.caption}</small></div></div>
+          <div className="phase-stages">{phase.stages.map((stage) => {
+            const Icon = stage.icon;
+            const index = STAGES.findIndex((candidate) => candidate.id === stage.id);
+            const unlocked = isUnlocked(stage.id, state);
+            const complete = index < stageIndex || (stage.id === 'outcome' && state.currentDay === 21);
+            return <button key={stage.id} disabled={!unlocked} aria-current={state.stage === stage.id ? 'step' : undefined} className={`stage-button ${state.stage === stage.id ? 'active' : ''} ${complete ? 'complete' : ''}`} onClick={() => setState((current) => ({ ...current, stage: stage.id }))}>
               <span className="stage-node">{complete ? <Check size={14} /> : <Icon size={15} />}</span>
               <span className="stage-copy"><small>{stage.eyebrow}</small><strong>{stage.label}</strong></span>
-            </button>
-          );
-        })}
+            </button>;
+          })}</div>
+        </section>)}
         <div className="rail-footer"><ShieldCheck size={15} /><span>Governed outcome loop<br/><small>PACT · v0.2</small></span></div>
       </aside>
 
@@ -278,17 +285,20 @@ export function App() {
 
 function BusinessRail({ state, observation, systemState, artifact }: { state: WorkflowState; observation: typeof scenario.observations[number]; systemState: string[]; artifact: AiArtifact | null }) {
   const currentOtif = state.stage === 'outcome' ? observation.otif : 72.4;
+  const recoveryCost = scenario.strategies.find((strategy) => strategy.id === 'STR-BALANCED')?.cost ?? 68_750;
+  const exposureToCost = scenario.impact.delayedRevenueExposure.value / recoveryCost;
   return <aside className="business-rail" aria-label="Executive business context">
     <section className="business-case-card">
-      <span className="rail-label">FLAGSHIP BUSINESS CASE</span>
-      <h2>Recover strategic customer deliveries</h2>
-      <p>OTIF collapsed by 11.9 points, delaying revenue and putting high-value customer relationships at risk.</p>
+      <span className="rail-label">EXECUTIVE VALUE CASE</span>
+      <h2>Protect revenue and strategic relationships</h2>
+      <p>For COO, supply chain, and transformation leaders coordinating recovery across organizational boundaries.</p>
       <div className="business-stakes">
         <div><strong>$1.24M</strong><span>revenue exposed</span></div>
-        <div><strong>42</strong><span>strategic customers</span></div>
-        <div><strong>318</strong><span>orders at risk</span></div>
-        <div><strong>5</strong><span>teams involved</span></div>
+        <div><strong>{formatMoney(recoveryCost)}</strong><span>bounded response</span></div>
+        <div><strong>{exposureToCost.toFixed(1)}×</strong><span>exposure-to-cost</span></div>
+        <div><strong>21 days</strong><span>measurable finish</span></div>
       </div>
+      <small className="value-caveat">Exposure-to-cost is not ROI. PACT measures protected value at closeout.</small>
     </section>
 
     <section className="step-brief" role="status" aria-live="polite" aria-atomic="true">
@@ -317,26 +327,32 @@ function PageHeading({ eyebrow, title, description, label }: { eyebrow: string; 
 
 function SignalView({ state, setState, onConfirm }: { state: WorkflowState; setState: Dispatch<SetStateAction<WorkflowState>>; onConfirm: () => void }) {
   return <section className="view-enter">
-    <PageHeading eyebrow="01 · DEFINE THE BUSINESS OUTCOME" title="A delivery collapse puts $1.24M—and 42 customer relationships—at risk." description="A dashboard found the decline. PACT turns it into a governed, cross-team recovery with a measurable finish line." label="INC-OTIF-042" />
-    <div className="outcome-thesis panel"><div><span>THE GAP PACT CLOSES</span><strong>Signal → trusted decision → coordinated action → measured result</strong></div><p>Most AI stops at an answer. PACT stays accountable until the business outcome changes.</p></div>
-    <div className="signal-grid">
-      <article className="hero-metric panel">
-        <div className="panel-top"><span className={labelClass('OBSERVED')}>OBSERVED</span><span className="source-ref">ERP fulfillment snapshot · EVD-ORD-041</span></div>
-        <div className="metric-name">CURRENT DELIVERY PERFORMANCE · ON TIME IN FULL</div><div className="metric-value">72.4<span>%</span></div>
-        <div className="metric-delta"><Activity size={18} /> −11.9 <span>percentage points vs 13-week control</span></div>
-        <div className="metric-baseline"><span>CONTROL</span><div><i style={{ width: '84.3%' }} /></div><strong>84.3%</strong></div>
-        <div className="signal-stakes"><div><strong>318</strong><span>orders at risk</span></div><div><strong>42</strong><span>strategic customers</span></div><div><strong>$1.24M</strong><span>revenue exposure</span></div></div>
+    <PageHeading eyebrow="EXECUTIVE DECISION BRIEF · COO / SUPPLY CHAIN / TRANSFORMATION" title="$1.24M is exposed. Five teams need one recovery decision." description="PACT is an AI outcome command center that turns a critical business signal into a trusted decision, coordinated action, and a provable result." label="INC-OTIF-042 · MATERIAL" />
+    <div className="executive-brief-grid">
+      <article className="incident-brief panel">
+        <div className="brief-topline"><span className={labelClass('OBSERVED')}>OBSERVED BUSINESS SIGNAL</span><code>ERP · EVD-ORD-041</code></div>
+        <div className="incident-score"><div><small>ON TIME IN FULL</small><strong>72.4%</strong></div><div className="incident-drop"><Activity size={18}/><strong>−11.9 pts</strong><span>vs 13-week control</span></div></div>
+        <div className="executive-stakes"><div><span>REVENUE EXPOSED</span><strong>$1.24M</strong></div><div><span>STRATEGIC CUSTOMERS</span><strong>42</strong></div><div><span>ORDERS AT RISK</span><strong>318</strong></div></div>
+        <div className="inaction-line"><Clock3 size={16}/><div><span>COST OF DELAY</span><strong>Every planning cycle leaves customer, revenue, and operational risk unresolved.</strong></div></div>
       </article>
-      <article className="objective-card panel">
-        <div className="panel-title"><div><Target size={18} /><span>Define what success means</span></div><span className="draft-pill">OUTCOME CONTRACT · DRAFT</span></div>
-        <label htmlFor="objective">What result must the organization produce?</label>
-        <textarea id="objective" value={state.objective} onChange={(event) => setState((current) => ({ ...current, objective: event.target.value }))} />
-        <div className="contract-grid"><div><small>TARGET</small><strong>≥82.0% OTIF</strong></div><div><small>DEADLINE</small><strong>Day 21</strong></div><div><small>BUDGET CAP</small><strong>$75,000</strong></div><div><small>AUTHORITY</small><strong>Human approval</strong></div></div>
-        <div className="constraint-line"><ShieldCheck size={15} /><span>No quality degradation · Strategic customers first · Approved suppliers only</span></div>
-        <button className="primary-button" onClick={onConfirm} disabled={state.objective.trim().length < 20}>Lock success criteria & verify KPI <ArrowRight size={17} /></button>
+
+      <article className="executive-decision-card panel">
+        <div className="decision-card-heading"><div className="decision-icon"><Target size={21}/></div><div><span>DECISION REQUIRED NOW</span><h2>Authorize a governed recovery investigation</h2></div></div>
+        <p>Verify the KPI, identify the value drivers, and return with bounded response options before committing money or teams.</p>
+        <div className="executive-contract"><div><small>SUCCESS</small><strong>≥82.0% OTIF</strong></div><div><small>DEADLINE</small><strong>21 days</strong></div><div><small>MAXIMUM BUDGET</small><strong>$75K</strong></div></div>
+        <div className="decision-safeguards"><ShieldCheck size={16}/><span>No quality degradation · approved suppliers only · human authorization before commitments</span></div>
+        <details className="contract-editor"><summary>Review or edit the measurable outcome</summary><label htmlFor="objective">Outcome contract</label><textarea id="objective" value={state.objective} onChange={(event) => setState((current) => ({ ...current, objective: event.target.value }))} /></details>
+        <button className="primary-button executive-cta" onClick={onConfirm} disabled={state.objective.trim().length < 20}>Verify the signal & prepare options <ArrowRight size={17} /></button>
       </article>
     </div>
-    <div className="belief-line"><Sparkles size={16} /><span>AI should earn the right for its answers to influence real decisions.</span></div>
+
+    <div className="operating-model panel">
+      <div className="operating-model-heading"><span>THE OPERATING MODEL SHIFT</span><strong>From fragmented response to accountable outcome</strong></div>
+      <div className="operating-path today-path"><span>TODAY</span><div>Dashboard alert</div><ArrowRight size={14}/><div>Meetings & spreadsheets</div><ArrowRight size={14}/><div>Fragmented actions</div><ArrowRight size={14}/><div>Outcome unclear</div></div>
+      <div className="operating-path pact-path"><span>WITH PACT</span><div>Verify truth</div><ArrowRight size={14}/><div>Choose response</div><ArrowRight size={14}/><div>Coordinate teams</div><ArrowRight size={14}/><div>Prove result</div></div>
+    </div>
+
+    <div className="production-path"><span>DESIGNED FOR THE SYSTEMS WHERE WORK ALREADY HAPPENS</span><div>ERP</div><i>→</i><div>Finance</div><i>→</i><div>Procurement</div><i>→</i><div>Manufacturing</div><i>→</i><div>Logistics</div><i>→</i><div>CRM</div><small>Demo uses a safe synthetic twin; enterprise adapters are the production path.</small></div>
   </section>;
 }
 

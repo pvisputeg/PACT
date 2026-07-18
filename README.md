@@ -10,7 +10,7 @@
 
 ![PACT Outcome Room closing a governed recovery at 82.1% observed synthetic OTIF](submission-assets/screenshots/05-outcome-closeout.png)
 
-PACT is the missing operating layer between a business signal and a business result. It verifies whether a consequential KPI is real, quantifies what is at stake, helps leaders choose a response, coordinates the teams that can change it, requires human authorization, and measures whether the intervention worked.
+PACT is an AI outcome command center for COO, supply-chain, and transformation leaders. It is the missing operating layer between a business signal and a business result: verifying whether a consequential KPI is real, quantifying what is at stake, helping leaders choose a response, coordinating the teams that can change it, requiring human authorization, and measuring whether the intervention worked.
 
 The flagship case begins with a decision any executive can understand: **$1.24M in revenue, 42 strategic customers, and 318 orders are at risk. Can five teams recover delivery performance to at least 82% within 21 days and a $75K budget?**
 
@@ -29,6 +29,14 @@ An organization sees On Time In Full (OTIF) fall from **84.3% to 72.4%**. Existi
 7. Did the approved actions produce the intended outcome?
 
 The deterministic demonstration closes at **82.1% observed synthetic OTIF on Day 21**, compared with a **82.2% simulated projection** and a target of **82.0%**.
+
+The experience is organized around three leadership phases:
+
+```text
+UNDERSTAND — trust the signal → DECIDE & MOBILIZE — move the organization → PROVE — measure the result
+```
+
+The initial value case compares **$1.24M of exposure** with a **$68,750 bounded response**—an 18.0× exposure-to-cost ratio. This is explicitly not presented as ROI; protected value must be measured at closeout.
 
 ## Why PACT is different
 

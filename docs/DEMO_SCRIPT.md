@@ -4,13 +4,13 @@ The video must stay under three minutes. Record at 1440p or 1080p with browser z
 
 ## 0:00–0:16 — The business stakes
 
-**Screen:** Define outcome.
+**Screen:** Executive Decision Brief.
 
 **Narration:**
 
-> Delivery performance collapsed from 84.3 to 72.4 percent. That puts 318 orders, 42 strategic customers, and 1.24 million dollars at risk. A dashboard can report the number. PACT turns it into a trusted decision, coordinated action, and a measured business result.
+> This is the decision a COO sees: delivery performance collapsed from 84.3 to 72.4 percent, exposing 318 orders, 42 strategic customers, and 1.24 million dollars. Today that response fragments across dashboards, meetings, and spreadsheets. PACT creates one accountable outcome loop.
 
-Click **Lock success criteria & verify KPI**.
+Point to **Today / With PACT**, then click **Verify the signal & prepare options**.
 
 ## 0:16–0:38 — Verify before acting
 

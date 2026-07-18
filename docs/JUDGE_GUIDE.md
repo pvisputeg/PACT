@@ -14,7 +14,7 @@ npm run dev
 
 Open http://localhost:5173.
 
-For a free test of the schema-validated plan and audit presentation, open http://localhost:5173/?artifact=fixture&reset=1. The `reset=1` parameter is consumed on load so every walkthrough starts at Signal; the bundled input is prominently labeled as a local fixture and is never accepted as GPT-5.6 evidence.
+For a free test of the schema-validated plan and audit presentation, open http://localhost:5173/?artifact=fixture&reset=1. The `reset=1` parameter is consumed on load so every walkthrough starts at the Executive Decision Brief; the bundled input is prominently labeled as a local fixture and is never accepted as GPT-5.6 evidence.
 
 `judge:verify` reproduces the scenario, runs all domain tests, exercises the stateful MCP approval and dependency chain, validates the Codex plugin, checks the GPT-5.6 request boundary without credentials, and creates the production bundle.
 
@@ -24,8 +24,8 @@ The checked-in GitHub Pages workflow runs the full judge verification and deploy
 
 ## Ninety-second product path
 
-1. Read the business stakes: $1.24M revenue exposure, 42 strategic customers, and 318 orders.
-2. Click **Lock success criteria & verify KPI**, then inspect the independently reproduced 72.4% OTIF.
+1. Read the Executive Decision Brief: $1.24M revenue exposure, 42 strategic customers, 318 orders, and one decision required now. Contrast the fragmented current response with PACT's accountable outcome loop.
+2. Click **Verify the signal & prepare options**, then inspect the independently reproduced 72.4% OTIF.
 3. Click **Map business impact** and see which value drivers and teams concentrate the loss.
 4. Click **Compare recovery options**, compare the three simulations, and keep Balanced recovery selected.
 5. Click **Build coordinated plan & audit it**, review independent dissent, then **Approve recovery plan**.
