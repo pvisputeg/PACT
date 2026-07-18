@@ -75,6 +75,7 @@ function speakBriefing(value: string) {
 
 export function App() {
   const [state, setState] = useState<WorkflowState>(() => {
+    if (new URLSearchParams(window.location.search).get('reset') === '1') return initialState;
     const stored = localStorage.getItem('pact.workflow.v1');
     if (!stored) return initialState;
     try { return JSON.parse(stored) as WorkflowState; } catch { return initialState; }
@@ -84,10 +85,17 @@ export function App() {
 
   useEffect(() => localStorage.setItem('pact.workflow.v1', JSON.stringify(state)), [state]);
   useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('reset') !== '1') return;
+    url.searchParams.delete('reset');
+    window.history.replaceState({}, '', url);
+  }, []);
+  useEffect(() => {
     let active = true;
+    const baseUrl = import.meta.env.BASE_URL;
     const artifactPath = new URLSearchParams(window.location.search).get('artifact') === 'fixture'
-      ? '/artifacts/fixture/strategy-and-audit.json'
-      : '/artifacts/gpt-5.6/strategy-and-audit.json';
+      ? `${baseUrl}artifacts/fixture/strategy-and-audit.json`
+      : `${baseUrl}artifacts/gpt-5.6/strategy-and-audit.json`;
     fetch(artifactPath, { cache: 'no-store' })
       .then(async (response) => {
         if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) return;

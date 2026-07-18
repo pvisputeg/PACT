@@ -33,7 +33,7 @@ The walkthrough discovered one defect: dependent actions did not become visually
 
 A second in-app browser walkthrough verified the no-cost artifact path on July 17, 2026:
 
-- `?artifact=fixture` loaded the bundled strict-schema fixture without a network API call.
+- `?artifact=fixture&reset=1` discarded inherited workflow state, consumed the reset parameter, and loaded the bundled strict-schema fixture without a network API call.
 - Strategy displayed `LOCAL SCHEMA FIXTURE · NO API CALL` and `fixture_plan_001`.
 - Approval displayed `FIXTURE AUDITOR` and `fixture_audit_001` while preserving human authority.
 - Balanced recovery remained selectable and assembled the same six-action decision packet.
