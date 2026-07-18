@@ -120,7 +120,8 @@ PACT separates model judgment from deterministic authority:
 
 ```mermaid
 flowchart LR
-    UI[Outcome Room] --> WF[Governed workflow]
+    CC[Enterprise Mission Control] --> UI[Outcome Room]
+    UI --> WF[Governed workflow]
     WF --> PF[Proofline]
     WF --> DS[Deterministic simulation]
     WF --> AG[Action Graph]
@@ -256,7 +257,7 @@ Speech and a non-human Intelligence Core are optional presentation enhancements;
 contracts/       Metric, outcome, action, plan, and audit schemas
 data/            Fixed-seed synthetic operating scenario
 src/domain/      Contracts, deterministic engine, authorization, tests
-src/             Outcome Room application
+src/             Enterprise Mission Control and Outcome Room application
 plugins/pact/    Codex skill and stateful MCP business tools
 scripts/         Scenario, MCP, plugin, and GPT-5.6 verification utilities
 docs/            Architecture, verification, demo, and submission material

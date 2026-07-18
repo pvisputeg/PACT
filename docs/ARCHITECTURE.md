@@ -2,17 +2,18 @@
 
 ## Product boundary
 
-The Build Week implementation proves one complete operating loop for one synthetic manufacturing outcome:
+The Build Week implementation presents an enterprise outcome portfolio and proves one complete operating loop for one synthetic manufacturing outcome:
 
 `signal -> proof -> impact -> strategy -> challenge -> approval -> execution -> observation -> learning`
 
-The implemented boundary is intentionally narrow. The contracts and tool interfaces are designed so other KPIs and real enterprise adapters can be added later without representing those future capabilities as complete.
+The platform information architecture is broad; the executable demonstration boundary is intentionally narrow. Additional portfolio cards are presentation templates, while Strategic Delivery Recovery is the implemented governed workflow. Contracts and tool interfaces show how other outcomes and real enterprise adapters can be added later without representing those future capabilities as complete.
 
 ## Runtime design
 
 ```mermaid
 flowchart LR
-    UI[Outcome Room UI] --> WF[Governed workflow state machine]
+    CC[Enterprise Outcome Command Center] --> UI[Strategic Delivery Recovery Outcome Room]
+    UI --> WF[Governed workflow state machine]
     WF --> CT[Versioned contracts]
     WF --> PE[Proofline evidence engine]
     WF --> SE[Deterministic strategy simulator]
