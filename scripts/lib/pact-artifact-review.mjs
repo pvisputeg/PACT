@@ -18,9 +18,38 @@ export function extractCitedEvidenceIds(values) {
   return ids;
 }
 
+function wordCount(value) {
+  return value.trim().split(/\s+/).filter(Boolean).length;
+}
+
+function isAtomicStatement(value, maxWords) {
+  const text = value.trim();
+  return /[.!?]$/.test(text)
+    && wordCount(text) <= maxWords
+    && !/\.\s+[a-z]/.test(text);
+}
+
+function isCompleteCitation(value) {
+  return isAtomicStatement(value, 30)
+    && /(?:EVD-[A-Z]+-\d+|evidencePacket|proposedActionGraph|metricContract|outcomeContract)/.test(value);
+}
+
 export function reviewGenuineArtifact(artifact, knownEvidenceIds) {
-  const plan = planSynthesisSchema.parse(artifact.plan);
-  const audit = independentAuditSchema.parse(artifact.audit);
+  const parsedPlan = planSynthesisSchema.safeParse(artifact.plan);
+  const parsedAudit = independentAuditSchema.safeParse(artifact.audit);
+  if (!parsedPlan.success || !parsedAudit.success) {
+    const schemaIssues = [
+      ...(parsedPlan.success ? [] : parsedPlan.error.issues.map((issue) => `plan.${issue.path.join('.')}: ${issue.message}`)),
+      ...(parsedAudit.success ? [] : parsedAudit.error.issues.map((issue) => `audit.${issue.path.join('.')}: ${issue.message}`)),
+    ];
+    return {
+      ready: false,
+      checks: { schemaConformance: false },
+      details: { missingTeams: [], unknownEvidenceIds: [], blockingFindingTitles: [], schemaIssues },
+    };
+  }
+  const plan = parsedPlan.data;
+  const audit = parsedAudit.data;
   const citationFields = [
     ...plan.evidenceCitations,
     ...audit.findings.flatMap((finding) => finding.evidenceIds),
@@ -32,6 +61,7 @@ export function reviewGenuineArtifact(artifact, knownEvidenceIds) {
   const blockingFindings = audit.findings.filter((finding) => finding.severity === 'blocking');
 
   const checks = {
+    schemaConformance: true,
     genuineAgentsSdk: artifact.provider === 'OpenAI Agents SDK'
       && artifact.model === 'gpt-5.6'
       && artifact.provenance?.kind === 'genuine'
@@ -48,6 +78,9 @@ export function reviewGenuineArtifact(artifact, knownEvidenceIds) {
     evidenceIntegrity: plan.evidenceCitations.length > 0
       && citedEvidence.length > 0
       && unknownEvidenceIds.length === 0,
+    executiveTextQuality: plan.evidenceCitations.every(isCompleteCitation)
+      && audit.unsupportedClaims.every((claim) => isAtomicStatement(claim, 35))
+      && audit.requiredConditions.every((condition) => isAtomicStatement(condition, 35)),
     decisionReadyAudit: audit.verdict === 'approve_with_conditions'
       && blockingFindings.length === 0
       && audit.requiredConditions.length > 0,

@@ -77,6 +77,7 @@ const outcomeLead = new Agent({
     'Cover Finance, Procurement, Manufacturing, Logistics, Customer, and Outcome Office.',
     'Enforce the Outcome Contract. Do not approve, claim execution, or invoke actions.',
     'Be concise enough for an executive decision packet.',
+    'Every evidenceCitations item must be one complete standalone citation ending with punctuation and naming an EVD identifier or an exact packet section; never split a sentence across array items.',
   ].join(' '),
   outputType: planSynthesisSchema,
   outputGuardrails: [{
@@ -113,6 +114,7 @@ const independentAuditor = new Agent({
     'A simulated projection may be challenged as a material assumption without demanding production-grade confidence intervals.',
     'Block only an internal contradiction, hard-constraint violation, or unsafe dependency not handled by the stated guards.',
     'Return at most 3 prioritized findings, unsupported claims, and required conditions.',
+    'Every unsupportedClaims and requiredConditions item must be one complete standalone sentence under 35 words; never fuse requirements or spill text across array items.',
     'You may not modify, approve, or execute the plan.',
   ].join(' '),
   outputType: independentAuditSchema,

@@ -1,12 +1,14 @@
 import { z } from 'zod';
 
 const conciseText = z.string().min(1).max(500);
+const atomicClaim = z.string().min(10).max(220);
+const atomicCondition = z.string().min(10).max(260);
 
 export const planSynthesisSchema = z.strictObject({
   executiveSummary: conciseText,
   recommendedStrategyId: z.enum(['STR-MARGIN', 'STR-SPEED', 'STR-BALANCED']),
   strategyRationale: conciseText,
-  evidenceCitations: z.array(z.string().min(1).max(120)).min(1).max(12),
+  evidenceCitations: z.array(z.string().min(1).max(180)).min(1).max(12),
   assumptions: z.array(z.strictObject({
     statement: conciseText,
     evidenceStatus: z.enum(['supported', 'partially_supported', 'unsupported']),
@@ -27,11 +29,10 @@ export const independentAuditSchema = z.strictObject({
     detail: conciseText,
     evidenceIds: z.array(z.string().min(1).max(120)).max(8),
   })).max(3),
-  unsupportedClaims: z.array(conciseText).max(3),
-  requiredConditions: z.array(conciseText).max(3),
+  unsupportedClaims: z.array(atomicClaim).max(3),
+  requiredConditions: z.array(atomicCondition).min(1).max(3),
   counterfactual: z.strictObject({
     scenario: conciseText,
     expectedImpact: conciseText,
   }),
 });
-

@@ -44,4 +44,19 @@ describe('genuine artifact release review', () => {
     expect(result.ready).toBe(false);
     expect(result.checks).toMatchObject({ evidenceIntegrity: false, decisionReadyAudit: false, projectBudget: false });
   });
+
+  it('rejects fused or incomplete executive statements', () => {
+    const malformed = {
+      ...artifact,
+      plan: { ...artifact.plan, evidenceCitations: [...artifact.plan.evidenceCitations, 'approval pending.'] },
+      audit: {
+        ...artifact.audit,
+        unsupportedClaims: ['Supplier recovery is unsupported,'],
+        requiredConditions: ['Validate recovery. except as agreed under the guards.'],
+      },
+    };
+    const result = reviewGenuineArtifact(malformed, new Set(['EVD-SUP-017', 'EVD-LOG-023']));
+    expect(result.ready).toBe(false);
+    expect(result.checks.executiveTextQuality).toBe(false);
+  });
 });
