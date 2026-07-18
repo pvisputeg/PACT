@@ -18,6 +18,12 @@ const requiredFiles = [
   'plugins/pact/skills/investigate-and-recover-outcome/SKILL.md',
   'plugins/pact/scripts/pact-mcp-server.mjs',
   'public/artifacts/gpt-5.6/README.md',
+  'submission-assets/README.md',
+  'submission-assets/screenshots/01-signal-contract.png',
+  'submission-assets/screenshots/02-proofline-verification.png',
+  'submission-assets/screenshots/03-strategy-sandbox.png',
+  'submission-assets/screenshots/04-approval-gate.png',
+  'submission-assets/screenshots/05-outcome-closeout.png',
 ];
 
 function walk(directory, output = []) {

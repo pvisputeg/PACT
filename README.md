@@ -8,6 +8,8 @@
 
 </div>
 
+![PACT Outcome Room closing a governed recovery at 82.1% observed synthetic OTIF](submission-assets/screenshots/05-outcome-closeout.png)
+
 PACT is a governed, multi-agent outcome system. It verifies whether a consequential KPI is real, explains why it matters, coordinates the teams that can change it, requires human authorization, executes safe business tools, and measures whether the intervention worked.
 
 > AI should not merely produce business answers. It should earn the right for those answers to influence real decisions.
