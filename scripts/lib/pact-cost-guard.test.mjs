@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  acknowledgeUnsettledCall,
   estimateCostUsd,
   reconcileCall,
   reserveCall,
@@ -35,5 +36,12 @@ describe('PACT API cost guard', () => {
     expect(() => reserveCall(ledger, { id: 'trace-2:auditor', agent: 'auditor', costUsd: 0.05 })).toThrow('unsettled');
     expect(() => reserveCall(ledger, { id: 'trace:lead', agent: 'lead', costUsd: 0.2 })).toThrow('exceed');
   });
-});
 
+  it('keeps an explicitly acknowledged interrupted call in the spend total', () => {
+    const ledger = { version: 1, budgetCapUsd: 1, entries: [] };
+    reserveCall(ledger, { id: 'trace:auditor', agent: 'auditor', costUsd: 0.3 });
+    expect(acknowledgeUnsettledCall(ledger, 'auditor')).toMatchObject({ status: 'charged-uncertain', costUsd: 0.3 });
+    reserveCall(ledger, { id: 'trace-2:auditor', agent: 'auditor', costUsd: 0.3 });
+    expect(totalCommittedUsd(ledger)).toBe(0.6);
+  });
+});

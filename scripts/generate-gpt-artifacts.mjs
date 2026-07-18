@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { Agent, Runner, generateTraceId, withTrace } from '@openai/agents';
 import { independentAuditSchema, planSynthesisSchema } from './lib/pact-agent-schemas.mjs';
 import {
+  acknowledgeUnsettledCall,
   estimateCostUsd,
   estimateTokens,
   readLedger,
@@ -177,6 +178,11 @@ if (resume) {
   planResponseId = checkpoint.responseId;
   planTraceId = checkpoint.traceId;
   planUsage = checkpoint.usage;
+  const acknowledgedAudit = acknowledgeUnsettledCall(ledger, independentAuditor.name);
+  if (acknowledgedAudit) {
+    await writeLedger(ledgerUrl, ledger);
+    console.log(`Counted interrupted Auditor reservation ${acknowledgedAudit.id} as charged-uncertain before explicit resume.`);
+  }
   console.log(`Resuming from saved Outcome Lead SDK response ${planResponseId}.`);
 } else {
   planTraceId = generateTraceId();

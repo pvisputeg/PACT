@@ -58,6 +58,14 @@ export function reconcileCall(ledger, id, usage) {
   return ledger;
 }
 
+export function acknowledgeUnsettledCall(ledger, agent) {
+  const entry = ledger.entries.find((candidate) => candidate.agent === agent && candidate.status === 'reserved');
+  if (!entry) return null;
+  entry.status = 'charged-uncertain';
+  entry.acknowledgedAt = new Date().toISOString();
+  return entry;
+}
+
 export async function readLedger(ledgerUrl, budgetCapUsd) {
   try {
     const ledger = JSON.parse(await readFile(ledgerUrl, 'utf8'));
