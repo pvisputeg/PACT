@@ -23,6 +23,8 @@ PACT:
 
 No production systems are connected. Customer communications are drafts and cannot be sent.
 
+PACT's original project code is available under the [MIT License](LICENSE). Third-party package notices are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
 ## Product surfaces
 
 - Enterprise Mission Control with a ranked outcome portfolio.
