@@ -524,6 +524,7 @@ function OutcomeRoom(props: {
     <header className="outcome-room-head"><button onClick={() => navigate('/')}><ArrowLeft size={15}/> Mission Control</button><div><span>{scenario.outcomeContract.id} · {scenario.outcomeContract.name.toUpperCase()}</span><strong>{scenario.plant.name}</strong></div><div><b>{stateLabel(state)}</b><small>{formatCompactMoney(scenario.impact.revenueExposure)} exposed · {scenario.outcomeContract.deadlineDays}-day contract</small></div></header>
     <nav className="stage-rail">{STAGES.map(({ id, label, icon: StageIcon }, index) => { const unlocked = stageUnlocked(id, state); const active = stage === id; const completed = STAGES.findIndex((item) => item.id === state.stage) > index || (id === 'closeout' && state.stage === 'closeout'); return <button key={id} disabled={!unlocked} className={`${active ? 'active' : ''} ${completed ? 'complete' : ''}`} onClick={() => onStage(id)}><i>{completed ? <CheckCircle2 size={14}/> : <StageIcon size={14}/>}</i><span><small>{String(index + 1).padStart(2, '0')}</small>{label}</span></button>; })}</nav>
     <div className="outcome-stage">
+      <SyntheticDisclosure/>
       {stage === 'investigation' && <InvestigationStage onContinue={props.onDefine}/>}
       {stage === 'define' && <DefineStage state={state} onContinue={props.onConfirm}/>}
       {stage === 'proof' && <ProofStage state={state} onContinue={props.onProof}/>}
