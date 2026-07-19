@@ -7,7 +7,7 @@
   "captureContract": {
     "artifactMode": "genuine",
     "reset": true,
-    "viewport": "1440x1000",
+    "viewport": "1440x960",
     "requiredVisibleLabels": ["SYNTHETIC OPERATING ENVIRONMENT", "GENUINE GPT-5.6 · STRICT SCHEMA"]
   },
   "capturePlan": [

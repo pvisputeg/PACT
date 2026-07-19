@@ -1,6 +1,6 @@
 # PACT demo script - 2 minutes 55 seconds
 
-Use `http://localhost:5173/?scenario=northstar&artifact=fixture&reset=1`. The footer must remain visible as `LOCAL SCHEMA FIXTURE · NO API CALL`. Record only the product; do not show setup or installation. Use no copyrighted music.
+Use `https://pvisputeg.github.io/PACT/?scenario=northstar&artifact=genuine&reset=1#/`. Record only after `npm run verify:gpt-artifact` accepts the fresh Northstar artifact and the interface visibly says `GENUINE GPT-5.6 · STRICT SCHEMA`. If genuine mode fails closed, stop and regenerate; never represent a fixture as genuine evidence. The no-API schema fixture remains explicitly labeled `LOCAL SCHEMA FIXTURE · NO API CALL`. Record only the product; do not show setup or installation, credentials, or copyrighted music.
 
 ## 0:00-0:18 - Mission Control
 
@@ -26,15 +26,15 @@ Pause on the inventory reconciliation, then select **Explore enterprise impact**
 
 Open the plant twin briefly, select the delayed shipment, and return to impact.
 
-## 1:17-1:38 - Strategy and agent separation
+## 1:17-1:38 - Codex build evidence and bounded model judgment
 
-> Speed First breaks the budget. Cost First misses the target. Balanced Recovery projects 96.4% for 386 thousand dollars. The Outcome Lead can propose, but it has zero business-tool authority.
+> Codex helped build PACT's contracts, domain engine, interface, MCP safeguards, and 59-test release chain. At runtime, GPT-5.6 handles bounded judgment: an Outcome Lead compares strategies, while deterministic code rejects Speed First on cost and Cost First on target.
 
 Select Balanced Recovery and submit its immutable packet.
 
 ## 1:38-1:57 - Independent challenge
 
-> A separate Auditor role challenges quality timing, customs, labor, compressor risk, and contingency. This free recording uses the visibly labeled no-API schema fixture; the genuine submission path displays GPT-5.6 response and trace IDs. Its conclusion is Decision-ready with conditions, not approved.
+> A separate Auditor role, also using GPT-5.6, challenges an immutable packet for quality, customs, labor, compressor, and contingency risk. GPT-5.6 response and trace IDs remain visible. It returns Decision-ready with conditions—five conditions, not approval—and neither agent has business tools.
 
 Bind all five conditions and open the Action Contract.
 

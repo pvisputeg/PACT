@@ -1,5 +1,9 @@
 # Judge guide - Operation Northstar
 
+## Fast public path
+
+Open the [free public judge demo](https://pvisputeg.github.io/PACT/?scenario=northstar&artifact=auto&reset=1#/). No credentials or API key are required. Confirm the visible model-artifact provenance before following the walkthrough below.
+
 ## Fast local path
 
 1. Run `npm install` and `npm run judge:verify`.

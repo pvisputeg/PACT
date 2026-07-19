@@ -4,6 +4,8 @@ PACT turns a consequential business signal into verified evidence, an independen
 
 The core belief is simple: make **AI accountable for the business outcome**, while keeping authority with people and enforcement in deterministic policy.
 
+**[Launch the free public judge demo](https://pvisputeg.github.io/PACT/?scenario=northstar&artifact=auto&reset=1#/)** — no credentials or paid API call required. The application prefers a valid genuine Northstar artifact and otherwise discloses the rejection before using its strict local fixture.
+
 ## Operation Northstar
 
 The end-to-end flagship is a fixed-seed Synthetic disruption at Aurelis Industrial Systems. Copper Alloy C-17 for Northstar Plant 7 is diverted by 12 days, threatening 318 orders, 42 strategic customers, and $8.7M of committed NX-400 revenue.
