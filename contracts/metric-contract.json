@@ -1,30 +1,17 @@
 {
   "$schema": "./schemas/metric-contract.schema.json",
-  "metricId": "supply-chain.otif",
-  "name": "On Time In Full",
-  "abbreviation": "OTIF",
+  "metricId": "manufacturing.committed_revenue_protected",
+  "name": "Committed Revenue Protected",
+  "abbreviation": "CRP",
   "version": "1.0.0",
-  "businessPurpose": "Measure customer orders delivered by the committed date with the complete promised quantity.",
-  "owner": "VP Supply Chain",
-  "entityGrain": "customer_order",
-  "numerator": "Count of eligible customer orders delivered on or before promise_date with delivered_quantity >= promised_quantity",
-  "denominator": "Count of eligible customer orders with promise_date in the measurement period",
-  "exclusions": [
-    "customer-cancelled orders before release",
-    "test orders",
-    "orders with an approved force-majeure exclusion"
-  ],
-  "dimensions": ["plant", "supplier", "carrier", "customer_tier", "product_family"],
-  "invariants": [
-    "numerator cannot exceed denominator",
-    "each eligible order contributes exactly once",
-    "promise_date must be present",
-    "delivered quantity cannot be negative"
-  ],
-  "historicalControl": {
-    "period": "trailing_13_weeks",
-    "expectedValue": 84.3,
-    "tolerancePercentagePoints": 0.2
-  },
+  "businessPurpose": "Measure the share of committed NX-400 revenue protected from the verified material disruption within the outcome horizon.",
+  "owner": "Plant COO",
+  "entityGrain": "committed_revenue",
+  "numerator": "Committed NX-400 order revenue delivered or contractually protected inside the 21-day outcome window",
+  "denominator": "Total committed NX-400 revenue exposed by Operation Northstar at contract acceptance",
+  "exclusions": ["orders cancelled before disruption receipt", "non-NX-400 orders", "test and internal transfer orders"],
+  "dimensions": ["plant", "customer", "order", "product", "material", "protection_state"],
+  "invariants": ["protected revenue cannot exceed committed exposed revenue", "each order contributes once", "projection never becomes observation", "quality incidents remain separately measured"],
+  "historicalControl": {"period": "contract_acceptance", "expectedValue": 0, "tolerancePercentagePoints": 0},
   "contentHash": "sha256:generated-at-runtime"
 }

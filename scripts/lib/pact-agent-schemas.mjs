@@ -6,7 +6,7 @@ const atomicCondition = z.string().min(10).max(260);
 
 export const planSynthesisSchema = z.strictObject({
   executiveSummary: conciseText,
-  recommendedStrategyId: z.enum(['STR-MARGIN', 'STR-SPEED', 'STR-BALANCED']),
+  recommendedStrategyId: z.enum(['STR-SPEED', 'STR-COST', 'STR-BALANCED']),
   strategyRationale: conciseText,
   evidenceCitations: z.array(z.string().min(1).max(180)).min(1).max(12),
   assumptions: z.array(z.strictObject({
@@ -14,10 +14,10 @@ export const planSynthesisSchema = z.strictObject({
     evidenceStatus: z.enum(['supported', 'partially_supported', 'unsupported']),
   })).max(4),
   crossTeamPriorities: z.array(z.strictObject({
-    team: z.enum(['Finance', 'Procurement', 'Manufacturing', 'Logistics', 'Customer', 'Outcome Office']),
+    team: z.enum(['Finance', 'Procurement', 'Quality', 'Manufacturing', 'Logistics', 'Workforce Operations', 'Customer Operations', 'Outcome Office']),
     priority: conciseText,
     dependency: conciseText,
-  })).min(1).max(6),
+  })).min(1).max(8),
   residualRisks: z.array(conciseText).max(4),
 });
 
@@ -28,9 +28,9 @@ export const independentAuditSchema = z.strictObject({
     title: z.string().min(1).max(100),
     detail: conciseText,
     evidenceIds: z.array(z.string().min(1).max(120)).max(8),
-  })).max(3),
-  unsupportedClaims: z.array(atomicClaim).max(3),
-  requiredConditions: z.array(atomicCondition).min(1).max(3),
+  })).max(5),
+  unsupportedClaims: z.array(atomicClaim).max(5),
+  requiredConditions: z.array(atomicCondition).min(1).max(5),
   counterfactual: z.strictObject({
     scenario: conciseText,
     expectedImpact: conciseText,

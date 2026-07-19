@@ -1,18 +1,19 @@
 # Submission image set
 
-These screenshots were captured from the verified local PACT build on July 18, 2026. They contain only the synthetic portfolio and flagship scenario and may be used in the Devpost gallery, repository, or demo-video edit.
+`devpost-cover.png` is the current Operation Northstar cover and is reproducibly generated with `npm run generate:og`.
 
-The current set is verified deterministic product evidence, not GPT-5.6 provenance evidence. After the genuine GPT-5.6 artifact is generated and reviewed, recapture the final gallery with the visible response IDs and update `gallery-manifest.json` to `status: reviewed` with matching plan and audit response IDs. The release audit enforces this handoff.
+The existing files under `screenshots/` were captured from the earlier prototype and are retained only as historical design evidence. Do not upload them as Operation Northstar.
 
-| File | Suggested caption | Judging story |
-|---|---|---|
-| `00-enterprise-command-center.png` | Mission Control for measurable enterprise outcomes: value, teams, commitments, approvals, governance, and learning. | Platform breadth, executive value, and product category |
-| `01-signal-contract.png` | Enter one governed Outcome Room where business ownership leads and OTIF becomes supporting evidence. | Coherent portfolio-to-outcome architecture |
-| `02-proofline-verification.png` | Proofline independently reproduces 72.4% OTIF and passes four integrity controls. | Technical implementation and trust |
-| `03-strategy-sandbox.png` | Compare margin, speed, and resilience with every projection labeled simulated. | Product design and decision quality |
-| `04-approval-gate.png` | A separate Auditor challenges the cross-team plan; PACT stops for human authority. | Novel governance and complete experience |
-| `05-outcome-closeout.png` | Close the loop at 82.1% observed synthetic OTIF and preserve the projection variance. | Measurable impact and idea differentiation |
+After `npm run verify:gpt-artifact` accepts a fresh Northstar artifact, recapture the six views defined in `gallery-manifest.json` from `?artifact=genuine&reset=1`. Use a 1440×1000 viewport and preserve the visible labels **SYNTHETIC OPERATING ENVIRONMENT** and **GENUINE GPT-5.6 · STRICT SCHEMA**. Preserve **SIMULATED**, **OBSERVED SYNTHETIC**, **HUMAN AUTHORITY**, and the deterministic rejection message wherever those labels apply.
 
-Recommended Devpost order: Enterprise Command Center first as the gallery cover, then Outcome Room, Outcome Closeout, Proofline, Strategy, and Approval. The cover establishes that PACT is a platform; closeout proves it does not end at an AI recommendation.
+Do not update `gptArtifact.status` to `reviewed` until the manifest contains the exact accepted `planResponseId` and `auditResponseId`. Do not add an image to `images` until its PNG dimensions and caption match the final file.
 
-Do not crop away semantic labels such as **SIMULATED**, **OBSERVED**, **SYNTHETIC TWIN**, or **HUMAN AUTHORITY**. They are part of the product's truthfulness and governance story.
+## Final gallery order and captions
+
+1. `devpost-cover.png` — PACT: Proof, Action, Coordination & Tracking.
+2. `10-mission-control.png` — Mission Control ranks a critical enterprise signal, exposes $8.7M of potential value, and makes the governed decision explicit.
+3. `20-plant-digital-twin.png` — The synthetic operating twin connects material, inventory, production, orders, customers, and financial exposure.
+4. `30-proofline-verification.png` — Proofline deterministically reconciles 8.1 ERP days to 5.4 usable days before planning can begin.
+5. `40-independent-audit.png` — A separate GPT-5.6 Auditor challenges the structured plan and binds five conditions without tool authority.
+6. `50-blocked-quality-guard.png` — Deterministic policy rejects a premature supplier commitment even after human approval because quality authorization is missing.
+7. `60-outcome-closeout.png` — PACT closes the loop at 96.1% observed synthetic protection, $389K cost, and zero quality or authority violations.

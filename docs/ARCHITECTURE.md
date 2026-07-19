@@ -1,96 +1,55 @@
-# PACT architecture
+# PACT architecture - Operation Northstar
 
-## Product boundary
+PACT is the governance and outcome layer above an operating twin. It is not an ERP, a supply-chain dashboard, or an autonomous agent.
 
-The Build Week implementation presents an enterprise outcome portfolio and proves one complete operating loop for one synthetic manufacturing outcome:
-
-`signal -> proof -> impact -> strategy -> challenge -> approval -> execution -> observation -> learning`
-
-The platform information architecture is broad; the executable demonstration boundary is intentionally narrow. Additional portfolio cards are presentation templates, while Strategic Delivery Recovery is the implemented governed workflow. Contracts and tool interfaces show how other outcomes and real enterprise adapters can be added later without representing those future capabilities as complete.
-
-## Runtime design
-
-```mermaid
-flowchart LR
-    CC[Enterprise Outcome Command Center] --> UI[Strategic Delivery Recovery Outcome Room]
-    UI --> WF[Governed workflow state machine]
-    WF --> CT[Versioned contracts]
-    WF --> PE[Proofline evidence engine]
-    WF --> SE[Deterministic strategy simulator]
-    WF --> AO[Agents SDK orchestrator]
-    AO --> GL[GPT-5.6 Outcome Lead]
-    GL --> GA[GPT-5.6 Independent Auditor]
-    GA --> WF
-    WF --> TG[Dependency-aware Action Graph]
-    TG --> BT[Safe simulated business tools]
-    BT --> DT[Synthetic operating twin]
-    DT --> OM[Outcome monitor]
-    PE --> OL[Outcome Ledger]
-    SE --> OL
-    AO --> OL
-    BT --> OL
-    OM --> OL
-    CX[Codex development environment] -. plugin, skill, and MCP surface .-> WF
+```text
+Enterprise Mission Control
+        |
+Northstar Plant 7 Digital Twin
+        |
+Investigation -> Outcome Contract -> Proofline -> Impact
+        |
+Outcome Lead proposal -> immutable packet -> independent Auditor
+        |
+Named human Action Contract
+        |
+Deterministic policy runtime -> dependency-ordered synthetic tools
+        |
+Observations -> closeout -> ledger -> replay -> learning
 ```
 
-## Layers
+## Source-of-truth boundaries
 
-### Contracts
+- `data/northstar-material-recovery.scenario.json` contains the fixed-seed enterprise, plant, material, evidence, impact, strategy, audit, action graph, observations, closeout, learning, and replay records.
+- `contracts/` defines metric, outcome, action, plan, and audit boundaries independently of React.
+- `src/domain/engine.ts` reproduces usable inventory, strategy compliance, immutable audit packets, readiness, plant state, protected value, execution, and ledger events.
+- `plugins/pact/runtime/pact-runtime.mjs` is the shared safe runtime used by the React domain and local MCP server.
+- `src/domain/ai-artifact.ts` is the runtime artifact boundary. It validates genuine and fixture artifacts with the same strict schema before React can consume them, fails closed in explicit genuine mode, and discloses any automatic fallback.
+- `src/domain/workflow-storage.ts` validates a versioned, scenario-bound state envelope before persistence or restore. Corrupt, stale, or policy-impossible browser state is rejected, reset to the governed baseline, and disclosed in the UI and ledger.
+- `src/App.tsx` presents the connected executive experience; it does not own a second set of business results.
 
-The Metric Contract defines OTIF, its grain, controls, and invariants. The Outcome Contract defines the objective, target, constraints, authority, and permitted action classes. JSON Schemas define agent and tool boundaries.
+## Authority model
 
-### Deterministic domain engine
+The Outcome Lead and independent Auditor have no business tools. They produce strict structured output. The Auditor receives a sealed packet and cannot edit the plan. Morgan Ellis, Plant COO, is the named decision authority. Deterministic guards alone unlock and execute synthetic operations.
 
-Pure TypeScript functions reproduce the KPI, rank contributors, calculate impacts, construct strategies, enforce constraints, order action dependencies, authorize tool calls, advance time, and compare projected with observed results. A fixed scenario version always yields the same values.
+Agents SDK plan checkpoints are cryptographically bound to the scenario ID, model, and serialized immutable evidence packet. Resume refuses stale or cross-scenario checkpoints before reserving or invoking the Auditor.
 
-### Governed workflow
+Accepted model output is visible on Strategy and Audit as judgment evidence: recommendation, assumptions, counterfactual challenge, response ID, trace ID, provider, and estimated cost. It can add ledger provenance, but it cannot approve a contract, grant scope, execute a tool, or calculate the final observation. Malformed or stale output is never consumed.
 
-The client follows an explicit stage machine. Later stages cannot appear complete until required evidence, challenge, approval, and predecessor states exist. State is locally persisted so a refresh does not invent progress.
+Every material request requires:
 
-### Intelligence boundary
+- verified material risk;
+- the exact plan ID;
+- all five adopted audit conditions;
+- named human approval;
+- approved parameters and suppliers;
+- completed predecessors; and
+- unchanged communication and quality safeguards.
 
-GPT-5.6 is used through the OpenAI Agents SDK. An explicit manager-style orchestrator runs the Outcome Lead and then gives the Independent Auditor an immutable packet containing the same evidence plus the typed plan. Each agent has a distinct instruction boundary, Zod output type, SDK output guardrail, response ID, and trace ID. The agents have no business tools and cannot hand off authority. Their output is advisory until validated against deterministic calculations and hard constraints. The prepared demo remains executable without external credentials through a clearly labeled offline fixture.
+## Evidence model
 
-### Agent topology
+Material statements carry evidence IDs and a label: `FACT`, `CALCULATED`, `INFERRED`, `ESTIMATED`, `SIMULATED`, or `OBSERVED`. The system never promotes a projection into an observation and never claims exclusive causation from temporal association.
 
-The implementation deliberately uses two reasoning agents, not a swarm:
+## Deterministic result
 
-1. **PACT Outcome Lead** synthesizes one evidence-cited, six-team recovery recommendation. Its output guardrail requires cross-team coverage and rejects claims that the plan was already approved or executed.
-2. **Independent PACT Outcome Auditor** receives a frozen audit packet. Its output guardrail requires the verdict to agree with the severity of its findings.
-3. **Executive decision owner** is not an agent. The human reviews both outputs together and remains the only authority that can release the deterministic action graph.
-
-Linked SDK traces group both reasoning stages into the governed workflow. A checkpoint preserves a valid Outcome Lead result before the audit begins. Automatic API retries are disabled, and a durable pre-call cost ledger enforces a configurable project budget that cannot exceed $5.
-
-### Tool boundary
-
-Material actions are executed by named simulated tools, never by direct UI mutation. Each request includes a correlation ID, approved plan ID, action ID, and parameters. Tools validate approval, dependencies, policy, and schemas before returning a ledger event.
-
-### Outcome Ledger
-
-The append-only-in-session ledger correlates contracts, evidence, simulations, decisions, approvals, actions, observations, and closeout. Exported JSON is traceable and content-hashed; PACT does not claim formal immutability or certification.
-
-## Flagship data flow
-
-1. Reproduce 84.3% baseline and 72.4% current OTIF from aggregate counts.
-2. Verify data completeness, grain, definition, and historical reconciliation.
-3. Rank evidence-backed contributors: Atlas 41%, Wilmington 27%, Carrier Delta 19%, other 13%.
-4. Calculate 318 at-risk orders and 42 affected strategic customers.
-5. Compare margin, speed, and balanced recovery strategies.
-6. Challenge the balanced plan and surface material dissent.
-7. Record a synthetic human approval.
-8. Execute finance, supplier, production, carrier, customer-draft, and work-item tools in dependency order.
-9. Advance through Days 3, 7, 14, and 21.
-10. Compare the simulated 82.2% projection with observed synthetic outcomes of 81.5% and 82.1%.
-
-## Trust boundaries
-
-- Calculations and policy checks are deterministic.
-- Model-produced explanations are schema-validated and evidence-cited.
-- Approval is performed by a human demonstration identity.
-- The Auditor can block but cannot approve or execute.
-- Business tools are synthetic, least-authority, and locally scoped.
-- External customer communication is draft-only.
-
-## Replaceable adapters
-
-The synthetic tools implement stable interfaces for finance authorization, supplier commitment, production resequencing, carrier reservation, customer drafting, and work-item creation. Future ERP, procurement, logistics, CRM, or collaboration adapters would implement the same contracts behind enterprise authentication and controls.
+The authoritative closeout is 96.1% observed synthetic committed revenue protected, $389,000 final spend, zero strategic customers lost, zero quality incidents, and zero unauthorized customer communications. Target is 95.0%; simulation is 96.4%.

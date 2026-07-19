@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1200, initial-scale=1">
+  <title>PACT social preview</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 1200px; height: 630px; margin: 0; overflow: hidden; }
+    body { background: #05080c; color: #f4f7f8; font-family: Inter, "Segoe UI", Arial, sans-serif; }
+    .card { position: relative; width: 1200px; height: 630px; padding: 38px 46px 34px; overflow: hidden; background:
+      radial-gradient(circle at 73% 34%, rgba(57,226,205,.12), transparent 27%),
+      radial-gradient(circle at 13% 86%, rgba(79,126,255,.10), transparent 24%),
+      linear-gradient(135deg, #06090e 0%, #0a1017 58%, #06090e 100%); }
+    .card::before { content: ""; position: absolute; inset: 0; opacity: .22; background-image:
+      linear-gradient(rgba(110,145,160,.10) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(110,145,160,.10) 1px, transparent 1px); background-size: 44px 44px; }
+    .top, .hero, .flow, .footer { position: relative; z-index: 1; }
+    .top { display: flex; align-items: center; justify-content: space-between; height: 44px; }
+    .brand { display: flex; align-items: center; gap: 15px; }
+    .mark { position: relative; width: 38px; height: 38px; transform: rotate(45deg); border: 1px solid #46dfca; box-shadow: 0 0 22px rgba(70,223,202,.25); }
+    .mark::before, .mark::after { content: ""; position: absolute; inset: 7px; border: 1px solid rgba(70,223,202,.55); }
+    .mark::after { inset: 15px; background: #46dfca; box-shadow: 0 0 12px #46dfca; }
+    .brand strong { display: block; font-size: 25px; letter-spacing: 7px; line-height: 1; }
+    .brand span { display: block; margin-top: 5px; color: #82919c; font: 10px/1.2 "Cascadia Mono", monospace; letter-spacing: 1.9px; }
+    .status { display: flex; gap: 9px; align-items: center; padding: 10px 13px; border: 1px solid rgba(70,223,202,.23); border-radius: 7px; color: #65e7d4; background: rgba(12,30,31,.54); font: 10px/1 "Cascadia Mono", monospace; letter-spacing: 1.25px; }
+    .status i { width: 6px; height: 6px; border-radius: 50%; background: #46dfca; box-shadow: 0 0 10px #46dfca; }
+    .hero { display: grid; grid-template-columns: 1fr 300px; gap: 44px; align-items: center; margin-top: 34px; }
+    .eyebrow { color: #56dfcd; font: 11px/1.2 "Cascadia Mono", monospace; letter-spacing: 2.2px; }
+    h1 { max-width: 790px; margin: 14px 0 15px; font-size: 48px; line-height: 1.04; letter-spacing: -2px; font-weight: 650; }
+    .sub { max-width: 740px; margin: 0; color: #a9b5bd; font-size: 17px; line-height: 1.46; }
+    .outcome { position: relative; height: 176px; display: grid; place-items: center; border: 1px solid rgba(96,133,150,.28); border-radius: 16px; background: linear-gradient(145deg, rgba(13,25,34,.92), rgba(7,13,19,.94)); box-shadow: inset 0 1px rgba(255,255,255,.025), 0 24px 70px rgba(0,0,0,.28); }
+    .outcome::before { content: ""; position: absolute; width: 120px; height: 120px; border-radius: 50%; border: 1px solid rgba(70,223,202,.28); box-shadow: 0 0 0 13px rgba(70,223,202,.035), 0 0 45px rgba(70,223,202,.11); }
+    .outcome-content { position: relative; text-align: center; }
+    .outcome small { display: block; color: #56dfcd; font: 9px/1.2 "Cascadia Mono", monospace; letter-spacing: 1.6px; }
+    .outcome strong { display: block; margin: 8px 0 2px; font: 40px/1 "Cascadia Mono", monospace; font-weight: 500; }
+    .outcome span { color: #aeb9c0; font-size: 12px; }
+    .flow { display: grid; grid-template-columns: 1fr 28px 1fr 28px 1fr 28px 1fr; align-items: stretch; margin-top: 37px; }
+    .step { min-height: 117px; padding: 17px 17px 15px; border: 1px solid rgba(102,132,145,.24); border-radius: 10px; background: rgba(9,15,22,.82); box-shadow: inset 0 1px rgba(255,255,255,.025); }
+    .step b { display: inline-grid; place-items: center; width: 24px; height: 24px; margin-bottom: 12px; border-radius: 6px; background: rgba(70,223,202,.10); border: 1px solid rgba(70,223,202,.25); color: #58e0ce; font: 10px/1 "Cascadia Mono", monospace; }
+    .step strong { display: block; font-size: 15px; line-height: 1.2; }
+    .step span { display: block; margin-top: 7px; color: #7f909b; font-size: 11px; line-height: 1.35; }
+    .arrow { display: grid; place-items: center; color: #3a6563; font-size: 18px; }
+    .footer { display: flex; align-items: center; justify-content: space-between; margin-top: 26px; }
+    .proof { display: flex; gap: 8px; }
+    .proof span { padding: 8px 10px; border-radius: 5px; border: 1px solid rgba(104,132,146,.23); background: rgba(8,14,20,.72); color: #aab5bc; font: 9px/1 "Cascadia Mono", monospace; letter-spacing: .8px; }
+    .footer-note { color: #56dfcd; font: 10px/1 "Cascadia Mono", monospace; letter-spacing: 1.2px; }
+    .footer-note i { display: inline-block; width: 5px; height: 5px; margin-right: 7px; border-radius: 50%; background: #56dfcd; box-shadow: 0 0 8px #56dfcd; vertical-align: 1px; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <header class="top">
+      <div class="brand"><div class="mark"></div><div><strong>PACT</strong><span>PROOF · ACTION · COORDINATION · TRACKING</span></div></div>
+      <div class="status"><i></i>SYNTHETIC BUSINESS TWIN · GOVERNANCE ONLINE</div>
+    </header>
+    <section class="hero">
+      <div>
+        <div class="eyebrow">ENTERPRISE OUTCOME OPERATING SYSTEM</div>
+        <h1>AI accountable for the business outcome—not just the answer.</h1>
+        <p class="sub">One governed loop from disputed signal to human-authorized action, measured result, and organizational learning.</p>
+      </div>
+      <div class="outcome"><div class="outcome-content"><small>NORTHSTAR OUTCOME</small><strong>96.1%</strong><span>observed synthetic</span></div></div>
+    </section>
+    <section class="flow">
+      <div class="step"><b>01</b><strong>Prove the signal</strong><span>Independent evidence before organizational action.</span></div><div class="arrow">→</div>
+      <div class="step"><b>02</b><strong>GPT-5.6 challenges</strong><span>Separate Auditor changes decision readiness.</span></div><div class="arrow">→</div>
+      <div class="step"><b>03</b><strong>Human authorizes</strong><span>Conditions, cost, owners, and risk stay visible.</span></div><div class="arrow">→</div>
+      <div class="step"><b>04</b><strong>Measure the outcome</strong><span>Observed result stays separate from projection.</span></div>
+    </section>
+    <footer class="footer">
+      <div class="proof"><span>OPENAI AGENTS SDK</span><span>CODEX PLUGIN</span><span>10 STATEFUL MCP TOOLS</span><span>29 TESTS</span></div>
+      <div class="footer-note"><i></i>HUMAN AUTHORITY · DETERMINISTIC CONTROLS</div>
+    </footer>
+  </main>
+</body>
+</html>

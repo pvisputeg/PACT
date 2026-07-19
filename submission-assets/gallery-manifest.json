@@ -1,18 +1,22 @@
 {
-  "version": 1,
-  "scenario": "PACT synthetic OTIF recovery",
-  "capturedOn": "2026-07-18",
-  "gptArtifact": {
-    "status": "pending",
-    "planResponseId": null,
-    "auditResponseId": null
+  "version": 2,
+  "scenario": "Operation Northstar synthetic material recovery",
+  "status": "northstar_recapture_required",
+  "note": "Existing screenshots are historical and must not be represented as Operation Northstar.",
+  "gptArtifact": {"status": "pending_genuine_review", "scenarioId": "northstar-material-recovery-v1"},
+  "captureContract": {
+    "artifactMode": "genuine",
+    "reset": true,
+    "viewport": "1440x1000",
+    "requiredVisibleLabels": ["SYNTHETIC OPERATING ENVIRONMENT", "GENUINE GPT-5.6 · STRICT SCHEMA"]
   },
-  "images": [
-    { "file": "00-enterprise-command-center.png", "width": 1280, "height": 720 },
-    { "file": "01-signal-contract.png", "width": 1280, "height": 720 },
-    { "file": "02-proofline-verification.png", "width": 1280, "height": 720 },
-    { "file": "03-strategy-sandbox.png", "width": 1265, "height": 712 },
-    { "file": "04-approval-gate.png", "width": 1265, "height": 934 },
-    { "file": "05-outcome-closeout.png", "width": 1265, "height": 712 }
-  ]
+  "capturePlan": [
+    {"file": "10-mission-control.png", "view": "mission_control", "route": "/", "caption": "Mission Control ranks a critical enterprise signal, exposes $8.7M of potential value, and makes the governed decision explicit."},
+    {"file": "20-plant-digital-twin.png", "view": "plant_twin", "route": "/plants/northstar-7", "caption": "The synthetic operating twin connects material, inventory, production, orders, customers, and financial exposure."},
+    {"file": "30-proofline-verification.png", "view": "proofline", "route": "/outcomes/northstar/verify", "caption": "Proofline deterministically reconciles 8.1 ERP days to 5.4 usable days before planning can begin."},
+    {"file": "40-independent-audit.png", "view": "independent_audit", "route": "/outcomes/northstar/audit", "caption": "A separate GPT-5.6 Auditor challenges the structured plan and binds five conditions without tool authority."},
+    {"file": "50-blocked-quality-guard.png", "view": "blocked_guard", "route": "/outcomes/northstar/coordinate", "caption": "Deterministic policy rejects a premature supplier commitment even after human approval because quality authorization is missing."},
+    {"file": "60-outcome-closeout.png", "view": "outcome_closeout", "route": "/outcomes/northstar/closeout", "caption": "PACT closes the loop at 96.1% observed synthetic protection, $389K cost, and zero quality or authority violations."}
+  ],
+  "images": []
 }

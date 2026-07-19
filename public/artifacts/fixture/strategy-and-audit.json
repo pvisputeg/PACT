@@ -1,114 +1,49 @@
 {
-  "generatedAt": "2026-07-17T20:00:00.000Z",
-  "model": "fixture:pact-v1",
+  "scenarioId": "northstar-material-recovery-v1",
+  "generatedAt": "2026-07-19T13:20:00.000Z",
+  "model": "fixture:pact-northstar-v1",
   "provider": "Local schema fixture",
   "provenance": {
-    "kind": "fixture",
-    "framework": "offline-fixture",
-    "orchestration": "manager",
-    "planAgent": "PACT Outcome Lead",
-    "auditAgent": "Independent PACT Outcome Auditor",
-    "planResponseId": "fixture_plan_001",
-    "auditResponseId": "fixture_audit_001",
-    "planTraceId": "fixture_trace_plan_001",
-    "auditTraceId": "fixture_trace_audit_001"
+    "kind": "fixture", "framework": "offline-fixture", "orchestration": "manager",
+    "planAgent": "PACT Outcome Lead", "auditAgent": "Independent PACT Outcome Auditor",
+    "planResponseId": "fixture_northstar_plan_001", "auditResponseId": "fixture_northstar_audit_001",
+    "planTraceId": "fixture_northstar_trace_plan_001", "auditTraceId": "fixture_northstar_trace_audit_001"
   },
-  "usage": {
-    "requests": 0,
-    "inputTokens": 0,
-    "outputTokens": 0,
-    "estimatedCostUsd": 0,
-    "projectCommittedUsd": 0,
-    "projectBudgetUsd": 4.5
-  },
+  "usage": {"requests": 0, "inputTokens": 0, "outputTokens": 0, "estimatedCostUsd": 0, "projectCommittedUsd": 0, "projectBudgetUsd": 4.5},
   "plan": {
-    "executiveSummary": "Balanced recovery meets the Day-21 target while preserving meaningful budget headroom and avoiding the speed plan's overtime concentration.",
+    "executiveSummary": "For schema-path testing only, STR-BALANCED is the sole deterministic option that projects at least 95% protected revenue inside the $420,000 boundary.",
     "recommendedStrategyId": "STR-BALANCED",
-    "strategyRationale": "The balanced strategy reaches 82.2% simulated OTIF for $68,750, remains inside every hard constraint, and distributes recovery across approved supplier allocation, production resequencing, and bounded carrier capacity.",
-    "evidenceCitations": [
-      "EVD-SUP-017",
-      "EVD-MFG-009",
-      "EVD-LOG-023",
-      "EVD-FIN-018"
-    ],
+    "strategyRationale": "The simulated plan projects 96.4% protected revenue for $386,000 in 18 days, but quality, customs, labor, compressor, and contingency assumptions still require independent challenge and human authority.",
+    "evidenceCitations": ["EVD-CALC-111 reproduces 5.4 usable inventory days.", "EVD-QLT-115 requires fresh alternate-supplier batch validation.", "EVD-LOG-117 identifies customs dependence for interplant transfer.", "EVD-LAB-112 records unconfirmed weekend labor capacity.", "EVD-SUP-116 records unresolved compressor supply risk."],
     "assumptions": [
-      {
-        "statement": "The approved alternate supplier covers 38% of the Atlas shortage.",
-        "evidenceStatus": "supported"
-      },
-      {
-        "statement": "Carrier Delta pickup acceptance reaches 92% by Day 7.",
-        "evidenceStatus": "partially_supported"
-      }
+      {"statement": "Fresh batch validation completes within 36 hours.", "evidenceStatus": "partially_supported"},
+      {"statement": "Interplant transfer clears customs on the primary route.", "evidenceStatus": "partially_supported"},
+      {"statement": "Two weekend shifts remain available.", "evidenceStatus": "unsupported"},
+      {"statement": "Compressor supply remains sufficient through Day 21.", "evidenceStatus": "unsupported"}
     ],
     "crossTeamPriorities": [
-      {
-        "team": "Finance",
-        "priority": "Authorize the bounded recovery envelope.",
-        "dependency": "Human approval of PLAN-BALANCED-v1."
-      },
-      {
-        "team": "Procurement",
-        "priority": "Confirm approved alternate component allocation.",
-        "dependency": "Finance authorization."
-      },
-      {
-        "team": "Manufacturing",
-        "priority": "Resequence feasible strategic orders at Wilmington.",
-        "dependency": "Alternate allocation confirmation."
-      },
-      {
-        "team": "Logistics",
-        "priority": "Reserve bounded Carrier Delta recovery capacity.",
-        "dependency": "Finance authorization."
-      },
-      {
-        "team": "Customer",
-        "priority": "Prepare evidence-backed recovery drafts.",
-        "dependency": "Updated production and pickup commitments."
-      },
-      {
-        "team": "Outcome Office",
-        "priority": "Track Day 3, 7, 14, and 21 checkpoints.",
-        "dependency": "Material commitments recorded."
-      }
+      {"team": "Finance", "priority": "Authorize the bounded $420,000 recovery envelope.", "dependency": "Plant COO approval and CFO-delegate authority."},
+      {"team": "Procurement", "priority": "Validate and commit bounded Redwood Alloys capacity.", "dependency": "Quality release and Finance authorization."},
+      {"team": "Quality", "priority": "Validate the C-17 sample without changing NX-400 thresholds.", "dependency": "Supplier capacity and sample receipt."},
+      {"team": "Manufacturing", "priority": "Resequence Line C by customer criticality.", "dependency": "Material arrival and labor confirmation."},
+      {"team": "Logistics", "priority": "Dispatch interplant inventory and reserve limited priority freight.", "dependency": "Finance authorization, customs contingency, and supplier commitment."},
+      {"team": "Workforce Operations", "priority": "Confirm two bounded weekend shifts.", "dependency": "Labor policy compliance."},
+      {"team": "Customer Operations", "priority": "Prepare strategic-customer recovery drafts.", "dependency": "Updated dates; external sending remains unavailable."},
+      {"team": "Outcome Office", "priority": "Monitor checkpoints and compressor risk.", "dependency": "Material commitments and cross-functional checkpoints."}
     ],
-    "residualRisks": [
-      "Carrier acceptance may remain one point below the simulated assumption.",
-      "Contributor shares remain observed associations rather than exclusive causal proof."
-    ]
+    "residualRisks": ["The supplier may miss the 36-hour quality window.", "Customs may delay the interplant transfer.", "A compressor constraint could reduce protected revenue below 95%."]
   },
   "audit": {
     "verdict": "approve_with_conditions",
     "findings": [
-      {
-        "severity": "material",
-        "title": "Carrier assumption exceeds observed evidence",
-        "detail": "The plan assumes 92% pickup acceptance while the deterministic observation reaches 91%; retain the Day-7 checkpoint and variance disclosure.",
-        "evidenceIds": [
-          "EVD-LOG-023"
-        ]
-      },
-      {
-        "severity": "advisory",
-        "title": "Causality language is appropriately bounded",
-        "detail": "The plan treats contributor shares as observed associations and does not claim exclusive causal identification.",
-        "evidenceIds": [
-          "EVD-SUP-017",
-          "EVD-MFG-009",
-          "EVD-LOG-023"
-        ]
-      }
+      {"severity": "material", "title": "Quality timing is not yet authorization", "detail": "Supplier commitment must remain blocked until the fresh sample passes unchanged NX-400 thresholds.", "evidenceIds": ["EVD-QLT-115"]},
+      {"severity": "material", "title": "Customs creates a transfer dependency", "detail": "The interplant transfer needs a documented contingency before dispatch.", "evidenceIds": ["EVD-LOG-117"]},
+      {"severity": "material", "title": "Weekend labor remains unconfirmed", "detail": "Production resequencing must wait for bounded labor confirmation.", "evidenceIds": ["EVD-LAB-112"]},
+      {"severity": "material", "title": "Compressor risk reduces plan margin", "detail": "A daily monitor and human re-escalation condition are required.", "evidenceIds": ["EVD-SUP-116"]},
+      {"severity": "material", "title": "Contingency requires separate authority", "detail": "The $35,000 reserve must remain locked behind CFO-delegate approval.", "evidenceIds": ["EVD-FIN-118"]}
     ],
-    "unsupportedClaims": [],
-    "requiredConditions": [
-      "Retain explicit human approval before any material synthetic operation.",
-      "Keep customer communication draft-only.",
-      "Measure and disclose the Day-21 projection variance."
-    ],
-    "counterfactual": {
-      "scenario": "Carrier pickup acceptance remains at 88% through Day 14.",
-      "expectedImpact": "Day-21 OTIF would likely close below the 82.0% target, requiring a bounded revision rather than silent escalation."
-    }
+    "unsupportedClaims": ["Quality release will complete within 36 hours.", "The primary customs route will clear without delay.", "Weekend labor will remain available through execution."],
+    "requiredConditions": ["Validate quality release before supplier commitment.", "Validate the customs contingency before inventory transfer.", "Confirm labor availability before production resequencing.", "Keep the $35,000 reserve locked behind CFO-delegate approval.", "Monitor compressor risk daily and pause for human re-escalation on material change."],
+    "counterfactual": {"scenario": "Compressor supply tightens while customs clearance adds two days.", "expectedImpact": "Protected revenue could fall to 94.7%, requiring human revision instead of silently expanding scope."}
   }
 }

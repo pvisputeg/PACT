@@ -7,6 +7,9 @@
     "dev": "vite --configLoader runner",
     "build": "tsc --noEmit && vite build --configLoader runner",
     "verify:dist": "node scripts/verify-dist.mjs",
+    "generate:og": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/generate-og-card.ps1",
+    "verify:demo": "node scripts/verify-demo.mjs",
+    "verify:submission": "node scripts/verify-submission.mjs",
     "test": "vitest run --config vitest.config.ts --configLoader runner",
     "test:watch": "vitest --config vitest.config.ts --configLoader runner",
     "reset": "node scripts/verify-scenario.mjs",
@@ -19,7 +22,7 @@
     "generate:agents:dry-run": "node scripts/generate-gpt-artifacts.mjs --dry-run",
     "promote:gpt-candidate": "node scripts/promote-gpt-candidate.mjs",
     "verify:gpt-artifact": "node scripts/verify-gpt-artifact.mjs",
-    "judge:verify": "npm run reset && npm test && npm run verify:mcp && npm run validate:plugin && npm run generate:agents:dry-run && npm run verify:gpt-artifact && npm run build && npm run verify:dist"
+    "judge:verify": "npm run reset && npm test && npm run verify:mcp && npm run validate:plugin && npm run generate:agents:dry-run && npm run verify:gpt-artifact && npm run verify:demo && npm run verify:submission && npm run build && npm run verify:dist"
   },
   "dependencies": {
     "@fontsource/dm-mono": "^5.2.6",

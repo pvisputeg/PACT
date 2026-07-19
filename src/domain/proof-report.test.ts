@@ -4,6 +4,7 @@ import { auditBalancedPlan, buildBalancedPlan, createApproval, initialState, sce
 import { buildProofReport } from './proof-report';
 
 const artifact: AiArtifact = {
+  scenarioId: 'northstar-material-recovery-v1',
   generatedAt: '2026-07-17T13:00:00.000Z',
   model: 'gpt-5.6',
   provider: 'OpenAI Agents SDK',
@@ -28,7 +29,7 @@ const artifact: AiArtifact = {
     findings: [{ severity: 'material', title: 'Carrier sensitivity', detail: 'Monitor pickup acceptance.', evidenceIds: ['EVD-LOG-023'] }],
     unsupportedClaims: [],
     requiredConditions: ['Retain human approval.'],
-    counterfactual: { scenario: 'Pickup acceptance stalls.', expectedImpact: 'OTIF closes below projection.' },
+    counterfactual: { scenario: 'Compressor supply tightens.', expectedImpact: 'Protected revenue closes below projection.' },
   },
 };
 
@@ -40,7 +41,7 @@ describe('human-readable outcome proof report', () => {
       ...initialState,
       contractHash: 'sha256:proof',
       verification: verifySignal(),
-      selectedStrategyId: 'STR-BALANCED',
+      selectedStrategyId: 'STR-BALANCED' as const,
       actions,
       auditFindings: auditBalancedPlan(balanced, actions),
       approval: createApproval('approved'),

@@ -1,0 +1,144 @@
+{
+  "generatedAt": "2026-07-18T14:34:40.394Z",
+  "model": "gpt-5.6",
+  "provider": "OpenAI Agents SDK",
+  "releaseReview": {
+    "status": "normalized",
+    "reviewedAt": "2026-07-18T15:35:21.449Z",
+    "method": "Deterministic editorial repair after a stricter release schema exposed three sentence-boundary defects; no model claim was added.",
+    "sourceArtifact": "artifacts/gpt-5.6/candidate-artifact.json",
+    "normalizedFields": [
+      "plan.evidenceCitations.6-7",
+      "audit.unsupportedClaims.2",
+      "audit.requiredConditions.2"
+    ],
+    "semanticChanges": false
+  },
+  "provenance": {
+    "kind": "genuine",
+    "framework": "@openai/agents",
+    "orchestration": "manager",
+    "planAgent": "PACT Outcome Lead",
+    "auditAgent": "Independent PACT Outcome Auditor",
+    "planResponseId": "resp_0604fe9ef32e60c3006a5b8d008bc88191aa9c228009872c00",
+    "auditResponseId": "resp_08a70e0d8974a6f6006a5b8ec5aeb4819f8c863b77d2c08cf7",
+    "planTraceId": "trace_6cbb7033dd054cbd98d766ea2d3dfde7",
+    "auditTraceId": "trace_d8b55aee84904400b1af6d800c9153eb"
+  },
+  "usage": {
+    "requests": 2,
+    "inputTokens": 4992,
+    "outputTokens": 5506,
+    "estimatedCostUsd": 0.19014,
+    "projectCommittedUsd": 0.261475,
+    "projectBudgetUsd": 4.5
+  },
+  "plan": {
+    "executiveSummary": "Recommend STR-BALANCED for executive consideration—not approval or execution. OBSERVED OTIF is 72.4% versus 84.3% baseline. FACTS: 318 orders and 42 strategic customers are at risk. CALCULATED exposure is $1.24M delayed revenue; ESTIMATED premium-freight exposure is $186K. The SIMULATION reaches 81.2% on Day 14 and 82.2% on Day 21 for $68,750, leaving $6,250 budget headroom. Approval remains pending, and quality, cost-basis, and operating assumptions require checkpoint evidence.",
+    "recommendedStrategyId": "STR-BALANCED",
+    "strategyRationale": "STR-BALANCED meets both simulated OTIF targets while staying below the $75,000 cap. STR-MARGIN misses both targets; STR-SPEED meets them but leaves only $100 headroom and assumes sustained weekend overtime. Balanced projections are conditional—not causal proof or execution results—and rely on supplier, carrier, and manufacturing recovery assumptions.",
+    "evidenceCitations": [
+      "EVD-PV-001–004: metric completeness, grain, definition consistency, and historical reconciliation passed.",
+      "EVD-SUP-017 and EVD-ORD-041: Atlas shortage association; EVD-MFG-009 and EVD-ORD-052: Wilmington delay association.",
+      "EVD-LOG-023 and EVD-SHP-012: Delta missed-pickup association; EVD-ORD-077: distributed causes.",
+      "EVD-ORD-041 and EVD-CUS-006: 318 at-risk orders and 42 strategic customers.",
+      "EVD-FIN-018: calculated $1.24M delayed-revenue exposure.",
+      "EVD-LOG-031: estimated $186K premium-freight exposure.",
+      "evidencePacket.strategies and proposedActionGraph: simulated outcomes, $68,750 proposed cost, $6,250 headroom, and human approval pending."
+    ],
+    "assumptions": [
+      {
+        "statement": "The approved alternate supplier covers 38% of the shortage.",
+        "evidenceStatus": "unsupported"
+      },
+      {
+        "statement": "Delta pickup acceptance reaches 92% by Day 7.",
+        "evidenceStatus": "unsupported"
+      },
+      {
+        "statement": "Wilmington schedule adherence reaches 90% by Day 7.",
+        "evidenceStatus": "unsupported"
+      },
+      {
+        "statement": "Quality escape-rate delta remains at or below zero.",
+        "evidenceStatus": "unsupported"
+      }
+    ],
+    "crossTeamPriorities": [
+      {
+        "team": "Finance",
+        "priority": "Validate the $68,750 bounded-spend basis and approval conditions.",
+        "dependency": "Executive outcome-owner approval precedes authorization."
+      },
+      {
+        "team": "Procurement",
+        "priority": "Confirm approved-alternate status, allocation, and 38% coverage evidence.",
+        "dependency": "Finance authorization; approved-supplier guard."
+      },
+      {
+        "team": "Manufacturing",
+        "priority": "Validate Wilmington resequencing and 90% adherence feasibility.",
+        "dependency": "Alternate-component commitment."
+      },
+      {
+        "team": "Logistics",
+        "priority": "Validate bounded Delta capacity and 92% pickup acceptance.",
+        "dependency": "Finance authorization."
+      },
+      {
+        "team": "Customer",
+        "priority": "Prepare draft-only, strategic-customer-prioritized communications.",
+        "dependency": "Manufacturing and logistics recovery commitments."
+      },
+      {
+        "team": "Outcome Office",
+        "priority": "Define Day 7, 14, and 21 evidence checkpoints for OTIF, quality, cost, and leading indicators.",
+        "dependency": "Procurement, manufacturing, and logistics commitments; human approval."
+      }
+    ],
+    "residualRisks": [
+      "The Day 21 projection has only 0.2 percentage points of target margin; carrier underperformance could erode it.",
+      "Quality-constraint compliance is monitored but not demonstrated.",
+      "Recovery-cost inputs lack separate source evidence despite internal arithmetic reconciliation.",
+      "Contributor shares are observed associations, not exclusive causal proof; 13% remains distributed causes."
+    ]
+  },
+  "audit": {
+    "verdict": "approve_with_conditions",
+    "findings": [
+      {
+        "severity": "material",
+        "title": "Target attainment has narrow, assumption-dependent margin",
+        "detail": "The simulation exceeds the Day 21 target by only 0.2 points. Observed associations do not validate the assumed 38% supplier coverage, 92% pickup acceptance, or 90% schedule adherence.",
+        "evidenceIds": [
+          "EVD-SUP-017",
+          "EVD-ORD-041",
+          "EVD-MFG-009",
+          "EVD-ORD-052",
+          "EVD-LOG-023",
+          "EVD-SHP-012"
+        ]
+      },
+      {
+        "severity": "material",
+        "title": "Cost and quality constraints require checkpoint evidence",
+        "detail": "The arithmetic remains within budget, but source validation of recovery costs and evidence that quality-escape delta remains nonpositive are pending. Existing guards make these conditional rather than blocking defects.",
+        "evidenceIds": []
+      }
+    ],
+    "unsupportedClaims": [
+      "Approved alternate supplier will cover 38% of the shortage.",
+      "Delta pickup acceptance will reach 92% by Day 7.",
+      "Wilmington schedule adherence will reach 90% by Day 7."
+    ],
+    "requiredConditions": [
+      "Executive outcome-owner approval must precede ACT-001 and all downstream commitments.",
+      "Finance must validate the $68,750 cost basis and enforce the $75,000 cap before authorization.",
+      "Day 7 evidence must validate supplier coverage, pickup acceptance, and schedule adherence; any material shortfall or quality degradation must pause dependent actions and trigger human re-escalation."
+    ],
+    "counterfactual": {
+      "scenario": "Actual recovery is uniformly 0.3 percentage points below the balanced simulation.",
+      "expectedImpact": "Projected OTIF becomes 80.9% on Day 14 and 81.9% on Day 21, missing both targets despite remaining within budget."
+    }
+  }
+}

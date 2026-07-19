@@ -1,105 +1,85 @@
 import type { AiArtifact } from './ai-artifact';
-import { CORRELATION_ID, scenario } from './engine';
+import { CORRELATION_ID, calculateProtectedValue, getFinalObservation, scenario } from './engine';
 import type { WorkflowState } from './types';
 
-function money(value: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
-function list(values: string[]): string {
-  return values.length ? values.join(', ') : 'None recorded';
-}
+const money = (value: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
+const list = (values: string[]) => values.length ? values.join(', ') : 'None recorded';
 
 export function buildProofReport(state: WorkflowState, artifact: AiArtifact | null = null): string {
-  const strategy = scenario.strategies.find((item) => item.id === state.selectedStrategyId)
-    ?? scenario.strategies.find((item) => item.id === 'STR-BALANCED')!;
-  const finalObservation = scenario.observations.find((item) => item.day === 21)!;
-  const totalCost = state.actions.reduce((sum, action) => sum + action.estimatedCost, 0);
+  const strategy = scenario.strategies.find((item) => item.id === state.selectedStrategyId) ?? scenario.strategies[2];
+  const finalObservation = getFinalObservation();
+  const projectionVariance = finalObservation.protectedRevenuePercent - finalObservation.projectedProtectionPercent;
+  const estimatedActionCost = state.actions.reduce((sum, action) => sum + action.estimatedCost, 0);
   const completedActions = state.actions.filter((action) => action.status === 'complete').length;
-  const verification = state.verification;
-
-  const contributors = scenario.contributors
-    .map((item) => `| ${item.name} | ${item.team} | ${item.share}% | OBSERVED ASSOCIATION | ${list(item.evidenceIds)} |`)
-    .join('\n');
   const actions = state.actions.length
     ? state.actions.map((action) => `| ${action.actionId} | ${action.team} | ${action.status.toUpperCase()} | ${action.toolOperation} | ${money(action.estimatedCost)} | ${list(action.evidenceIds)} |`).join('\n')
     : '| — | — | NOT ASSEMBLED | — | — | — |';
   const audit = state.auditFindings.length
-    ? state.auditFindings.map((finding) => `- **${finding.severity.toUpperCase()} — ${finding.title}:** ${finding.detail} Evidence: ${list(finding.evidenceIds)}.`).join('\n')
-    : '- Deterministic independent audit not yet run.';
+    ? state.auditFindings.map((finding) => `- **${finding.severity.toUpperCase()} — ${finding.title}:** ${finding.detail} Evidence: ${list(finding.evidenceIds)}. Remediation in plan: ${finding.resolved ? 'yes' : 'no'}.`).join('\n')
+    : '- Independent audit not yet run.';
   const modelSection = artifact
     ? `### ${artifact.provenance.kind === 'genuine' ? 'GPT-5.6 reviewed artifacts' : 'Local schema fixture'}
 
 - Provider: ${artifact.provider}
 - Artifact kind: **${artifact.provenance.kind.toUpperCase()}**
-- Orchestration: ${artifact.provenance.orchestration} via ${artifact.provenance.framework}
-- Outcome Lead trace: \`${artifact.provenance.planTraceId}\`
-- Independent Auditor trace: \`${artifact.provenance.auditTraceId}\`
-- Plan response: \`${artifact.provenance.planResponseId}\`
-- Audit response: \`${artifact.provenance.auditResponseId}\`
+- Framework: ${artifact.provenance.framework}; orchestration: ${artifact.provenance.orchestration}
+- Outcome Lead trace: \`${artifact.provenance.planTraceId}\`; response: \`${artifact.provenance.planResponseId}\`
+- Independent Auditor trace: \`${artifact.provenance.auditTraceId}\`; response: \`${artifact.provenance.auditResponseId}\`
 - Estimated model cost: $${artifact.usage.estimatedCostUsd.toFixed(4)} within a $${artifact.usage.projectBudgetUsd.toFixed(2)} project cap
 - Recommended strategy: ${artifact.plan.recommendedStrategyId}
-- Model rationale: ${artifact.plan.strategyRationale}
 - Independent verdict: **${artifact.audit.verdict.toUpperCase()}**
 - Required conditions: ${list(artifact.audit.requiredConditions)}
-- Counterfactual: ${artifact.audit.counterfactual.scenario} — ${artifact.audit.counterfactual.expectedImpact}
 
 ${artifact.provenance.kind === 'genuine'
-  ? 'The model output was accepted only after strict schema validation. It did not authorize or execute actions.'
-  : 'This fixture made no API call and is not GPT-5.6 evidence. It exists only to test the schema-validated presentation path for free.'}`
+  ? 'The model output was accepted only after strict schema validation. It proposed and challenged; it did not authorize or execute actions.'
+  : 'This Local schema fixture made no API call and is not GPT-5.6 evidence. It exists only to exercise the schema-validated presentation path for free.'}`
     : `### GPT-5.6 reviewed artifacts
 
 No generated model artifact was loaded. The workflow remained on its deterministic, schema-ready path.`;
 
-  return `# PACT Outcome Proof Report
+  return `# PACT Outcome Proof Report — Operation Northstar
 
-**Proof, Action, Coordination & Tracking**  
-Correlation: \`${CORRELATION_ID}\`  
-Scenario: \`${scenario.scenarioId}\` v${scenario.version}  
-Generated: ${new Date().toISOString()}
+**Enterprise Outcome Operating System**
+Correlation: \`${CORRELATION_ID}\`
+Scenario: \`${scenario.scenarioId}\` v${scenario.version}
+Provenance: **SYNTHETIC DETERMINISTIC DEMONSTRATION**
 
 ## Outcome contract
 
 - Objective: ${state.objective}
-- Contract: Metric Contract v1.0.0
+- Contract ID: \`${scenario.outcomeContract.id}\`
 - Contract hash: \`${state.contractHash ?? 'not-confirmed'}\`
-- Target: **at least 82.0% OTIF by Day 21**
-- Hard boundaries: budget no more than $75,000; no quality degradation; approved suppliers only; strategic customers prioritized; human approval required.
+- Target: **protect at least ${scenario.outcomeContract.targetProtectedRevenuePercent.toFixed(1)}% of committed revenue by Day ${scenario.outcomeContract.deadlineDays}**
+- Baseline exposure: **${money(scenario.outcomeContract.baselineExposedRevenue)} — CALCULATED**
+- Hard boundaries: ${scenario.outcomeContract.constraints.join('; ')}.
 
 ## Proofline verification
 
-- Classification: **${verification?.classification.toUpperCase() ?? 'NOT VERIFIED'}**
-- Baseline: ${verification?.baseline.toFixed(1) ?? '—'}%
-- Reproduced current state: ${verification?.current.toFixed(1) ?? '—'}%
-- Evidence: ${list(verification?.evidenceIds ?? [])}
-- Explanation: ${verification?.explanation ?? 'Signal verification has not run.'}
+- Classification: **${state.verification?.classification.toUpperCase() ?? 'NOT VERIFIED'}**
+- Confidence: **${state.verification?.confidence.toUpperCase() ?? 'NOT ASSESSED'}**
+- ERP reported coverage: ${state.verification?.erpCoverageDays.toFixed(1) ?? '—'} days — FACT
+- Reproduced usable coverage: ${state.verification?.usableCoverageDays.toFixed(1) ?? '—'} days — CALCULATED
+- Inventory discrepancy: ${state.verification?.discrepancyDays.toFixed(1) ?? '—'} days — CALCULATED
+- Evidence: ${list(state.verification?.evidenceIds ?? [])}
+- Explanation: ${state.verification?.explanation ?? 'Signal verification has not run.'}
 
-## Business impact
+## Cascading business impact
 
-- **FACT:** ${scenario.impact.ordersAtRisk.value} orders at risk (${list(scenario.impact.ordersAtRisk.evidenceIds)})
-- **FACT:** ${scenario.impact.strategicCustomers.value} strategic customers affected (${list(scenario.impact.strategicCustomers.evidenceIds)})
-- **CALCULATED:** ${money(scenario.impact.delayedRevenueExposure.value)} delayed revenue exposure (${list(scenario.impact.delayedRevenueExposure.evidenceIds)})
-- **ESTIMATED:** ${money(scenario.impact.premiumFreightExposure.value)} premium freight exposure; assumptions: ${list(scenario.impact.premiumFreightExposure.assumptions)}
-
-| Contributor | Team | Share | Claim type | Evidence |
-|---|---|---:|---|---|
-${contributors}
-
-Contributor shares are observed associations, not claims of exclusive causation.
+- **FACT:** ${scenario.impact.ordersAtRisk} orders and ${scenario.impact.strategicCustomers} strategic customers are exposed (EVD-ORD-113).
+- **CALCULATED:** ${money(scenario.impact.revenueExposure)} committed revenue exposure (EVD-FIN-118).
+- **ESTIMATED:** ${money(scenario.impact.penaltyExposure)} potential penalty exposure.
+- **INFERRED:** downstream testing, workforce, work-in-progress, and compressor dependencies remain bounded hypotheses.
 
 ## Decision packet
 
 - Selected strategy: **${strategy.name}** (\`${strategy.id}\`)
-- **SIMULATED** Day 14: ${strategy.projectedDay14.toFixed(1)}% OTIF
-- **SIMULATED** Day 21: ${strategy.projectedDay21.toFixed(1)}% OTIF
-- Proposed strategy cost: ${money(strategy.cost)}
-- Assembled action cost: ${money(totalCost)}
+- **SIMULATED** protected revenue: ${strategy.projectedProtectedRevenuePercent.toFixed(1)}%
+- Estimated strategy cost: ${money(strategy.estimatedCost)}
+- Estimated action cost: ${money(estimatedActionCost)}
+- Duration: ${strategy.durationDays} days
+- Downside case: ${strategy.downsideCase}
 
-### Deterministic independent audit
+### Independent audit
 
 ${audit}
 
@@ -109,12 +89,13 @@ ${modelSection}
 
 - Decision: **${state.approval?.decision.toUpperCase() ?? 'NOT DECIDED'}**
 - Approver: ${state.approval?.approver ?? 'Not recorded'}
-- Decided at: ${state.approval?.decidedAt ?? 'Not recorded'}
+- Authority: ${state.approval?.authority ?? 'Not recorded'}
 - Approved plan: ${state.approval?.planVersion ?? 'Not recorded'}
+- Conditions: ${list(state.approval?.conditions ?? [])}
 
 ## Coordinated action graph
 
-| Action | Team | Status | Tool operation | Cost | Evidence |
+| Action | Team | Status | Tool operation | Estimated cost | Evidence |
 |---|---|---|---|---:|---|
 ${actions}
 
@@ -122,19 +103,22 @@ Completed actions: ${completedActions} of ${state.actions.length}. Every tool re
 
 ## Measured outcome
 
-- **OBSERVED SYNTHETIC** Day 21 OTIF: **${finalObservation.otif.toFixed(1)}%**
-- **SIMULATED** Balanced projection: **82.2%**
-- Target: **82.0%**
-- Projection variance: **-0.1 percentage point**
-- Quality escape delta: **${finalObservation.qualityEscapeDelta.toFixed(1)} percentage point**
-- Closeout: target met within budget with no quality degradation.
-- Lesson: Carrier recovery was 1 point below its operating assumption; the target was still achieved.
+- Target: **${scenario.outcomeContract.targetProtectedRevenuePercent.toFixed(1)}% — HUMAN-ACCEPTED FACT**
+- **SIMULATED** Balanced projection: **${finalObservation.projectedProtectionPercent.toFixed(1)}%**
+- **OBSERVED SYNTHETIC** Day ${finalObservation.day} protected revenue: **${finalObservation.protectedRevenuePercent.toFixed(1)}%**
+- Projection variance: **${projectionVariance > 0 ? '+' : ''}${projectionVariance.toFixed(1)} percentage points — CALCULATED**
+- Observed protected value: **${money(calculateProtectedValue(finalObservation.protectedRevenuePercent, finalObservation.revenueExposure))} — CALCULATED FROM OBSERVATION**
+- Final response spend: **${money(finalObservation.spend)} — OBSERVED SYNTHETIC**
+- Budget variance: **${money(scenario.closeout.budget - finalObservation.spend)} under budget — CALCULATED**
+- Quality incidents: **${scenario.closeout.qualityIncidents}**; strategic customers lost: **${scenario.closeout.strategicCustomersLost}**; unauthorized customer communications: **${scenario.closeout.unauthorizedCustomerCommunications}**.
+- PACT records temporal and process linkage; it does not claim that one action exclusively caused the result.
 
-## Traceability
+## Traceability and learning
 
 - Ledger events: ${state.ledger.length}
 - Correlation ID: \`${CORRELATION_ID}\`
-- Evidence, simulation, human decision, tool operations, and observed outcome remain separately labeled.
+- Retained lessons: ${scenario.lessons.length}
+- Evidence, simulation, independent dissent, human decision, policy guards, tool operations, and observed outcome remain separately labeled.
 
 ---
 

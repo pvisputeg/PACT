@@ -11,16 +11,17 @@ Use PACT as an evidence-to-outcome workflow, not as a general chat persona.
 
 1. Establish an Outcome Contract containing the signal, target, deadline, constraints, indicators, and required approvals.
 2. Confirm the contract with the user before material investigation or action.
-3. Run Proofline checks against the Metric Contract and classify the signal as `verified_operational`, `data_defect`, `calculation_defect`, or `insufficient_evidence`.
+3. Run Proofline checks against the Metric Contract and classify the signal as `verified_material_risk`, `data_defect`, `calculation_defect`, or `insufficient_evidence`.
 4. If the signal is not verified, stop recovery planning and explain the missing or defective evidence.
 5. Rank contributors and impacts. Label every statement as fact, calculated, inferred, estimated, simulated, or observed.
-6. Generate margin-protecting, fastest-recovery, and balanced strategies. Enforce hard constraints deterministically.
+6. Generate Speed First, Cost First, and Balanced Recovery strategies. Enforce target, deadline, quality, supplier, communication, and $420,000 budget constraints deterministically.
 7. Build a cross-team Action Graph with owners, dependencies, approvals, costs, expected contributions, and recovery paths.
 8. Ask an independent Auditor to challenge unsupported assumptions, missing dependencies, policy violations, and optimistic projections.
-9. Present the complete decision packet and require explicit human approval before material tool calls.
-10. Execute safe tools in dependency order, recording correlated ledger events.
-11. Advance the synthetic timeline only when requested and compare simulated projections with observed synthetic outcomes.
-12. Close with the target result, variance, lessons, residual risks, and next action.
+9. If the Auditor returns required conditions, show how they change decision readiness and ask the Plant COO whether to bind that exact five-condition set to the plan. Never adopt conditions silently.
+10. Present the condition-bound decision packet and require explicit human approval before material tool calls.
+11. Execute safe tools in dependency order, passing both the approved plan identifier and adopted audit-condition-set identifier, and record correlated ledger events.
+12. Advance the synthetic timeline only when requested and compare simulated projections with observed synthetic outcomes.
+13. Close with the target result, variance, lessons, residual risks, and next action.
 
 ## Evidence discipline
 
@@ -33,7 +34,12 @@ Use PACT as an evidence-to-outcome workflow, not as a general chat persona.
 ## Authority limits
 
 - Do not approve a plan on the user's behalf.
+- Do not adopt an Auditor condition set without explicit direction from the executive outcome owner.
 - Do not execute a material action without an approved plan identifier.
+- Do not execute a material action without the exact adopted audit-condition-set identifier.
 - Do not use unapproved suppliers.
+- Do not commit alternate material before Quality authorization and Finance authorization.
+- Do not resequence production before material and labor readiness.
+- Do not exceed the $420,000 Northstar contract limit.
 - Do not send customer communication; create a draft only.
 - The Auditor may block or challenge but may not modify, approve, or execute the plan.

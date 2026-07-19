@@ -1,102 +1,57 @@
-# PACT demo script — 2 minutes 55 seconds
+# PACT demo script - 2 minutes 55 seconds
 
-The video must stay under three minutes. Record at 1440p or 1080p with browser zoom adjusted so the complete Approval Gate is visible. Use accelerated, deliberate clicks; do not show setup or installation.
+Use `http://localhost:5173/?scenario=northstar&artifact=fixture&reset=1`. The footer must remain visible as `LOCAL SCHEMA FIXTURE · NO API CALL`. Record only the product; do not show setup or installation. Use no copyrighted music.
 
-## 0:00–0:14 — Enterprise Mission Control
+## 0:00-0:18 - Mission Control
 
-**Screen:** Enterprise Outcome Command Center.
+> This is PACT, an Enterprise Outcome Operating System. Operation Northstar begins with one critical signal that may threaten 8.7 million dollars of committed NX-400 revenue. PACT will not call it material until the evidence reproduces the risk.
 
-**Narration:**
+Show the ranked attention item, then select **Enter Outcome Room**.
 
-> PACT is an enterprise operating system for measurable outcomes. This is Mission Control: eight active outcomes, 11.8 million dollars at stake, 27 teams coordinating, five approvals waiting, and one governed lifecycle from signal to organizational learning.
+## 0:18-0:37 - Signal before action
 
-Click **Strategic Delivery Recovery**.
+> PACT does not jump from an alert to a recommendation. It opens an investigation, converges seven evidence sources, and fixes the business contract before any recovery planning begins.
 
-## 0:14–0:30 — One governed Outcome Room
+Advance through investigation and accept the 95 percent, 21-day, 420-thousand-dollar Outcome Contract.
 
-**Screen:** Strategic Delivery Recovery.
+## 0:37-0:57 - Proofline discrepancy
 
-**Narration:**
+> The ERP reports 8.1 coverage days. Proofline removes quality-held, allocated, and incompatible inventory and applies current consumption. The result is 5.4 usable days, reproduced by ten deterministic controls.
 
-> Each outcome opens a governed room. The owner, value at risk, teams, target, and 21-day contract lead. OTIF is supporting evidence: a 97-percent-confidence signal exposing 1.24 million dollars—not the product itself.
+Pause on the inventory reconciliation, then select **Explore enterprise impact**.
 
-Click **Verify the signal & prepare options**.
+## 0:57-1:17 - Connected plant twin
 
-## 0:30–0:48 — Verify before acting
+> The disruption is not a KPI card. The twin traces Copper Alloy C-17 through the heat-exchanger cell, Line C, 318 orders, 42 strategic customers, and 8.7 million dollars of exposure.
 
-**Screen:** Verify the KPI.
+Open the plant twin briefly, select the delayed shipment, and return to impact.
 
-**Narration:**
+## 1:17-1:38 - Strategy and agent separation
 
-> Before mobilizing five teams or spending recovery budget, PACT earns the right to act. Four independent controls reproduce 1,810 compliant orders out of 2,500: 72.4 percent. The decline is real—not a reporting defect.
+> Speed First breaks the budget. Cost First misses the target. Balanced Recovery projects 96.4% for 386 thousand dollars. The Outcome Lead can propose, but it has zero business-tool authority.
 
-Click **Map business impact**.
+Select Balanced Recovery and submit its immutable packet.
 
-## 0:48–1:04 — Impact Map
+## 1:38-1:57 - Independent challenge
 
-**Screen:** Impact Map.
+> A separate Auditor role challenges quality timing, customs, labor, compressor risk, and contingency. This free recording uses the visibly labeled no-API schema fixture; the genuine submission path displays GPT-5.6 response and trace IDs. Its conclusion is Decision-ready with conditions, not approved.
 
-**Narration:**
+Bind all five conditions and open the Action Contract.
 
-> The system connects evidence to consequence: 41 percent of the deterioration concentrates around an Atlas component shortage, 27 percent around Wilmington sequencing, and 19 percent around missed Delta pickups. That exposes 318 orders, 42 strategic customers, and 1.24 million dollars in delayed revenue.
+## 1:57-2:18 - Human authority and safety
 
-Click **Compare recovery options**.
+> Only the Plant COO authorizes the bounded plan. PACT then deliberately attempts supplier commitment too early. The deterministic tool returns: Action blocked: Required quality authorization is missing.
 
-## 1:04–1:25 — Strategy Sandbox
+Select **Approve with conditions and activate**. Keep the blocked tool result visible.
 
-**Screen:** Choose response.
+## 2:18-2:37 - Dependency execution
 
-**Narration:**
+> The same supplier request succeeds after Quality and Finance complete. Ten commitments across eight functions execute in dependency order; the digital twin moves from 5.4 to 9.8 coverage days. Customer output remains draft-only.
 
-> PACT compares three bounded responses by outcome, cost, speed, and residual risk. The OpenAI Agents SDK Outcome Lead turns an immutable evidence packet into a typed, traced recommendation for Balanced recovery. The deterministic simulator—not the model—produces 82.2 percent by Day 21 for 68,750 dollars.
+Select **Run approved graph**, then **Measure the outcome**.
 
-Click **Build coordinated plan & audit it**.
+## 2:37-2:55 - Measured closeout
 
-## 1:25–1:48 — Independent challenge and human authority
+> The target was 95 percent, the simulation was 96.4%, and the observed synthetic result is 96.1% at 389 thousand dollars. No quality incident and no unauthorized communication occurred. The complete evidence-to-outcome chain and eight lessons remain replayable.
 
-**Screen:** Authorize plan.
-
-**Narration:**
-
-> The proposing role cannot certify itself. A separate GPT-5.6 Auditor agent receives the frozen plan, challenges its evidence and assumptions, and cannot edit or execute it. Deterministic checks reconcile the budget, and PACT stops before commitment. A human must decide.
-
-Click **Approve recovery plan**.
-
-## 1:48–2:20 — Governed execution
-
-**Screen:** Coordinate teams.
-
-**Narration while executing the six actions:**
-
-> Approval does not directly change the metric. PACT converts the decision into six owned commitments across finance, procurement, manufacturing, logistics, customer operations, and the outcome lead. Under the surface, governed Codex tools reject missing approval, missing predecessors, or unsafe requests.
-
-Click each **Record [team] commitment** button, then **Measure business outcome**.
-
-## 2:20–2:42 — Measure the result
-
-**Screen:** Measure result.
-
-Click Day 7, Day 14, and Day 21 while narrating:
-
-> Activity is not success. PACT advances the synthetic operating twin and observes leading indicators. OTIF reaches 81.5 percent on Day 14 and 82.1 percent on Day 21. The target is met—but the 0.1-point variance from projection remains visible and explained.
-
-## 2:42–2:55 — Codex-native close
-
-**Screen:** Day 21, point to the proof-report and Outcome Ledger exports.
-
-**Narration:**
-
-> Codex helped reshape the product from a narrow verifier into this complete outcome loop, then accelerated implementation, debugging, and verification. The result is Codex-native: AGENTS rules, a validated PACT plugin, an outcome-recovery skill, and nine stateful MCP tools. PACT turns AI answers into accountable outcomes.
-
-End on the Day-21 closeout, not source code.
-
-## Recording notes
-
-- Record a clean reset rehearsal first.
-- Use spoken audio; do not rely only on captions.
-- Keep the cursor still while narrating evidence.
-- Do not describe simulated values as forecasts.
-- Do not say the customer message was sent.
-- If showing GPT-5.6, generate and inspect the genuine artifact before recording.
-- Keep the GPT-5.6 response IDs visible on Strategy and Approval long enough to establish provenance.
-- Keep installation, test output, and future vision outside the primary product story.
+Select Day 21, accept closeout, and end on the achieved outcome with the ledger and replay links visible.

@@ -1,6 +1,6 @@
 import { independentAuditSchema, planSynthesisSchema } from './pact-agent-schemas.mjs';
 
-const REQUIRED_TEAMS = ['Finance', 'Procurement', 'Manufacturing', 'Logistics', 'Customer', 'Outcome Office'];
+const REQUIRED_TEAMS = ['Finance', 'Procurement', 'Quality', 'Manufacturing', 'Logistics', 'Workforce Operations', 'Customer Operations', 'Outcome Office'];
 
 export function collectEvidenceIds(value, ids = new Set()) {
   if (typeof value === 'string' && /^EVD-[A-Z]+-\d+$/.test(value)) ids.add(value);
@@ -62,6 +62,7 @@ export function reviewGenuineArtifact(artifact, knownEvidenceIds) {
 
   const checks = {
     schemaConformance: true,
+    northstarIdentity: artifact.scenarioId === 'northstar-material-recovery-v1',
     genuineAgentsSdk: artifact.provider === 'OpenAI Agents SDK'
       && artifact.model === 'gpt-5.6'
       && artifact.provenance?.kind === 'genuine'
@@ -73,7 +74,8 @@ export function reviewGenuineArtifact(artifact, knownEvidenceIds) {
       && /^resp_/.test(artifact.provenance?.auditResponseId ?? ''),
     traceProvenance: /^trace_/.test(artifact.provenance?.planTraceId ?? '')
       && /^trace_/.test(artifact.provenance?.auditTraceId ?? ''),
-    balancedStrategy: plan.recommendedStrategyId === 'STR-BALANCED',
+    strategyDecisionIntegrity: `${plan.executiveSummary} ${plan.strategyRationale}`.includes(plan.recommendedStrategyId)
+      && plan.residualRisks.length > 0,
     crossTeamCoverage: missingTeams.length === 0,
     evidenceIntegrity: plan.evidenceCitations.length > 0
       && citedEvidence.length > 0
@@ -84,6 +86,8 @@ export function reviewGenuineArtifact(artifact, knownEvidenceIds) {
     decisionReadyAudit: audit.verdict === 'approve_with_conditions'
       && blockingFindings.length === 0
       && audit.requiredConditions.length > 0,
+    decisionChangingAudit: audit.findings.some((finding) => finding.severity === 'material')
+      && audit.requiredConditions.some((condition) => /(?:pause|re-escalat|checkpoint|validate)/i.test(condition)),
     usageProvenance: Number.isInteger(artifact.usage?.requests)
       && artifact.usage.requests >= 2
       && Number.isInteger(artifact.usage?.inputTokens)
