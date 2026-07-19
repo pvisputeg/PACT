@@ -34,6 +34,8 @@ jobs:
         run: npm run judge:verify
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - name: Upload production bundle
         uses: actions/upload-pages-artifact@v3
         with:
