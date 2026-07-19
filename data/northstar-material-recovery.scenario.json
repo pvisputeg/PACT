@@ -1,6 +1,6 @@
 {
   "scenarioId": "northstar-material-recovery-v1",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "seed": 56021,
   "generatedAt": "2026-07-19T13:12:00.000Z",
   "synthetic": true,
@@ -66,8 +66,8 @@
     "route": "Ordan Strait",
     "status": "diverted",
     "delayDays": 12,
-    "originalArrival": "2026-05-08",
-    "revisedArrival": "2026-05-20",
+    "originalArrival": "2026-07-22",
+    "revisedArrival": "2026-08-03",
     "evidenceIds": ["EVD-EDI-101", "EVD-CAR-102", "EVD-PORT-103", "EVD-PO-104"]
   },
   "inventory": {
@@ -90,7 +90,7 @@
   "verificationControls": [
     {"id": "EVD-EDI-101", "name": "Supplier delay confirmed", "status": "pass", "detail": "Supplier EDI notice confirms Copper Alloy C-17 will miss the purchase-order date by 12 days."},
     {"id": "EVD-CAR-102", "name": "Carrier diversion confirmed", "status": "pass", "detail": "Carrier event records the Meridian Horizon diversion away from the Ordan Strait."},
-    {"id": "EVD-PO-104", "name": "Purchase-order schedule matched", "status": "pass", "detail": "Affected shipment reconciles to PO-7741 and the May 8 required arrival."},
+    {"id": "EVD-PO-104", "name": "Purchase-order schedule matched", "status": "pass", "detail": "Affected shipment reconciles to PO-7741 and the July 22 required arrival."},
     {"id": "EVD-BOM-108", "name": "Bill-of-material dependency verified", "status": "pass", "detail": "NX-400 heat-exchange assemblies require material MAT-C17 with no unrestricted substitute."},
     {"id": "EVD-WMS-105", "name": "Warehouse quantity reproduced", "status": "pass", "detail": "Physical-lot records reproduce the ERP gross quantity."},
     {"id": "EVD-ALLOC-107", "name": "Allocated inventory removed", "status": "pass", "detail": "1.1 production days are already committed to released orders."},
@@ -159,21 +159,21 @@
   },
   "strategies": [
     {
-      "id": "STR-SPEED", "name": "Speed First", "projectedProtectedRevenuePercent": 98, "estimatedCost": 510000, "durationDays": 13, "confidence": "medium", "customerRisk": "low", "qualityRisk": "low", "residualRisk": "medium",
+      "id": "STR-SPEED", "name": "Speed First", "projectedProtectedRevenuePercent": 98, "projectedDay14ProtectedRevenuePercent": 98, "estimatedCost": 510000, "durationDays": 13, "confidence": "medium", "customerRisk": "low", "qualityRisk": "low", "residualRisk": "medium",
       "actions": ["Air-freight replacement material", "Overtime production", "Priority logistics"],
       "assumptions": ["Immediate material availability", "Full weekend labor acceptance"],
       "dependencies": ["CFO budget exception"],
       "downsideCase": "Budget overrun increases if air capacity tightens."
     },
     {
-      "id": "STR-COST", "name": "Cost First", "projectedProtectedRevenuePercent": 84, "estimatedCost": 95000, "durationDays": 21, "confidence": "high", "customerRisk": "high", "qualityRisk": "low", "residualRisk": "high",
+      "id": "STR-COST", "name": "Cost First", "projectedProtectedRevenuePercent": 84, "projectedDay14ProtectedRevenuePercent": 72, "estimatedCost": 95000, "durationDays": 21, "confidence": "high", "customerRisk": "high", "qualityRisk": "low", "residualRisk": "high",
       "actions": ["Wait for delayed shipment", "Conserve inventory", "Reprioritize customer orders", "Defer lower-priority commitments"],
       "assumptions": ["Customers accept revised dates"],
       "dependencies": ["Account-team escalation"],
       "downsideCase": "Relationship-critical commitments fail."
     },
     {
-      "id": "STR-BALANCED", "name": "Balanced Recovery", "projectedProtectedRevenuePercent": 96.4, "estimatedCost": 386000, "durationDays": 18, "confidence": "medium_high", "customerRisk": "low", "qualityRisk": "medium", "residualRisk": "moderate",
+      "id": "STR-BALANCED", "name": "Balanced Recovery", "projectedProtectedRevenuePercent": 96.4, "projectedDay14ProtectedRevenuePercent": 93.2, "estimatedCost": 386000, "durationDays": 18, "confidence": "medium_high", "customerRisk": "low", "qualityRisk": "medium", "residualRisk": "moderate",
       "actions": ["Purchase partial quantity from conditionally approved supplier", "Transfer inventory from another Aurelis plant", "Resequence by customer criticality", "Use limited air freight", "Plan bounded overtime", "Prepare customer communication drafts"],
       "assumptions": ["Quality release completes within 36 hours", "Interplant transfer clears customs", "Weekend labor is available"],
       "dependencies": ["Quality sign-off", "Finance authority", "Labor confirmation", "Customs contingency"],
@@ -206,6 +206,7 @@
     "decision": "approve_with_conditions",
     "conditions": [
       "Quality release required before supplier purchase",
+      "Day 14 checkpoint miss pauses execution and requires re-escalation",
       "Customer communication remains draft-only",
       "Contingency reserve requires CFO delegate approval",
       "Compressor risk reviewed daily"
@@ -217,20 +218,20 @@
     {"actionId": "ACT-002", "description": "Approve alternate supplier sample batch", "owner": "Dr. Lena Ortiz", "team": "Quality", "evidenceIds": ["EVD-QLT-115"], "dependencies": ["ACT-001"], "preconditions": ["Sample batch received", "NX-400 thresholds unchanged"], "parameters": {"supplier": "Redwood Alloys", "batchId": "BATCH-C17-R01"}, "estimatedCost": 12000, "estimatedEffect": 0, "toolOperation": "quality.validate_release", "deadline": "Day 2", "recovery": "Reject sample and retain conditional status."},
     {"actionId": "ACT-003", "description": "Authorize bounded recovery spend", "owner": "Avery Brooks", "team": "Finance", "evidenceIds": ["EVD-FIN-118", "EVD-POL-114"], "dependencies": [], "preconditions": ["Plant COO approval", "CFO delegate authority"], "parameters": {"amount": 420000, "currency": "USD"}, "estimatedCost": 0, "estimatedEffect": 0, "toolOperation": "finance.authorize_recovery", "deadline": "Day 1", "recovery": "Revoke unused authority."},
     {"actionId": "ACT-004", "description": "Commit approved alternate material", "owner": "Priya Raman", "team": "Procurement", "evidenceIds": ["EVD-SUP-119", "EVD-QLT-115"], "dependencies": ["ACT-002", "ACT-003"], "preconditions": ["Quality authorization", "Finance authorization", "Conditionally approved supplier"], "parameters": {"supplier": "Redwood Alloys", "amount": 148000, "coverageDays": 1.7}, "estimatedCost": 148000, "estimatedEffect": 1.7, "toolOperation": "supplier.commit_allocation", "deadline": "Day 2", "recovery": "Cancel unshipped allocation."},
-    {"actionId": "ACT-005", "description": "Transfer approved inventory from Aurelis Brno", "owner": "Nadia Okafor", "team": "Logistics", "evidenceIds": ["EVD-LOG-117", "EVD-WMS-120"], "dependencies": ["ACT-003"], "preconditions": ["Inventory confirmed", "Customs contingency active"], "parameters": {"origin": "Aurelis Brno", "coverageDays": 1.6, "customsContingency": true}, "estimatedCost": 52000, "estimatedEffect": 1.6, "toolOperation": "inventory.transfer", "deadline": "Day 3", "recovery": "Return unopened lots to Brno."},
+    {"actionId": "ACT-005", "description": "Transfer approved inventory from Aurelis Brno", "owner": "Nadia Okafor", "team": "Logistics", "evidenceIds": ["EVD-LOG-117", "EVD-WMS-120"], "dependencies": ["ACT-003", "ACT-007"], "preconditions": ["Inventory confirmed", "Carrier reservation confirmed", "Customs route validated", "Customs contingency active"], "parameters": {"origin": "Aurelis Brno", "coverageDays": 1.6, "customsContingency": true}, "estimatedCost": 52000, "estimatedEffect": 1.6, "toolOperation": "inventory.transfer", "deadline": "Day 3", "recovery": "Return unopened lots to Brno."},
     {"actionId": "ACT-006", "description": "Confirm bounded overtime and weekend shifts", "owner": "Caleb Young", "team": "Workforce Operations", "evidenceIds": ["EVD-LAB-112"], "dependencies": [], "preconditions": ["Labor policy respected"], "parameters": {"weekendShifts": 2, "overtimeHours": 960}, "estimatedCost": 42000, "estimatedEffect": 0, "toolOperation": "labor.confirm_capacity", "deadline": "Day 2", "recovery": "Return to standard shift plan."},
-    {"actionId": "ACT-007", "description": "Reserve interplant transfer and limited air freight", "owner": "Nadia Okafor", "team": "Logistics", "evidenceIds": ["EVD-LOG-117"], "dependencies": ["ACT-004", "ACT-005"], "preconditions": ["Replacement material confirmed", "Transfer dispatched"], "parameters": {"carrier": "Aurelis Priority Freight", "reservedLoads": 6, "cap": 65000}, "estimatedCost": 65000, "estimatedEffect": 1.1, "toolOperation": "carrier.reserve_capacity", "deadline": "Day 3", "recovery": "Release unused reservations."},
+    {"actionId": "ACT-007", "description": "Validate customs route and reserve interplant plus limited-air-freight capacity", "owner": "Nadia Okafor", "team": "Logistics", "evidenceIds": ["EVD-LOG-117"], "dependencies": ["ACT-003", "ACT-004"], "preconditions": ["Finance authorization", "Replacement material confirmed", "Customs route validated before dispatch"], "parameters": {"carrier": "Aurelis Priority Freight", "reservedLoads": 6, "cap": 65000, "customsRouteValidated": true, "contingencyRoute": "Frankfurt air gateway"}, "estimatedCost": 65000, "estimatedEffect": 1.1, "toolOperation": "carrier.reserve_capacity", "deadline": "Day 3", "recovery": "Release unused reservations."},
     {"actionId": "ACT-008", "description": "Resequence Line C by customer criticality", "owner": "Marcus Chen", "team": "Manufacturing", "evidenceIds": ["EVD-ORD-113", "EVD-IOT-110"], "dependencies": ["ACT-004", "ACT-005", "ACT-006"], "preconditions": ["Material arrival confirmed", "Labor confirmed"], "parameters": {"plant": "Northstar Plant 7", "line": "Line C", "priorityTier": "strategic"}, "estimatedCost": 32000, "estimatedEffect": 113, "toolOperation": "production.resequence", "deadline": "Day 4", "recovery": "Restore the prior sequence snapshot."},
     {"actionId": "ACT-009", "description": "Prepare strategic-customer recovery drafts", "owner": "Sofia Patel", "team": "Customer Operations", "evidenceIds": ["EVD-ORD-113"], "dependencies": ["ACT-007", "ACT-008"], "preconditions": ["Recovery dates recalculated", "Draft-only policy"], "parameters": {"audience": "42 strategic customers", "send": false}, "estimatedCost": 0, "estimatedEffect": 0, "toolOperation": "customer.create_draft", "deadline": "Day 4", "recovery": "Discard drafts."},
-    {"actionId": "ACT-010", "description": "Ring-fence contingency and monitor outcome variance", "owner": "PACT Outcome Lead", "team": "Outcome Office", "evidenceIds": ["EVD-CALC-111", "EVD-FIN-118"], "dependencies": ["ACT-003", "ACT-004", "ACT-005", "ACT-006", "ACT-007", "ACT-008", "ACT-009"], "preconditions": ["Material commitments recorded", "CFO delegate authority retained"], "parameters": {"checkpoints": "Day 3, 7, 14, 21", "compressorRiskDaily": true, "contingencyReserve": 35000}, "estimatedCost": 35000, "estimatedEffect": 0, "toolOperation": "work.create_items", "deadline": "Day 4", "recovery": "Release unused reserve and close incomplete work items with rationale."}
+    {"actionId": "ACT-010", "description": "Ring-fence contingency and monitor outcome variance", "owner": "PACT Outcome Lead", "team": "Outcome Office", "evidenceIds": ["EVD-CALC-111", "EVD-FIN-118"], "dependencies": ["ACT-003", "ACT-004", "ACT-005", "ACT-006", "ACT-007", "ACT-008", "ACT-009"], "preconditions": ["Material commitments recorded", "CFO delegate authority retained"], "parameters": {"checkpoints": "Day 3, 7, 14, 21", "compressorRiskDaily": true, "contingencyReserve": 35000, "reEscalationRule": "Pause and re-escalate if Day 14 protection is below 93% or any hard constraint fails"}, "estimatedCost": 35000, "estimatedEffect": 0, "toolOperation": "work.create_items", "deadline": "Day 4", "recovery": "Release unused reserve and close incomplete work items with rationale."}
   ],
   "plantStateProgression": [
     {"id": "TWIN-STATE-00", "label": "Initial", "coverageDays": 5.4, "ordersProtected": 0, "lineCRisk": "high", "phase": "Verified disruption", "unlockActionId": null},
     {"id": "TWIN-STATE-01", "label": "Quality approval", "coverageDays": 5.4, "ordersProtected": 0, "lineCRisk": "high", "phase": "Supplier conditionally cleared", "unlockActionId": "ACT-002"},
     {"id": "TWIN-STATE-02", "label": "Supplier commitment", "coverageDays": 7.1, "ordersProtected": 0, "lineCRisk": "medium", "phase": "Replacement material confirmed", "unlockActionId": "ACT-004"},
-    {"id": "TWIN-STATE-03", "label": "Interplant transfer", "coverageDays": 8.7, "ordersProtected": 71, "lineCRisk": "medium", "phase": "Interplant inventory dispatched", "unlockActionId": "ACT-005"},
-    {"id": "TWIN-STATE-04", "label": "Resequencing", "coverageDays": 8.7, "ordersProtected": 184, "lineCRisk": "medium", "phase": "Line C resequenced", "unlockActionId": "ACT-008"},
-    {"id": "TWIN-STATE-05", "label": "Logistics secured", "coverageDays": 9.8, "ordersProtected": 184, "lineCRisk": "low", "phase": "Logistics secured", "unlockActionId": "ACT-007"}
+    {"id": "TWIN-STATE-03", "label": "Logistics gate", "coverageDays": 8.2, "ordersProtected": 0, "lineCRisk": "medium", "phase": "Carrier and customs route secured", "unlockActionId": "ACT-007"},
+    {"id": "TWIN-STATE-04", "label": "Interplant transfer", "coverageDays": 9.8, "ordersProtected": 71, "lineCRisk": "medium", "phase": "Interplant inventory dispatched", "unlockActionId": "ACT-005"},
+    {"id": "TWIN-STATE-05", "label": "Resequencing", "coverageDays": 9.8, "ordersProtected": 184, "lineCRisk": "low", "phase": "Line C resequenced", "unlockActionId": "ACT-008"}
   ],
   "observations": [
     {"day": 0, "label": "SIMULATED", "revenueExposure": 8700000, "protectedRevenuePercent": 0, "projectedProtectionPercent": 96.4, "inventoryCoverageDays": 5.4, "ordersProtected": 0, "ordersAtRisk": 318, "spend": 0, "lineCRisk": "high", "status": "verified_disruption"},

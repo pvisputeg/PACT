@@ -14,6 +14,7 @@ export interface Strategy {
   id: 'STR-SPEED' | 'STR-COST' | 'STR-BALANCED';
   name: string;
   projectedProtectedRevenuePercent: number;
+  projectedDay14ProtectedRevenuePercent: number;
   estimatedCost: number;
   durationDays: number;
   confidence: string;

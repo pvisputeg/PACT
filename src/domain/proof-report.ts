@@ -74,6 +74,7 @@ Provenance: **SYNTHETIC DETERMINISTIC DEMONSTRATION**
 
 - Selected strategy: **${strategy.name}** (\`${strategy.id}\`)
 - **SIMULATED** protected revenue: ${strategy.projectedProtectedRevenuePercent.toFixed(1)}%
+- **SIMULATED Day 14** protected revenue: ${strategy.projectedDay14ProtectedRevenuePercent.toFixed(1)}% against the 93.0% interim contract
 - Estimated strategy cost: ${money(strategy.estimatedCost)}
 - Estimated action cost: ${money(estimatedActionCost)}
 - Duration: ${strategy.durationDays} days

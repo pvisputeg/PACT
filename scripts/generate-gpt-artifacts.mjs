@@ -50,8 +50,8 @@ const evidencePacket = {
     proposedCost: 386000,
     budgetHeadroom: 34000,
     humanApprovalStatus: 'pending',
-    actions: scenario.actionGraph.map((action) => ({ actionId: action.actionId, team: action.team, owner: action.owner, cost: action.estimatedCost, dependencies: action.dependencies, operation: action.description })),
-    deterministicGuards: ['human approval required', 'spend <= 420000', 'quality authorization before supplier commitment', 'approved supplier only', 'dependencies enforced', 'customer communication draft-only', 'production requires material and labor readiness'],
+    actions: scenario.actionGraph.map((action) => ({ actionId: action.actionId, team: action.team, owner: action.owner, cost: action.estimatedCost, evidenceIds: action.evidenceIds, dependencies: action.dependencies, preconditions: action.preconditions, parameters: action.parameters, deadline: action.deadline, operation: action.description })),
+    deterministicGuards: ['human approval required', 'spend <= 420000', 'quality authorization before supplier commitment', 'approved supplier only', 'dependencies enforced', 'validated customs route and carrier reservation before interplant dispatch', 'customer communication draft-only', 'production requires material and labor readiness', 'Day 3, 7, 14, and 21 checkpoints with pause and re-escalation on Day 14 or hard-constraint miss'],
   },
   note: 'Contributor shares are observed associations, not exclusive causal proof. Projections are SIMULATED.',
 };
@@ -112,6 +112,7 @@ const independentAuditor = new Agent({
     'Human approval being pending is expected: preserve it as a required condition, not a blocking defect.',
     'A simulated projection may be challenged as a material assumption without demanding production-grade confidence intervals.',
     'Block only an internal contradiction, hard-constraint violation, or unsafe dependency not handled by the stated guards.',
+    'For each material assumption, express the required condition as a concrete validation, checkpoint, pause, or re-escalation control that can change the human decision.',
     'Return at most 5 prioritized findings, unsupported claims, and required conditions.',
     'Every unsupportedClaims and requiredConditions item must be one complete standalone sentence under 35 words; never fuse requirements or spill text across array items.',
     'You may not modify, approve, or execute the plan.',

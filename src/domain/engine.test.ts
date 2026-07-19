@@ -42,6 +42,14 @@ describe('Operation Northstar scenario integrity', () => {
     expect(scenario.impact.orderSegments.reduce((sum, item) => sum + item.exposedRevenue, 0)).toBe(8_700_000);
   });
 
+  it('keeps the shipment chronology after signal receipt and exactly twelve days apart', () => {
+    const receivedAt = new Date(scenario.signal.receivedAt).getTime();
+    const originalArrival = new Date(`${scenario.shipment.originalArrival}T00:00:00.000Z`).getTime();
+    const revisedArrival = new Date(`${scenario.shipment.revisedArrival}T00:00:00.000Z`).getTime();
+    expect(originalArrival).toBeGreaterThanOrEqual(receivedAt);
+    expect((revisedArrival - originalArrival) / 86_400_000).toBe(scenario.shipment.delayDays);
+  });
+
   it('resolves all action dependency IDs and proves the graph is acyclic', () => {
     const ids = new Set(scenario.actionGraph.map((action) => action.actionId));
     scenario.actionGraph.forEach((action) => action.dependencies.forEach((dependency) => expect(ids.has(dependency)).toBe(true)));
@@ -57,6 +65,10 @@ describe('Operation Northstar scenario integrity', () => {
     };
     scenario.actionGraph.forEach((action) => visit(action.actionId));
     expect(visited.size).toBe(10);
+    const transfer = scenario.actionGraph.find((action) => action.actionId === 'ACT-005')!;
+    const logisticsGate = scenario.actionGraph.find((action) => action.actionId === 'ACT-007')!;
+    expect(transfer.dependencies).toContain('ACT-007');
+    expect(logisticsGate.parameters.customsRouteValidated).toBe(true);
   });
 
   it('keeps observations aligned with deterministic closeout', () => {
@@ -131,6 +143,7 @@ describe('bounded strategies and independent audit', () => {
     expect(evaluateStrategy(cost).reasons).toContain('Fails the 95% protected-revenue target');
     expect(evaluateStrategy(balanced)).toEqual({ compliant: true, reasons: [] });
     expect(balanced.projectedProtectedRevenuePercent).toBe(96.4);
+    expect(balanced.projectedDay14ProtectedRevenuePercent).toBeGreaterThanOrEqual(outcomeContract.interimTarget.value);
     expect(balanced.estimatedCost).toBe(386_000);
   });
 
@@ -211,7 +224,7 @@ describe('bounded human authorization and safe tool execution', () => {
       const completed = state.actions.find((action) => action.status === 'complete' && !before.has(action.actionId));
       if (completed) order.push(completed.actionId);
     }
-    expect(order).toEqual(['ACT-001','ACT-002','ACT-003','ACT-004','ACT-005','ACT-006','ACT-007','ACT-008','ACT-009','ACT-010']);
+    expect(order).toEqual(['ACT-001','ACT-002','ACT-003','ACT-004','ACT-006','ACT-007','ACT-005','ACT-008','ACT-009','ACT-010']);
     expect(state.actions.find((action) => action.actionId === 'ACT-009')?.result?.deliveryState).toBe('not_sent');
     expect(state.actions.find((action) => action.actionId === 'ACT-010')?.result?.runtimeVersion).toBe(RUNTIME_VERSION);
     expect(state.ledger.filter((event) => event.source === 'simulated_business_tool')).toHaveLength(10);

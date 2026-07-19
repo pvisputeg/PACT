@@ -30,7 +30,7 @@ const call = (name, arguments_) => request('tools/call', { name, arguments: argu
 try {
   const initialized = await request('initialize', { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 'pact-verifier', version: '1.0.0' } });
   assert(initialized.result.serverInfo.name === 'pact-business-tools', 'MCP initialization failed');
-  assert(initialized.result.serverInfo.version === '1.0.0', 'MCP did not load the Northstar runtime');
+  assert(initialized.result.serverInfo.version === '1.0.1', 'MCP did not load the Northstar runtime');
   const listed = await request('tools/list');
   assert(listed.result.tools.length === 15, 'Expected fifteen governed Northstar tools');
 
@@ -59,22 +59,26 @@ try {
   await call('pact_authorize_finance', { ...common, actionId: 'ACT-003', amount: 420000, currency: 'USD' });
   const supplier = await call('pact_commit_supplier', { ...common, actionId: 'ACT-004', supplier: 'Redwood Alloys', amount: 148000, coverageDays: 1.7 });
   assert(supplier.result.structuredContent.projectedCoverageDays === 7.1, 'Supplier commitment did not update the twin');
+  const prematureTransfer = await call('pact_transfer_inventory', { ...common, actionId: 'ACT-005', origin: 'Aurelis Brno', coverageDays: 1.6, customsContingency: true });
+  assert(prematureTransfer.result.isError === true && prematureTransfer.result.content[0].text.includes('ACT-007'), 'Inventory transfer must wait for the carrier and customs gate');
+  const invalidCustomsGate = await call('pact_reserve_carrier', { ...common, actionId: 'ACT-007', carrier: 'Aurelis Priority Freight', reservedLoads: 6, cap: 65000, customsRouteValidated: false, contingencyRoute: 'Frankfurt air gateway' });
+  assert(invalidCustomsGate.result.isError === true, 'Carrier reservation must reject an unvalidated customs route');
+  await call('pact_reserve_carrier', { ...common, actionId: 'ACT-007', carrier: 'Aurelis Priority Freight', reservedLoads: 6, cap: 65000, customsRouteValidated: true, contingencyRoute: 'Frankfurt air gateway' });
   await call('pact_transfer_inventory', { ...common, actionId: 'ACT-005', origin: 'Aurelis Brno', coverageDays: 1.6, customsContingency: true });
   const prematureProduction = await call('pact_resequence_production', { ...common, actionId: 'ACT-008', plant: 'Northstar Plant 7', line: 'Line C', priorityTier: 'strategic' });
   assert(prematureProduction.result.isError === true, 'Production must wait for labor confirmation');
   await call('pact_confirm_labor_capacity', { ...common, actionId: 'ACT-006', weekendShifts: 2, overtimeHours: 960 });
-  await call('pact_reserve_carrier', { ...common, actionId: 'ACT-007', carrier: 'Aurelis Priority Freight', reservedLoads: 6, cap: 65000 });
   await call('pact_resequence_production', { ...common, actionId: 'ACT-008', plant: 'Northstar Plant 7', line: 'Line C', priorityTier: 'strategic' });
   const sendBlocked = await call('pact_create_customer_draft', { ...common, actionId: 'ACT-009', audience: '42 strategic customers', send: true });
   assert(sendBlocked.result.isError === true, 'Direct external sending must be rejected');
   const draft = await call('pact_create_customer_draft', { ...common, actionId: 'ACT-009', audience: '42 strategic customers', send: false });
   assert(draft.result.structuredContent.deliveryState === 'not_sent', 'Customer communication must remain draft-only');
-  await call('pact_create_work_items', { ...common, actionId: 'ACT-010', checkpoints: 'Day 3, 7, 14, 21', compressorRiskDaily: true, contingencyReserve: 35000 });
+  await call('pact_create_work_items', { ...common, actionId: 'ACT-010', checkpoints: 'Day 3, 7, 14, 21', compressorRiskDaily: true, contingencyReserve: 35000, reEscalationRule: 'Pause and re-escalate if Day 14 protection is below 93% or any hard constraint fails' });
   const outcome = await call('pact_observe_outcome', { day: 21 });
   assert(outcome.result.structuredContent.protectedRevenuePercent === 96.1, 'Unexpected Day-21 protected revenue');
   assert(outcome.result.structuredContent.spend === 389000, 'Unexpected Day-21 spend');
   assert(outcome.result.structuredContent.qualityIncidents === 0, 'Quality safeguard failed');
-  assert(outcome.result.structuredContent.runtimeVersion === '1.0.0', 'Result is not from the Northstar runtime');
+  assert(outcome.result.structuredContent.runtimeVersion === '1.0.1', 'Result is not from the Northstar runtime');
   console.log('PACT Northstar MCP verified: proof, five-condition audit, human authority, exact quality rejection, spend/supplier/dependency/send guards, twin transitions, and 96.1% closeout pass');
 } finally {
   child.kill();

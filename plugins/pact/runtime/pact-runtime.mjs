@@ -1,4 +1,4 @@
-export const RUNTIME_VERSION = '1.0.0';
+export const RUNTIME_VERSION = '1.0.1';
 export const PLAN_ID = 'PLAN-NORTHSTAR-BALANCED-v1';
 export const CORRELATION_ID = 'PACT-NORTHSTAR-2026-07';
 export const AUDIT_CONDITION_SET_ID = 'AUDIT-COND-NORTHSTAR-v1';
@@ -44,7 +44,7 @@ export const ACTION_GRAPH = [
   }, 'pact_commit_supplier', 'Commit bounded Copper Alloy C-17 only after quality and finance authorization.', { supplier: { type: 'string', const: 'Redwood Alloys' }, amount: { type: 'number', maximum: 160000 }, coverageDays: { type: 'number', const: 1.7 } }, ['supplier', 'amount', 'coverageDays']),
   definition({
     actionId: 'ACT-005', description: 'Transfer approved inventory from Aurelis Brno', owner: 'Nadia Okafor', team: 'Logistics', evidenceIds: ['EVD-LOG-117', 'EVD-WMS-120'],
-    preconditions: ['Inventory confirmed', 'Customs contingency active'], dependencies: ['ACT-003'], parameters: { origin: 'Aurelis Brno', coverageDays: 1.6, customsContingency: true }, estimatedCost: 52000, estimatedEffect: 1.6,
+    preconditions: ['Inventory confirmed', 'Carrier reservation confirmed', 'Customs route validated', 'Customs contingency active'], dependencies: ['ACT-003', 'ACT-007'], parameters: { origin: 'Aurelis Brno', coverageDays: 1.6, customsContingency: true }, estimatedCost: 52000, estimatedEffect: 1.6,
     toolOperation: 'inventory.transfer', deadline: 'Day 3', recovery: 'Return unopened lots to Brno.',
   }, 'pact_transfer_inventory', 'Dispatch confirmed synthetic inventory with a customs contingency.', { origin: { type: 'string', const: 'Aurelis Brno' }, coverageDays: { type: 'number', const: 1.6 }, customsContingency: { type: 'boolean', const: true } }, ['origin', 'coverageDays', 'customsContingency']),
   definition({
@@ -53,10 +53,10 @@ export const ACTION_GRAPH = [
     toolOperation: 'labor.confirm_capacity', deadline: 'Day 2', recovery: 'Return to standard shift plan.',
   }, 'pact_confirm_labor_capacity', 'Confirm bounded synthetic labor capacity within policy.', { weekendShifts: { type: 'integer', maximum: 2 }, overtimeHours: { type: 'integer', maximum: 960 } }, ['weekendShifts', 'overtimeHours']),
   definition({
-    actionId: 'ACT-007', description: 'Reserve interplant transfer and limited air freight', owner: 'Nadia Okafor', team: 'Logistics', evidenceIds: ['EVD-LOG-117'],
-    preconditions: ['Replacement material confirmed', 'Transfer dispatched'], dependencies: ['ACT-004', 'ACT-005'], parameters: { carrier: 'Aurelis Priority Freight', reservedLoads: 6, cap: 65000 }, estimatedCost: 65000, estimatedEffect: 1.1,
+    actionId: 'ACT-007', description: 'Validate customs route and reserve interplant plus limited-air-freight capacity', owner: 'Nadia Okafor', team: 'Logistics', evidenceIds: ['EVD-LOG-117'],
+    preconditions: ['Finance authorization', 'Replacement material confirmed', 'Customs route validated before dispatch'], dependencies: ['ACT-003', 'ACT-004'], parameters: { carrier: 'Aurelis Priority Freight', reservedLoads: 6, cap: 65000, customsRouteValidated: true, contingencyRoute: 'Frankfurt air gateway' }, estimatedCost: 65000, estimatedEffect: 1.1,
     toolOperation: 'carrier.reserve_capacity', deadline: 'Day 3', recovery: 'Release unused reservations.',
-  }, 'pact_reserve_carrier', 'Reserve limited synthetic priority freight after material commitments exist.', { carrier: { type: 'string', const: 'Aurelis Priority Freight' }, reservedLoads: { type: 'integer', maximum: 6 }, cap: { type: 'number', maximum: 65000 } }, ['carrier', 'reservedLoads', 'cap']),
+  }, 'pact_reserve_carrier', 'Validate the synthetic customs route and reserve bounded transfer capacity before inventory dispatch.', { carrier: { type: 'string', const: 'Aurelis Priority Freight' }, reservedLoads: { type: 'integer', maximum: 6 }, cap: { type: 'number', maximum: 65000 }, customsRouteValidated: { type: 'boolean', const: true }, contingencyRoute: { type: 'string', const: 'Frankfurt air gateway' } }, ['carrier', 'reservedLoads', 'cap', 'customsRouteValidated', 'contingencyRoute']),
   definition({
     actionId: 'ACT-008', description: 'Resequence Line C by customer criticality', owner: 'Marcus Chen', team: 'Manufacturing', evidenceIds: ['EVD-ORD-113', 'EVD-IOT-110'],
     preconditions: ['Material arrival confirmed', 'Labor confirmed'], dependencies: ['ACT-004', 'ACT-005', 'ACT-006'], parameters: { plant: 'Northstar Plant 7', line: 'Line C', priorityTier: 'strategic' }, estimatedCost: 32000, estimatedEffect: 113,
@@ -69,9 +69,9 @@ export const ACTION_GRAPH = [
   }, 'pact_create_customer_draft', 'Create synthetic strategic-customer drafts. External sending is unavailable.', { audience: { type: 'string', const: '42 strategic customers' }, send: { type: 'boolean', const: false } }, ['audience', 'send']),
   definition({
     actionId: 'ACT-010', description: 'Ring-fence contingency and monitor outcome variance', owner: 'PACT Outcome Lead', team: 'Outcome Office', evidenceIds: ['EVD-CALC-111', 'EVD-FIN-118'],
-    preconditions: ['Material commitments recorded', 'CFO delegate authority retained'], dependencies: ['ACT-003', 'ACT-004', 'ACT-005', 'ACT-006', 'ACT-007', 'ACT-008', 'ACT-009'], parameters: { checkpoints: 'Day 3, 7, 14, 21', compressorRiskDaily: true, contingencyReserve: 35000 }, estimatedCost: 35000, estimatedEffect: 0,
+    preconditions: ['Material commitments recorded', 'CFO delegate authority retained'], dependencies: ['ACT-003', 'ACT-004', 'ACT-005', 'ACT-006', 'ACT-007', 'ACT-008', 'ACT-009'], parameters: { checkpoints: 'Day 3, 7, 14, 21', compressorRiskDaily: true, contingencyReserve: 35000, reEscalationRule: 'Pause and re-escalate if Day 14 protection is below 93% or any hard constraint fails' }, estimatedCost: 35000, estimatedEffect: 0,
     toolOperation: 'work.create_items', deadline: 'Day 4', recovery: 'Release unused reserve and close incomplete work items with rationale.',
-  }, 'pact_create_work_items', 'Ring-fence the synthetic contingency and create cross-functional checkpoints with daily compressor-risk monitoring.', { checkpoints: { type: 'string', const: 'Day 3, 7, 14, 21' }, compressorRiskDaily: { type: 'boolean', const: true }, contingencyReserve: { type: 'number', const: 35000 } }, ['checkpoints', 'compressorRiskDaily', 'contingencyReserve']),
+  }, 'pact_create_work_items', 'Ring-fence the synthetic contingency and create governed checkpoints with an explicit pause-and-re-escalate rule.', { checkpoints: { type: 'string', const: 'Day 3, 7, 14, 21' }, compressorRiskDaily: { type: 'boolean', const: true }, contingencyReserve: { type: 'number', const: 35000 }, reEscalationRule: { type: 'string', const: 'Pause and re-escalate if Day 14 protection is below 93% or any hard constraint fails' } }, ['checkpoints', 'compressorRiskDaily', 'contingencyReserve', 'reEscalationRule']),
 ];
 
 export const OBSERVATIONS = {
@@ -122,20 +122,21 @@ function assertApprovedParameters(operation, args) {
   if ((operation === 'supplier.validate_capacity' || operation === 'quality.validate_release' || operation === 'supplier.commit_allocation') && args.supplier !== 'Redwood Alloys') throw new Error('Action blocked: Supplier is not approved for this Action Contract.');
   if (operation === 'supplier.commit_allocation' && (args.amount !== 148000 || args.coverageDays !== 1.7)) throw new Error('Action blocked: Supplier commitment differs from the authorized scope.');
   if (operation === 'inventory.transfer' && args.customsContingency !== true) throw new Error('Action blocked: Customs contingency is required.');
+  if (operation === 'carrier.reserve_capacity' && (args.customsRouteValidated !== true || args.contingencyRoute !== 'Frankfurt air gateway')) throw new Error('Action blocked: A validated customs route and contingency gateway are required.');
   if (operation === 'customer.create_draft' && args.send !== false) throw new Error('Action blocked: Direct customer-message sending is prohibited.');
   if (operation === 'production.resequence' && (args.plant !== 'Northstar Plant 7' || args.line !== 'Line C')) throw new Error('Action blocked: Production request differs from the approved plan.');
-  if (operation === 'work.create_items' && args.contingencyReserve !== 35000) throw new Error('Action blocked: The $35,000 contingency reserve is not ring-fenced.');
+  if (operation === 'work.create_items' && (args.contingencyReserve !== 35000 || args.reEscalationRule !== 'Pause and re-escalate if Day 14 protection is below 93% or any hard constraint fails')) throw new Error('Action blocked: The contingency reserve and checkpoint re-escalation rule must remain intact.');
 }
 
 function actionResult(operation, args) {
   const base = { operationId: `OP-${args.actionId.slice(-3)}`, actionId: args.actionId, accepted: true };
   if (operation === 'quality.validate_release') return { ...base, qualityAuthorization: 'approved', qualityThresholdsChanged: false, supplierState: 'conditionally_cleared' };
   if (operation === 'supplier.commit_allocation') return { ...base, replacementMaterial: 'confirmed', projectedCoverageDays: 7.1, lineCRisk: 'medium' };
-  if (operation === 'inventory.transfer') return { ...base, transferState: 'dispatched', projectedCoverageDays: 8.7, ordersProtected: 71 };
+  if (operation === 'inventory.transfer') return { ...base, transferState: 'dispatched', projectedCoverageDays: 9.8, ordersProtected: 71 };
   if (operation === 'production.resequence') return { ...base, sequenceState: 'published', ordersProtected: 184, lineCState: 'operational' };
-  if (operation === 'carrier.reserve_capacity') return { ...base, reservationState: 'confirmed', projectedCoverageDays: 9.8 };
+  if (operation === 'carrier.reserve_capacity') return { ...base, reservationState: 'confirmed', customsRouteStatus: 'validated', contingencyRoute: args.contingencyRoute, projectedCoverageDays: 8.2 };
   if (operation === 'customer.create_draft') return { ...base, draftId: 'DRAFT-NORTHSTAR-042', deliveryState: 'not_sent', safeguard: 'External send unavailable' };
-  if (operation === 'work.create_items') return { ...base, itemCount: 14, checkpoints: [3, 7, 14, 21], compressorRiskDaily: true, contingencyReserve: 35000, reserveState: 'ring_fenced' };
+  if (operation === 'work.create_items') return { ...base, itemCount: 14, checkpoints: [3, 7, 14, 21], compressorRiskDaily: true, contingencyReserve: 35000, reEscalationRule: args.reEscalationRule, reserveState: 'ring_fenced' };
   return base;
 }
 

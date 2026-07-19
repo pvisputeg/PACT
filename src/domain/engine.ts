@@ -17,6 +17,7 @@ import type {
   VerificationResult,
   WorkflowState,
 } from './types';
+import { outcomeContract } from './contracts';
 
 export const scenario = scenarioJson as unknown as Scenario;
 export const CORRELATION_ID = SHARED_CORRELATION_ID;
@@ -87,6 +88,7 @@ export function evaluateStrategy(strategy: Strategy): { compliant: boolean; reas
   const budget = `$${scenario.outcomeContract.maximumBudget.toLocaleString('en-US')}`;
   if (strategy.estimatedCost > scenario.outcomeContract.maximumBudget) reasons.push(`Exceeds the ${budget} response budget`);
   if (strategy.projectedProtectedRevenuePercent < scenario.outcomeContract.targetProtectedRevenuePercent) reasons.push(`Fails the ${scenario.outcomeContract.targetProtectedRevenuePercent}% protected-revenue target`);
+  if (strategy.projectedDay14ProtectedRevenuePercent < outcomeContract.interimTarget.value) reasons.push(`Fails the Day ${outcomeContract.interimTarget.deadlineDay} interim target of ${outcomeContract.interimTarget.value}% protected revenue`);
   if (strategy.durationDays > scenario.outcomeContract.deadlineDays) reasons.push(`Exceeds the ${scenario.outcomeContract.deadlineDays}-day outcome deadline`);
   return { compliant: reasons.length === 0, reasons };
 }
@@ -105,12 +107,16 @@ export function buildBalancedPlan(): PactAction[] {
 
 export function auditBalancedPlan(_strategy: Strategy, actions: PactAction[]): AuditFinding[] {
   const graphIds = new Set(actions.map((action) => action.actionId));
+  const transfer = actions.find((action) => action.actionId === 'ACT-005');
+  const logisticsGate = actions.find((action) => action.actionId === 'ACT-007');
   return scenario.audit.findings.map((finding) => ({
     ...finding,
     resolved: finding.id === 'AUD-001'
       ? graphIds.has('ACT-002') && actions.find((action) => action.actionId === 'ACT-004')?.dependencies.includes('ACT-002') === true
       : finding.id === 'AUD-002'
-        ? actions.find((action) => action.actionId === 'ACT-005')?.parameters.customsContingency === true
+        ? transfer?.dependencies.includes('ACT-007') === true
+          && transfer.parameters.customsContingency === true
+          && logisticsGate?.parameters.customsRouteValidated === true
         : finding.id === 'AUD-003'
           ? graphIds.has('ACT-006')
           : finding.id === 'AUD-004'

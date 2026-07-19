@@ -1,106 +1,106 @@
 {
-  "generatedAt": "2026-07-18T14:34:40.394Z",
+  "scenarioId": "northstar-material-recovery-v1",
+  "generatedAt": "2026-07-19T23:32:59.772Z",
   "model": "gpt-5.6",
   "provider": "OpenAI Agents SDK",
-  "releaseReview": {
-    "status": "normalized",
-    "reviewedAt": "2026-07-18T15:35:21.449Z",
-    "method": "Deterministic editorial repair after a stricter release schema exposed three sentence-boundary defects; no model claim was added.",
-    "sourceArtifact": "artifacts/gpt-5.6/candidate-artifact.json",
-    "normalizedFields": [
-      "plan.evidenceCitations.6-7",
-      "audit.unsupportedClaims.2",
-      "audit.requiredConditions.2"
-    ],
-    "semanticChanges": false
-  },
   "provenance": {
     "kind": "genuine",
     "framework": "@openai/agents",
     "orchestration": "manager",
     "planAgent": "PACT Outcome Lead",
     "auditAgent": "Independent PACT Outcome Auditor",
-    "planResponseId": "resp_0604fe9ef32e60c3006a5b8d008bc88191aa9c228009872c00",
-    "auditResponseId": "resp_08a70e0d8974a6f6006a5b8ec5aeb4819f8c863b77d2c08cf7",
-    "planTraceId": "trace_6cbb7033dd054cbd98d766ea2d3dfde7",
-    "auditTraceId": "trace_d8b55aee84904400b1af6d800c9153eb"
+    "planResponseId": "resp_024526bd69967fbb006a5d5e42447c819fbd945d3ef34f18ff",
+    "auditResponseId": "resp_05cd59ffeab9e0ac006a5d5e6a6364819fab6e1f1969d7bda2",
+    "planTraceId": "trace_a2cdd68aa241423da1f76317e2ee2f94",
+    "auditTraceId": "trace_57a92e74728b415f8d3a11c46f644c5e"
   },
   "usage": {
     "requests": 2,
-    "inputTokens": 4992,
-    "outputTokens": 5506,
-    "estimatedCostUsd": 0.19014,
-    "projectCommittedUsd": 0.261475,
+    "inputTokens": 9099,
+    "outputTokens": 6660,
+    "estimatedCostUsd": 0.245295,
+    "projectCommittedUsd": 0.690255,
     "projectBudgetUsd": 4.5
   },
   "plan": {
-    "executiveSummary": "Recommend STR-BALANCED for executive consideration—not approval or execution. OBSERVED OTIF is 72.4% versus 84.3% baseline. FACTS: 318 orders and 42 strategic customers are at risk. CALCULATED exposure is $1.24M delayed revenue; ESTIMATED premium-freight exposure is $186K. The SIMULATION reaches 81.2% on Day 14 and 82.2% on Day 21 for $68,750, leaving $6,250 budget headroom. Approval remains pending, and quality, cost-basis, and operating assumptions require checkpoint evidence.",
+    "executiveSummary": "Advisory recommendation: advance STR-BALANCED to human decision gates. It is the only modeled strategy compatible with the Day 14 and Day 21 targets and $420,000 cap. The projection is not an observation; execution remains prohibited pending the Action Contract, required approvals, and operational confirmations.",
     "recommendedStrategyId": "STR-BALANCED",
-    "strategyRationale": "STR-BALANCED meets both simulated OTIF targets while staying below the $75,000 cap. STR-MARGIN misses both targets; STR-SPEED meets them but leaves only $100 headroom and assumes sustained weekend overtime. Balanced projections are conditional—not causal proof or execution results—and rely on supplier, carrier, and manufacturing recovery assumptions.",
+    "strategyRationale": "Verified facts show a 12-day delay and only 5.4 usable coverage days against $8.7 million exposed revenue. Current protection remains 0% observed. The STR-BALANCED simulation projects 93.2% protection by Day 14 and 96.4% by Day 21 at an estimated $386,000, leaving $34,000 headroom. STR-SPEED breaches the budget, while STR-COST misses both targets. Balanced remains conditional because its 94.7% downside case would miss the final target.",
     "evidenceCitations": [
-      "EVD-PV-001–004: metric completeness, grain, definition consistency, and historical reconciliation passed.",
-      "EVD-SUP-017 and EVD-ORD-041: Atlas shortage association; EVD-MFG-009 and EVD-ORD-052: Wilmington delay association.",
-      "EVD-LOG-023 and EVD-SHP-012: Delta missed-pickup association; EVD-ORD-077: distributed causes.",
-      "EVD-ORD-041 and EVD-CUS-006: 318 at-risk orders and 42 strategic customers.",
-      "EVD-FIN-018: calculated $1.24M delayed-revenue exposure.",
-      "EVD-LOG-031: estimated $186K premium-freight exposure.",
-      "evidencePacket.strategies and proposedActionGraph: simulated outcomes, $68,750 proposed cost, $6,250 headroom, and human approval pending."
+      "Supplier, carrier, and purchase-order records confirm the 12-day shipment delay (EVD-EDI-101, EVD-CAR-102, and EVD-PO-104).",
+      "Restricted inventory deductions reproduce 5.4 usable production days (EVD-CALC-111).",
+      "NX-400 requires MAT-C17 without an unrestricted substitute (EVD-BOM-108).",
+      "Spend above $250,000 requires CFO-delegate authority (EVD-POL-114).",
+      "The alternate supplier is conditionally approved and requires fresh batch validation (EVD-QLT-115).",
+      "The strategy costs, protection projections, confidence levels, and downside cases are simulations in evidencePacket.strategies.",
+      "Targets, constraints, approval requirements, and the observed 0% current state are defined in evidencePacket.outcomeContract.",
+      "Dependencies, checkpoints, draft-only communications, and pause-and-re-escalate guards are defined in evidencePacket.proposedActionGraph."
     ],
     "assumptions": [
       {
-        "statement": "The approved alternate supplier covers 38% of the shortage.",
+        "statement": "Quality release completes within 36 hours; validation is required, but completion and timing are not observed.",
+        "evidenceStatus": "partially_supported"
+      },
+      {
+        "statement": "The interplant transfer clears customs; validation and contingency controls are proposed, but clearance is not confirmed.",
+        "evidenceStatus": "partially_supported"
+      },
+      {
+        "statement": "Weekend labor is available; confirmation remains pending.",
         "evidenceStatus": "unsupported"
       },
       {
-        "statement": "Delta pickup acceptance reaches 92% by Day 7.",
-        "evidenceStatus": "unsupported"
-      },
-      {
-        "statement": "Wilmington schedule adherence reaches 90% by Day 7.",
-        "evidenceStatus": "unsupported"
-      },
-      {
-        "statement": "Quality escape-rate delta remains at or below zero.",
+        "statement": "Compressor supply does not reduce protection below 95%; the packet identifies this as a downside risk.",
         "evidenceStatus": "unsupported"
       }
     ],
     "crossTeamPriorities": [
       {
         "team": "Finance",
-        "priority": "Validate the $68,750 bounded-spend basis and approval conditions.",
-        "dependency": "Executive outcome-owner approval precedes authorization."
+        "priority": "Maintain the $420,000 ceiling and verify authority for the $386,000 estimate.",
+        "dependency": "Plant COO and CFO-delegate approval plus a human-approved Action Contract."
       },
       {
         "team": "Procurement",
-        "priority": "Confirm approved-alternate status, allocation, and 38% coverage evidence.",
-        "dependency": "Finance authorization; approved-supplier guard."
+        "priority": "Establish alternate capacity and preserve the approved-or-conditionally-approved supplier restriction.",
+        "dependency": "Quality release, Finance authority, and Global Procurement VP approval before commitment."
+      },
+      {
+        "team": "Quality",
+        "priority": "Validate the alternate batch without changing NX-400 thresholds; track incidents separately.",
+        "dependency": "Sample receipt, unchanged specifications, and independent sign-off."
       },
       {
         "team": "Manufacturing",
-        "priority": "Validate Wilmington resequencing and 90% adherence feasibility.",
-        "dependency": "Alternate-component commitment."
+        "priority": "Keep resequencing conditional on confirmed material and labor readiness.",
+        "dependency": "Released alternate material, interplant arrival, and workforce confirmation."
       },
       {
         "team": "Logistics",
-        "priority": "Validate bounded Delta capacity and 92% pickup acceptance.",
-        "dependency": "Finance authorization."
+        "priority": "Confirm inventory, customs routing, carrier capacity, and contingency routing before dispatch.",
+        "dependency": "Finance authority, supplier commitment, and validated customs route."
       },
       {
-        "team": "Customer",
-        "priority": "Prepare draft-only, strategic-customer-prioritized communications.",
-        "dependency": "Manufacturing and logistics recovery commitments."
+        "team": "Workforce Operations",
+        "priority": "Confirm bounded overtime and two weekend shifts under labor policy.",
+        "dependency": "Verified labor availability and production schedule."
+      },
+      {
+        "team": "Customer Operations",
+        "priority": "Prepare recovery-date drafts only; no external send is permitted.",
+        "dependency": "Recalculated dates from confirmed logistics and manufacturing readiness."
       },
       {
         "team": "Outcome Office",
-        "priority": "Define Day 7, 14, and 21 evidence checkpoints for OTIF, quality, cost, and leading indicators.",
-        "dependency": "Procurement, manufacturing, and logistics commitments; human approval."
+        "priority": "Maintain observation-versus-projection separation and assess Day 3, 7, 14, and 21 checkpoints.",
+        "dependency": "Tool-confirmed evidence, all required approvals, and pause/re-escalation if Day 14 is below 93% or any hard constraint fails."
       }
     ],
     "residualRisks": [
-      "The Day 21 projection has only 0.2 percentage points of target margin; carrier underperformance could erode it.",
-      "Quality-constraint compliance is monitored but not demonstrated.",
-      "Recovery-cost inputs lack separate source evidence despite internal arithmetic reconciliation.",
-      "Contributor shares are observed associations, not exclusive causal proof; 13% remains distributed causes."
+      "The compressor downside case reduces projected protection to 94.7%, below target.",
+      "Quality release, customs clearance, and weekend labor remain unconfirmed.",
+      "Only $34,000 of modeled budget headroom remains.",
+      "Medium-high confidence is simulated; final spend, deliveries, protection, and quality incidents remain unobserved."
     ]
   },
   "audit": {
@@ -108,37 +108,64 @@
     "findings": [
       {
         "severity": "material",
-        "title": "Target attainment has narrow, assumption-dependent margin",
-        "detail": "The simulation exceeds the Day 21 target by only 0.2 points. Observed associations do not validate the assumed 38% supplier coverage, 92% pickup acceptance, or 90% schedule adherence.",
+        "title": "Required approvals remain pending",
+        "detail": "The pending Action Contract is expected, but all required approvals, particularly Global Procurement VP approval before ACT-004, must be documented before execution.",
         "evidenceIds": [
-          "EVD-SUP-017",
-          "EVD-ORD-041",
-          "EVD-MFG-009",
-          "EVD-ORD-052",
-          "EVD-LOG-023",
-          "EVD-SHP-012"
+          "EVD-POL-114",
+          "EVD-FIN-118"
         ]
       },
       {
         "severity": "material",
-        "title": "Cost and quality constraints require checkpoint evidence",
-        "detail": "The arithmetic remains within budget, but source validation of recovery costs and evidence that quality-escape delta remains nonpositive are pending. Existing guards make these conditional rather than blocking defects.",
-        "evidenceIds": []
+        "title": "Compressor downside misses the final target",
+        "detail": "The modeled downside reaches only 94.7%, while existing automatic re-escalation addresses Day 14 and hard-constraint failures rather than a forecast Day 21 target miss.",
+        "evidenceIds": [
+          "EVD-SUP-116"
+        ]
+      },
+      {
+        "severity": "material",
+        "title": "Quality timing remains unverified",
+        "detail": "The alternate supplier requires fresh batch validation, and neither successful release nor completion within 36 hours is observed.",
+        "evidenceIds": [
+          "EVD-QLT-115",
+          "EVD-SUP-119"
+        ]
+      },
+      {
+        "severity": "material",
+        "title": "Customs and carrier readiness remain conditional",
+        "detail": "Routing, reservation, and contingency guards are appropriate, but actual interplant clearance and carrier readiness remain unconfirmed.",
+        "evidenceIds": [
+          "EVD-LOG-117",
+          "EVD-WMS-120"
+        ]
+      },
+      {
+        "severity": "material",
+        "title": "Weekend labor availability is unconfirmed",
+        "detail": "Production resequencing is safely dependency-gated, but availability for two weekend shifts and 960 overtime hours remains unsupported.",
+        "evidenceIds": [
+          "EVD-LAB-112"
+        ]
       }
     ],
     "unsupportedClaims": [
-      "Approved alternate supplier will cover 38% of the shortage.",
-      "Delta pickup acceptance will reach 92% by Day 7.",
-      "Wilmington schedule adherence will reach 90% by Day 7."
+      "Completion of alternate-batch quality release within 36 hours is not observed.",
+      "Customs clearance for the interplant transfer is not confirmed.",
+      "Weekend labor availability for two shifts and 960 overtime hours is not confirmed.",
+      "Compressor availability sufficient to preserve 95.0% Day 21 protection is unsupported; the modeled downside is 94.7%."
     ],
     "requiredConditions": [
-      "Executive outcome-owner approval must precede ACT-001 and all downstream commitments.",
-      "Finance must validate the $68,750 cost basis and enforce the $75,000 cap before authorization.",
-      "Day 7 evidence must validate supplier coverage, pickup acceptance, and schedule adherence; any material shortfall or quality degradation must pause dependent actions and trigger human re-escalation."
+      "Before execution, the Action Contract must document Plant COO, CFO-delegate, Global Procurement VP, and independent-audit clearance.",
+      "ACT-004 must remain paused until Quality records a passing BATCH-C17-R01 validation under unchanged NX-400 thresholds within the modeled 36-hour window.",
+      "ACT-005 must remain paused until inventory, carrier capacity, customs routing, and the contingency route are tool-confirmed at the Day 3 checkpoint.",
+      "ACT-008 must remain paused until Workforce Operations confirms policy-compliant availability for both weekend shifts and 960 overtime hours by Day 2.",
+      "Daily compressor monitoring must trigger immediate human re-escalation whenever the current Day 21 CRP projection falls below 95.0%."
     ],
     "counterfactual": {
-      "scenario": "Actual recovery is uniformly 0.3 percentage points below the balanced simulation.",
-      "expectedImpact": "Projected OTIF becomes 80.9% on Day 14 and 81.9% on Day 21, missing both targets despite remaining within budget."
+      "scenario": "The compressor constraint materializes while other Balanced Recovery assumptions hold.",
+      "expectedImpact": "Projected Day 21 protection falls from 96.4% to 94.7%, missing the target by 0.3 percentage points and requiring human re-escalation."
     }
   }
 }
