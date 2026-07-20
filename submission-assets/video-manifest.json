@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "status": "upload_ready_local",
+  "file": "video/pact-openai-build-week-demo.mp4",
+  "bytes": 11464639,
+  "durationSeconds": 170.28,
+  "resolution": "1920x1080",
+  "videoCodec": "H.264 High",
+  "audioCodec": "AAC-LC mono",
+  "sha256": "ddd1f73513c46dd196dfbbd578988951cadb7b8fc7ae6b4435f4786b0a117c3a",
+  "narrationVoice": "Microsoft David Desktop (synthetic)",
+  "music": "none",
+  "scenario": "Operation Northstar synthetic material recovery",
+  "sourceScript": "scripts/build-demo-video.ps1",
+  "scenes": [
+    "mission_control",
+    "proofline",
+    "plant_twin",
+    "independent_audit",
+    "blocked_quality_guard",
+    "outcome_closeout"
+  ],
+  "disclosures": [
+    "All organizations, people, evidence, tool calls, and outcomes shown are synthetic.",
+    "The video contains no credentials, production integrations, customer data, copyrighted music, or real-world outcome claims.",
+    "The narration explains Codex's build role, bounded GPT-5.6 judgment, deterministic controls, human authority, and measured synthetic closeout."
+  ]
+}

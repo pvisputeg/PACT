@@ -28,7 +28,7 @@ Open the plant twin briefly, select the delayed shipment, and return to impact.
 
 ## 1:17-1:38 - Codex build evidence and bounded model judgment
 
-> Codex helped build PACT's contracts, domain engine, interface, MCP safeguards, and 59-test release chain. At runtime, GPT-5.6 handles bounded judgment: an Outcome Lead compares strategies, while deterministic code rejects Speed First on cost and Cost First on target.
+> Codex helped build PACT's contracts, domain engine, interface, MCP safeguards, and 60-test release chain. At runtime, GPT-5.6 handles bounded judgment: an Outcome Lead compares strategies, while deterministic code rejects Speed First on cost and Cost First on target.
 
 Select Balanced Recovery and submit its immutable packet.
 

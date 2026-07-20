@@ -33,7 +33,7 @@ Verified against the [official rules](https://openai.devpost.com/rules), [offici
 
 ## Public YouTube video
 
-- [ ] Runtime is **2:55** and therefore strictly less than three minutes.
+- [ ] Runtime is approximately **2:50** and therefore strictly less than three minutes.
 - [ ] Video is uploaded to YouTube and visibility is **Public**, not Unlisted or Private.
 - [ ] Spoken English audio explains what PACT does, how Codex changed the build, and what GPT-5.6 does in the product.
 - [ ] The product shown behaves exactly as narrated.

@@ -17,3 +17,9 @@ Do not update `gptArtifact.status` to `reviewed` until the manifest contains the
 5. `40-independent-audit.png` — A separate GPT-5.6 Auditor challenges the structured plan and binds five conditions without tool authority.
 6. `50-blocked-quality-guard.png` — Deterministic policy rejects a premature supplier commitment even after human approval because quality authorization is missing.
 7. `60-outcome-closeout.png` — PACT closes the loop at 96.1% observed synthetic protection, $389K cost, and zero quality or authority violations.
+
+## Demo video
+
+Run `scripts/build-demo-video.ps1` after the six reviewed gallery images are final. The script creates a narrated, 1080p, sub-three-minute MP4 at `submission-assets/video/pact-openai-build-week-demo.mp4`. The MP4 and intermediate media are intentionally ignored by Git; the script, accepted screenshots, and narration remain reproducible and reviewable.
+
+The video contains no music, credentials, customer data, production integrations, or real-world outcome claims. It identifies the scenario as synthetic and explains Codex's role, the bounded GPT-5.6 roles, deterministic safety gates, human authority, and measured synthetic closeout.

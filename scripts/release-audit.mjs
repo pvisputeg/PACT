@@ -1,4 +1,5 @@
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { collectEvidenceIds, reviewGenuineArtifact } from './lib/pact-artifact-review.mjs';
@@ -30,6 +31,7 @@ const requiredFiles = [
   'submission-assets/og-card.html',
   'submission-assets/devpost-cover.png',
   'submission-assets/gallery-manifest.json',
+  'submission-assets/video-manifest.json',
   'submission-assets/screenshots/00-enterprise-command-center.png',
   'submission-assets/screenshots/00b-reusable-outcome-contract.png',
   'submission-assets/screenshots/01-signal-contract.png',
@@ -42,6 +44,7 @@ const requiredFiles = [
   'scripts/verify-demo.mjs',
   'scripts/verify-submission.mjs',
   'scripts/verify-gpt-artifact.mjs',
+  'scripts/build-demo-video.ps1',
 ];
 
 function walk(directory, output = []) {
@@ -157,6 +160,37 @@ try {
   galleryAssets = { status: 'BLOCKED', reason: 'gallery manifest JSON is invalid' };
 }
 
+let videoPackage = { status: 'BLOCKED', reason: 'video package has not been evaluated' };
+try {
+  const videoManifest = JSON.parse(readFileSync(join(root, 'submission-assets/video-manifest.json'), 'utf8'));
+  const videoProblems = [];
+  if (videoManifest.status !== 'upload_ready_local') videoProblems.push('video status must be upload_ready_local');
+  if (!Number.isFinite(videoManifest.durationSeconds) || videoManifest.durationSeconds <= 0 || videoManifest.durationSeconds >= 180) {
+    videoProblems.push('video duration must be greater than zero and strictly less than 180 seconds');
+  }
+  if (videoManifest.resolution !== '1920x1080') videoProblems.push('video resolution must be 1920x1080');
+  if (videoManifest.music !== 'none') videoProblems.push('video must not contain music');
+  if (!/^[a-f0-9]{64}$/i.test(videoManifest.sha256 ?? '')) videoProblems.push('video SHA-256 is missing or invalid');
+  if (!Array.isArray(videoManifest.scenes) || videoManifest.scenes.length !== 6) videoProblems.push('video must contain the six reviewed Northstar scenes');
+  if (!Array.isArray(videoManifest.disclosures) || videoManifest.disclosures.length < 3) videoProblems.push('video disclosures are incomplete');
+
+  const videoPath = join(root, 'submission-assets', videoManifest.file ?? '');
+  let localArtifact = 'NOT_PRESENT';
+  if (existsSync(videoPath)) {
+    localArtifact = 'VERIFIED';
+    const bytes = readFileSync(videoPath);
+    const digest = createHash('sha256').update(bytes).digest('hex');
+    if (bytes.length !== videoManifest.bytes) videoProblems.push(`video byte count mismatch: manifest ${videoManifest.bytes}, actual ${bytes.length}`);
+    if (digest !== videoManifest.sha256) videoProblems.push('video SHA-256 does not match the local MP4');
+  }
+
+  videoPackage = videoProblems.length
+    ? { status: 'BLOCKED', problems: videoProblems }
+    : { status: 'READY', durationSeconds: videoManifest.durationSeconds, resolution: videoManifest.resolution, localArtifact };
+} catch {
+  videoPackage = { status: 'BLOCKED', reason: 'video manifest JSON is invalid' };
+}
+
 const submission = readFileSync(join(root, 'docs/SUBMISSION.md'), 'utf8');
 const placeholderMatches = [...new Set([...submission.matchAll(/\[(?:ADD|RUN)[^\]]*\]/g)].map((match) => match[0]))];
 const sensitivePatterns = [
@@ -167,7 +201,7 @@ const secretFindings = [];
 
 for (const file of walk(root)) {
   const rel = relative(root, file).replaceAll('\\', '/');
-  if (rel === '.env.example' || /\.(?:woff2?|png|jpe?g|gif|ico)$/i.test(rel)) continue;
+  if (rel === '.env.example' || /\.(?:woff2?|png|jpe?g|gif|ico|mp4|wav)$/i.test(rel)) continue;
   const content = readFileSync(file, 'utf8');
   for (const pattern of sensitivePatterns) {
     pattern.lastIndex = 0;
@@ -182,6 +216,7 @@ const audit = {
   genuineGptArtifact: genuineArtifact ? { status: 'READY' } : { status: 'BLOCKED', reason: artifactProblem, apiKeyConfigured: Boolean(process.env.OPENAI_API_KEY) },
   galleryProvenance,
   galleryAssets,
+  videoPackage,
   submissionPlaceholders: placeholderMatches.length ? { status: 'BLOCKED', values: placeholderMatches } : { status: 'READY' },
   gitOrigin: remoteUrl() ? { status: 'READY', url: remoteUrl() } : { status: 'BLOCKED', reason: 'origin remote not configured' },
   credentialScan: secretFindings.length ? { status: 'BLOCKED', files: [...new Set(secretFindings)] } : { status: 'READY' },

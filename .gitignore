@@ -9,3 +9,5 @@ artifacts/gpt-5.6/*.json
 coverage/
 .DS_Store
 Thumbs.db
+submission-assets/video/*.mp4
+submission-assets/video/work/
